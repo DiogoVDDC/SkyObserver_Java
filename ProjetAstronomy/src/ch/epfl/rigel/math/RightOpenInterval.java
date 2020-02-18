@@ -9,17 +9,13 @@ public final class RightOpenInterval extends Interval {
     }
     
     public static RightOpenInterval of(double low, double high) {
-        if (low < high) {
-            return new RightOpenInterval(low, high);
-        }
-        throw new IllegalArgumentException();
+        Preconditions.checkArgument(low < high);
+        return new RightOpenInterval(low, high);
     }
     
     public static RightOpenInterval symmetric(double size) {
-        if (size > 0) {
-            return new RightOpenInterval(-size, size);
-        }
-        throw new IllegalArgumentException();
+        Preconditions.checkArgument(size > 0 );
+        return new RightOpenInterval(-size, size);
     }
     
     public double reduce(double v) {
@@ -27,7 +23,7 @@ public final class RightOpenInterval extends Interval {
     }
 
     @Override
-    boolean contains(double v) {
+    public boolean contains(double v) {
         return ((v >= low()) || (v < high()));
     }
     

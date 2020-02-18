@@ -9,17 +9,13 @@ public final class ClosedInterval extends Interval {
     }
     
     public static ClosedInterval of(double low, double high) {
-        if (low < high) {
-            return new ClosedInterval(low, high);
-        }
-        throw new IllegalArgumentException();
+        Preconditions.checkArgument(low < high);
+        return new ClosedInterval(low, high);
     }
     
     public static ClosedInterval symmetric(double size) {
-        if (size > 0) {
-            return new ClosedInterval(-size, size);
-        }
-        throw new IllegalArgumentException();
+        Preconditions.checkArgument(size > 0);
+        return new ClosedInterval(-size, size);
     }
 
     public double clip(double v) {
@@ -29,7 +25,7 @@ public final class ClosedInterval extends Interval {
     }
     
     @Override
-    boolean contains(double v) {
+    public boolean contains(double v) {
         return ((v >= low()) || (v <= high()));
     }
 

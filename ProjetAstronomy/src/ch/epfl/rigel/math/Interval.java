@@ -19,7 +19,7 @@ abstract public class Interval {
         return high - low;
     }
 
-    abstract boolean contains(double v);
+    abstract public boolean contains(double v);
     
     @Override
     public final boolean equals(Object obj) {
