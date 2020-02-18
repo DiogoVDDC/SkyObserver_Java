@@ -18,4 +18,16 @@ abstract public class Interval {
     public double size() {
         return high - low;
     }
+
+    abstract boolean contains(double v);
+    
+    @Override
+    public final boolean equals(Object obj) {
+        throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public final int hashCode() {
+        throw new UnsupportedOperationException();
+    }
 }
