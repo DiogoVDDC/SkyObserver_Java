@@ -2,11 +2,10 @@ package ch.epfl.rigel.math;
 
 import java.util.Locale;
 
-public class RightOpenInterval extends Interval {
+public final class RightOpenInterval extends Interval {
 
     private RightOpenInterval(double low, double high) {
         super(low, high);
-        // TODO Auto-generated constructor stub
     }
     
     public static RightOpenInterval of(double low, double high) {

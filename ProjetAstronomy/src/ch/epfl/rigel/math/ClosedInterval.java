@@ -2,7 +2,7 @@ package ch.epfl.rigel.math;
 
 import java.util.Locale;
 
-public class ClosedInterval extends Interval {
+public final class ClosedInterval extends Interval {
 
     private ClosedInterval(double low, double high) {
         super(low, high);
