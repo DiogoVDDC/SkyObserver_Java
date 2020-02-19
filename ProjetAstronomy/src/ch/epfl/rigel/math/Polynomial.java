@@ -10,14 +10,20 @@ public final class Polynomial {
     private double[] coefficients;
     
     /**
-     * Constructs a polynomial using the given coefficients.
+     * Constructs a polynomial using the given coefficients used only by the auxiliary constructor function.
      * 
-     * @param coeff
+     * @param coeff(Double[]): the list of the coefficients.
      */
     private Polynomial(double[] coeff) {
         this.coefficients = coeff;
     };
     
+    /**
+     * Allows to create a polynomial in decreasing power.
+     * @param coefficientN(Double): the first coefficient of the polynomial.
+     * @param coefficients(Double): following coefficient.
+     * @return(Polynomial): the newly created polynomial.
+     */
     public static Polynomial of(double coefficientN, double... coefficients) {
         Preconditions.checkArgument(coefficientN != 0);
         
@@ -27,6 +33,11 @@ public final class Polynomial {
         return new Polynomial(coeff);
     }
     
+    /**
+     * Evaluate the polynomial at a given x.
+     * @param x(Double): the x value to evaluate.
+     * @return(Double): the result of the evaluated polynomial.
+     */
     public double at(double x) {
         double val = 0;
         for (double c : coefficients) {
