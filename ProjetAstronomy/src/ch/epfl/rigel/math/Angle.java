@@ -1,5 +1,12 @@
 package ch.epfl.rigel.math;
 
+/**
+ * Representation of a Polynomial
+ * 
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ *
+ */
+
 public final class Angle {
     
     private static final double TAU = 2 * Math.PI;

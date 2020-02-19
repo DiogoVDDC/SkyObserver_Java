@@ -1,5 +1,7 @@
 package ch.epfl.rigel.math;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * Representation of a Polynomial
  * 
@@ -48,19 +50,20 @@ public final class Polynomial {
     }
     
     @Override
+    // outputs to console the polynomial in the correct format
     public String toString() {
         int degree = coefficients.length-1;
         StringBuilder str = new StringBuilder();
-        str.append(coefficients[0] + "x^" + degree);
-        for (int y = 1; y < coefficients.length-1; y++) {
-            double coeff = coefficients[y];
-            if (coeff != 0) {
-                if(coeff > 0) str.append("+");
+        str.append(coefficients[0] + " x^" + degree);
+        for (int i = 1; i < coefficients.length-1; i++) {
+            double coeff = coefficients[i];
+            if (coeff != 0 && coeff > 0) {
+                str.append(" + ");
                 str.append(coeff);
-                str.append("x^" + (degree-y));
+                str.append(" x^" + (degree-i));
             }
         }
-        str.append(coefficients[degree]);
+        str.append(" + " + coefficients[degree]);
         return str.toString();
     }
     

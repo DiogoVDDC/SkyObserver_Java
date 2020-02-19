@@ -2,6 +2,8 @@ package ch.epfl.rigel.math;
 
 import java.util.Locale;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * Class to create an right-opened interval.
  * @author Theo Houle (312432)
@@ -40,7 +42,7 @@ public final class RightOpenInterval extends Interval {
     }
     
     /**
-     * Method to normalize the given number bewteen the boundaries of the interval.
+     * Method to normalize the given number between the boundaries of the interval.
      * @param v(Double): the number to normalize.
      * @return(Double): the normalized number.
      */
@@ -54,6 +56,7 @@ public final class RightOpenInterval extends Interval {
     }
     
     @Override
+    // outputs to console the interval in the correct format
     public String toString() {
         return String.format(Locale.ROOT,"[%s,%s[", low(), high());
     }

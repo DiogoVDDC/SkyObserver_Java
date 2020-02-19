@@ -2,6 +2,8 @@ package ch.epfl.rigel.math;
 
 import java.util.Locale;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * Allow to create a closed interval.
  * 
@@ -53,11 +55,16 @@ public final class ClosedInterval extends Interval {
     }
     
     @Override
+    /**   
+     * @param v: the value to be checked for existence
+     * @return: whether or not a certain value is contained in the interval
+     */
     public boolean contains(double v) {
         return ((v >= low()) || (v <= high()));
     }
 
     @Override
+    // Outputs to console the interval in the correct format
     public String toString() {
         return String.format(Locale.ROOT, "[%s,%s]", low(), high());
     }

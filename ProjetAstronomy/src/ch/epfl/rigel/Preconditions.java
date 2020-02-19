@@ -9,7 +9,7 @@ import ch.epfl.rigel.math.Interval;
 public final class Preconditions {
     
     /**
-     * Empty constructor to prevent from instantiating a Precondition class.
+     * Empty constructor to prevent instantiation of the Precondition class.
      */
     private Preconditions () {}
     
@@ -26,7 +26,7 @@ public final class Preconditions {
     /**
      * Allows to throw an exception if a given value isn't contained in a given interval.
      * @param interval(Interval): Interval to compare if the value is contained in.
-     * @param value(Double): the value we want to know if 
+     * @param value(Double): the value that is to checked if inside the interval.
      */
     public static void checkInInterval(Interval interval, double value) {
         if(interval.contains(value)) {

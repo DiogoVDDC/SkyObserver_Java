@@ -3,7 +3,7 @@ import ch.epfl.rigel.math.Polynomial;
 
 public class Main {
     public static void main(String[] args) {
-       System.out.println(Angle.ofArcsec(1));
-       System.out.println(Angle.ofDMS(85, 18, 30));
+       System.out.println(Polynomial.of(3, 2,4,6));
+       
     }
 }
