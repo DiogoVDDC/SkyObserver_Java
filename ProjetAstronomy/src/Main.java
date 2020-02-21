@@ -1,4 +1,3 @@
-import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.Polynomial;
 
 public class Main {

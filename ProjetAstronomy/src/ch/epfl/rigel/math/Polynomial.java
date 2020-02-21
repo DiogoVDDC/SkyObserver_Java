@@ -1,5 +1,7 @@
 package ch.epfl.rigel.math;
 
+import ch.epfl.rigel.Preconditions;
+
 /**
  * Representation of a Polynomial
  * 
@@ -50,6 +52,7 @@ public final class Polynomial {
     }
     
     @Override
+    // outputs to console the polynomial in the correct format
     public String toString() {
         int degree = coefficients.length-1;
         StringBuilder str = new StringBuilder();
