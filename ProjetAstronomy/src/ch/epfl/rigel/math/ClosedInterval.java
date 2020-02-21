@@ -40,7 +40,7 @@ public final class ClosedInterval extends Interval {
      */
     public static ClosedInterval symmetric(double size) {
         Preconditions.checkArgument(size > 0);
-        return new ClosedInterval(-size, size);
+        return new ClosedInterval(-size/2, size/2);
     }
     
     /**
@@ -60,7 +60,9 @@ public final class ClosedInterval extends Interval {
      * @return: whether or not a certain value is contained in the interval
      */
     public boolean contains(double v) {
-        return ((v >= low()) || (v <= high()));
+        System.out.println("low" + low());
+        System.out.println("high" + high());
+        return ((v >= low()) && (v <= high()));
     }
 
     @Override

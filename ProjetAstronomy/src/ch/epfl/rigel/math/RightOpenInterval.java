@@ -38,7 +38,7 @@ public final class RightOpenInterval extends Interval {
      */
     public static RightOpenInterval symmetric(double size) {
         Preconditions.checkArgument(size > 0 );
-        return new RightOpenInterval(-size, size);
+        return new RightOpenInterval(-size/2, size/2);
     }
     
     /**
@@ -47,12 +47,16 @@ public final class RightOpenInterval extends Interval {
      * @return(Double): the normalized number.
      */
     public double reduce(double v) {
-        return low() + Math.floorMod((int)(v - low()), (int)size());
+        return low() + floorMod(v-low(), size());
+    }
+    
+    private double floorMod(double x, double y) {
+        return x - y*Math.floor(x/y);
     }
 
     @Override
     public boolean contains(double v) {
-        return ((v >= low()) || (v < high()));
+        return ((v >= low()) && (v < high()));
     }
     
     @Override

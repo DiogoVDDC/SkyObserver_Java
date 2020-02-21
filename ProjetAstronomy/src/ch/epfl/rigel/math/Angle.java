@@ -21,10 +21,10 @@ public final class Angle {
     private static final double ARC_SECOND_PER_RAD = Math.toRadians(ARC_SECOND_PER_DEG);    
     
     // Number of arc hour per radian.
-    private static final double ARC_HOUR_PER_RAD = TAU / 24;
+    private static final double ARC_HOUR_PER_RAD = 24/ TAU;
     
     // Number of radian per arc hour.
-    private static final double RAD_PER_ARC_HOUR = 24/ TAU;
+    private static final double RAD_PER_ARC_HOUR = TAU / 24;
     
     private Angle () {}
     
@@ -62,7 +62,7 @@ public final class Angle {
      * @return(Double): the converted angle in radians.
      */
     public static double ofDMS(int deg, int min, double sec) {
-        if( (deg < 0 && deg >= 60) || (min < 0 && min >= 60)) {
+        if(  min < 0 || min >= 60 || sec < 0 || sec >= 60) {
             throw new IllegalArgumentException();
         }
         
