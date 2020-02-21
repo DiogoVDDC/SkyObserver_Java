@@ -29,7 +29,7 @@ public final class Preconditions {
      * @param value(Double): the value that is to checked if inside the interval.
      */
     public static void checkInInterval(Interval interval, double value) {
-        if(interval.contains(value)) {
+        if(!interval.contains(value)) {
             throw new IllegalArgumentException();
         }
    }
