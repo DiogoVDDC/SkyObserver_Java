@@ -56,18 +56,29 @@ public final class Polynomial {
     public String toString() {
         int degree = coefficients.length-1;
         StringBuilder str = new StringBuilder();
+        
         for (int y = 0; y < coefficients.length-1; y++) {
             double coeff = coefficients[y];
             if (coeff != 0) {
-                str.append(coeff);
-                str.append("x^" + (degree-y));
-                if(coeff > 0) { // A negative number already has a sign in front.
+                if(coeff == -1) {
+                    str.append("-");
+                }
+                if (coeff != 1 && coeff != -1) {
+                    str.append(coeff);
+                }
+                if (degree > 1) {
+                    str.append("x^" + degree);
+                } else {
+                    str.append("x");
+                }
+                if (coefficients[y+1] > 0) {
                     str.append("+");
                 }
             }
+            degree --;
         }
-        //To prevent having "x^0" at the end.
-        str.append(coefficients[degree]);
+        
+        str.append(coefficients[coefficients.length-1]);
         return str.toString();
     }
     

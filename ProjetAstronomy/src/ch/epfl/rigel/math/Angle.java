@@ -9,7 +9,7 @@ package ch.epfl.rigel.math;
 
 public final class Angle {
     
-    private static final double TAU = 2 * Math.PI;
+    public static final double TAU = 2 * Math.PI;
     
     // Number of second arc per degree.
     private static final double ARC_SECOND_PER_DEG = 1 / 3600.0;
