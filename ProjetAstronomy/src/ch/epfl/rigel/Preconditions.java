@@ -28,9 +28,11 @@ public final class Preconditions {
      * @param interval(Interval): Interval to compare if the value is contained in.
      * @param value(Double): the value that is to checked if inside the interval.
      */
-    public static void checkInInterval(Interval interval, double value) {
+    public static double checkInInterval(Interval interval, double value) {
         if(!interval.contains(value)) {
             throw new IllegalArgumentException();
         }
+        
+        return value;
    }
 }
