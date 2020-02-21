@@ -40,10 +40,12 @@ public final class Polynomial {
      */
     public double at(double x) {
         double val = 0;
-        for (double c : coefficients) {
-            val += c;
+        for (int i = 0; i < coefficients.length-1; i++) {
+            val += coefficients[i];
             val *= x;
         }
+        // The last coeff is added separetely to prevent the for loop to multiply by x one time to many the polynomial.
+        val += coefficients[coefficients.length-1];
         return val;
     }
     
@@ -51,15 +53,17 @@ public final class Polynomial {
     public String toString() {
         int degree = coefficients.length-1;
         StringBuilder str = new StringBuilder();
-        str.append(coefficients[0] + "x^" + degree);
-        for (int y = 1; y < coefficients.length-1; y++) {
+        for (int y = 0; y < coefficients.length-1; y++) {
             double coeff = coefficients[y];
             if (coeff != 0) {
-                if(coeff > 0) str.append("+");
                 str.append(coeff);
                 str.append("x^" + (degree-y));
+                if(coeff > 0) { // A negative number already has a sign in front.
+                    str.append("+");
+                }
             }
         }
+        //To prevent having "x^0" at the end.
         str.append(coefficients[degree]);
         return str.toString();
     }
