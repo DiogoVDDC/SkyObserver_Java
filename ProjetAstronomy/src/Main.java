@@ -4,7 +4,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 
 public class Main {
     public static void main(String[] args) {
-        Polynomial a = Polynomial.of(1, 2, 2);
+        Polynomial a = Polynomial.of(1, 4, -1, 2);
         System.out.println(a.at(2));
         System.out.println(a);
         

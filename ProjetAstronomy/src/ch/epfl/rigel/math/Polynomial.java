@@ -13,7 +13,7 @@ public final class Polynomial {
     
     /**
      * Constructs a polynomial using the given coefficients used only by the auxiliary constructor function.
-     * GNE
+     *
      * @param coeff(Double[]): the list of the coefficients.
      */
     private Polynomial(double[] coeff) {
@@ -59,18 +59,24 @@ public final class Polynomial {
         
         for (int y = 0; y < coefficients.length-1; y++) {
             double coeff = coefficients[y];
+            //If the coefficient is null, nothing must be written.
             if (coeff != 0) {
+                //If the coefficient is -1, there must be a minus sign and the one disappear since 1*x is x.
                 if(coeff == -1) {
                     str.append("-");
                 }
+                 // The one must disappear since +-1*x = +-x.
                 if (coeff != 1 && coeff != -1) {
                     str.append(coeff);
                 }
+                //if the degree is 1, the x must not be raised since x^1 = x.
                 if (degree > 1) {
                     str.append("x^" + degree);
                 } else {
                     str.append("x");
                 }
+                //If the next coefficient is positive, a plus sign must be added, 
+                //else, since a negative value already has a minus sign, we don't need to add it.
                 if (coefficients[y+1] > 0) {
                     str.append("+");
                 }
@@ -78,6 +84,7 @@ public final class Polynomial {
             degree --;
         }
         
+        //Adding the last coefficient separately to avoid having it multiplied by x.
         str.append(coefficients[coefficients.length-1]);
         return str.toString();
     }
