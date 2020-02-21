@@ -13,7 +13,7 @@ public final class Polynomial {
     
     /**
      * Constructs a polynomial using the given coefficients used only by the auxiliary constructor function.
-     * 
+     * GNE
      * @param coeff(Double[]): the list of the coefficients.
      */
     private Polynomial(double[] coeff) {
