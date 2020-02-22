@@ -16,6 +16,7 @@ public final class Preconditions {
     /**
      * Allows to throw an exception if a given argument is wrong.
      * @param isTrue (Boolean): the result of the given argument, if false, throw an exception.
+     * @throws: if the argument is wrong, throws IllegalArgumentException.
      */
     public static void checkArgument(boolean isTrue) {
         if(!isTrue) {
@@ -25,8 +26,9 @@ public final class Preconditions {
 
     /**
      * Allows to throw an exception if a given value isn't contained in a given interval.
-     * @param interval(Interval): Interval to compare if the value is contained in.
-     * @param value(Double): the value that is to checked if inside the interval.
+     * @param interval: Interval to compare if the value is contained in.
+     * @param value: the value that is to checked if inside the interval.
+     * @throws: if the value isn't contained in the interval, throws IllegalArgumentException.
      */
     public static double checkInInterval(Interval interval, double value) {
         if(!interval.contains(value)) {
