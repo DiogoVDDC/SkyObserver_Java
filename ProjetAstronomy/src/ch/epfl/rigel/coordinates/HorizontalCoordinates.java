@@ -30,5 +30,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
         return lonDeg();
     }
 
-    public String azOctantName()
+    public String azOctantName() {
+        return null;
+    }
 }
