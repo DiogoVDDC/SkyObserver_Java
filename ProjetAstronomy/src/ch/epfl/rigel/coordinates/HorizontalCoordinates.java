@@ -7,15 +7,22 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
-public class HorizontalCoordinates extends SphericalCoordinates{
+/**
+ * Representation of coordinates in horizontal system.
+ * @author Theo Houle (312432)
+ *
+ */
+public final class HorizontalCoordinates extends SphericalCoordinates{
 
+    // Interval in which the azimuth angle must be contained.
     private static final RightOpenInterval azInterval = RightOpenInterval.of(0, 360);
+    // Interval in which the altitude angle must be contained.
     private static final ClosedInterval altInterval = ClosedInterval.symmetric(180);
     
     /**
      * Constructor for HorizontalCoordinates, private because used only by the auxiliary constructors.
-     * @param alt: altitude angle in radians.
-     * @param az: azimuth angle in radians.
+     * @param alt: altitude angle in radiant.
+     * @param az: azimuth angle in radiant.
      */
     private HorizontalCoordinates(double alt, double az) {
         super(alt, az);
