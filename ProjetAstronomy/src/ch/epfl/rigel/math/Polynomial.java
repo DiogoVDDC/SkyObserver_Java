@@ -10,35 +10,35 @@ import ch.epfl.rigel.Preconditions;
  */
 public final class Polynomial {
     private double[] coefficients;
-    
+
     /**
      * Constructs a polynomial using the given coefficients used only by the auxiliary constructor function.
      *
-     * @param coeff(Double[]): the list of the coefficients.
+     * @param coeff: the list of the coefficients.
      */
     private Polynomial(double[] coeff) {
         this.coefficients = coeff;
     };
-    
+
     /**
      * Allows to create a polynomial in decreasing power.
-     * @param coefficientN(Double): the first coefficient of the polynomial.
-     * @param coefficients(Double): following coefficient.
-     * @return(Polynomial): the newly created polynomial.
+     * @param coefficientN: the first coefficient of the polynomial.
+     * @param coefficients: following coefficient.
+     * @return: the newly created polynomial.
      */
     public static Polynomial of(double coefficientN, double... coefficients) {
         Preconditions.checkArgument(coefficientN != 0);
-        
+
         double[] coeff = new double[coefficients.length+1];
         coeff[0] = coefficientN;
         System.arraycopy(coefficients, 0, coeff, 1, coefficients.length);
         return new Polynomial(coeff);
     }
-    
+
     /**
      * Evaluate the polynomial at a given x.
-     * @param x(Double): the x value to evaluate.
-     * @return(Double): the result of the evaluated polynomial.
+     * @param x: the x value to evaluate.
+     * @return: the result of the evaluated polynomial.
      */
     public double at(double x) {
         double val = 0;
@@ -50,13 +50,13 @@ public final class Polynomial {
         val += coefficients[coefficients.length-1];
         return val;
     }
-    
+
     @Override
     // outputs to console the polynomial in the correct format
     public String toString() {
         int degree = coefficients.length-1;
         StringBuilder str = new StringBuilder();
-        
+
         for (int y = 0; y < coefficients.length-1; y++) {
             double coeff = coefficients[y];
             //If the coefficient is null, nothing must be written.
@@ -65,7 +65,7 @@ public final class Polynomial {
                 if(coeff == -1) {
                     str.append("-");
                 }
-                 // The one must disappear since +-1*x = +-x.
+                // The one must disappear since +-1*x = +-x.
                 if (coeff != 1 && coeff != -1) {
                     str.append(coeff);
                 }
@@ -83,17 +83,17 @@ public final class Polynomial {
             }
             degree --;
         }
-        
+
         //Adding the last coefficient separately to avoid having it multiplied by x.
         str.append(coefficients[coefficients.length-1]);
         return str.toString();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
-    
+
     @Override
     public int hashCode() {
         throw new UnsupportedOperationException();

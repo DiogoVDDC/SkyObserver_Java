@@ -13,8 +13,8 @@ public final class RightOpenInterval extends Interval {
 
     /**
      * Constructor of the RightOpenedInterval used only by the two auxiliary constrcuctor.
-     * @param low(Double): lower boundary of the interval.
-     * @param high(Double): upped boundaty of the interval.
+     * @param low: lower boundary of the interval.
+     * @param high: upped boundaty of the interval.
      */
     private RightOpenInterval(double low, double high) {
         super(low, high);
@@ -22,9 +22,9 @@ public final class RightOpenInterval extends Interval {
     
     /**
      * Auxiliary constructor to create a right opened interval between to given boundaries.
-     * @param low(Double): lower boundary.
-     * @param high(Double): upper boundary.
-     * @return(Double): the newly created interval.
+     * @param low: lower boundary.
+     * @param high: upper boundary.
+     * @return: the newly created interval.
      */
     public static RightOpenInterval of(double low, double high) {
         Preconditions.checkArgument(low < high);
@@ -33,8 +33,8 @@ public final class RightOpenInterval extends Interval {
     
     /**
      * Auxiliary constructor to create a righ opened interval centralized at 0 and symmetric with a given radius.
-     * @param size(Double): the radius of the interval.
-     * @return(RightOpenInterval): the newly created interval.
+     * @param size: the radius of the interval.
+     * @return: the newly created interval.
      */
     public static RightOpenInterval symmetric(double size) {
         Preconditions.checkArgument(size > 0 );
@@ -43,8 +43,8 @@ public final class RightOpenInterval extends Interval {
     
     /**
      * Method to normalize the given number between the boundaries of the interval.
-     * @param v(Double): the number to normalize.
-     * @return(Double): the normalized number.
+     * @param v: the number to normalize.
+     * @return: the normalized number.
      */
     public double reduce(double v) {
         return low() + floorMod(v-low(), size());

@@ -1,5 +1,9 @@
 package ch.epfl.rigel.coordinates;
 
+import java.util.Locale;
+
+import org.junit.jupiter.api.Order;
+
 import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
@@ -7,29 +11,75 @@ import ch.epfl.rigel.math.RightOpenInterval;
 
 public final class GeographicCoordinates extends SphericalCoordinates{
 
-      private static final RightOpenInterval lonInterval = RightOpenInterval.symmetric(360);
-      private static final ClosedInterval latInterval = ClosedInterval.symmetric(180);
-//    GeographicCoordinates ofDeg(double lonDeg, double latDeg),
-//    qui retourne les coordonnées géographiques dont la longitude en degrés est égale à lonDeg et la latitude en degrés est égale à latDeg,
-//    ou lève IllegalArgumentException si l'une ou l'autre de ces composantes est invalide (voir §2.2).
-//   
-//
-//    boolean isValidLonDeg(double lonDeg), qui retourne vrai ssi l'angle qui lui est passé représente une longitude valide en degrés,
-//    boolean isValidLatDeg(double latDeg), qui retourne vrai ssi l'angle qui lui est passé représente une latitude valide en degrés.
-//    
-//
-//    double lon(), qui retourne la longitude,
-//    double lonDeg(), qui retourne la longitude en degrés,
-//    double lat(), qui retourne la latitude,
-//    double latDeg(), qui retourne la latitude en degrés.
-    
-    
+    // longitude interval in terms of radians, 180 to -180 degrees
+    private static final RightOpenInterval lonInterval = RightOpenInterval.symmetric(360);
+    // latitude interval in terms of radians, 90 to -90 degrees
+    private static final ClosedInterval latInterval = ClosedInterval.symmetric(180);
+  
     private GeographicCoordinates(double lat, double lon) {
         super(lat, lon);        
     }
-    
+
     //CHECK IF HAS TO BE PUBLIC
-    public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
-        return new GeographicCoordinates(Angle.ofDeg(Preconditions.checkInInterval(lonInterval, lonDeg)), Angle.ofDeg(Preconditions.checkInInterval(latInterval, latDeg)));
+    /**     
+     * @param: longitude in degrees 
+     * @param: latitude in degrees 
+     * @return: returns a new geographic coordinates object
+     */
+     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
+        return new GeographicCoordinates( Angle.ofDeg(Preconditions.checkInInterval(latInterval, latDeg)),
+                Angle.ofDeg(Preconditions.checkInInterval(lonInterval, lonDeg)));
+    }
+
+    /**     
+     * @param: longitude in degrees 
+     * @return: returns true is the longitude is in the correct interval
+     */
+    public static boolean isValidLonDeg(double lonDeg) {
+        Preconditions.checkInInterval(lonInterval, lonDeg);
+        return true;
+    }
+
+    /**     
+     * @param: latitude in degrees 
+     * @return: returns true is the latitude is in the correct interval
+     */
+    public static boolean isValidLatDeg(double latDeg) {
+        Preconditions.checkInInterval(lonInterval, latDeg);
+        return true;
+    }
+
+    /**     
+     * @return: returns longitude in radians
+     */
+    public double lon() {
+        return super.lon();
+    }
+
+    /**     
+     * @return: returns longitude in degrees
+     */
+    public double lonDeg() {
+        return super.lonDeg();
+    }
+
+    /**     
+     * @return: returns latitude in radians
+     */
+    public double lat() {
+        return super.lat();
+    }
+
+    /**     
+     * @return: returns latitude in degrees
+     */
+    public double latDeg() {
+        return super.latDeg();
+    }
+
+    // HOW DO I ADD THE DEGREE SYMBOL
+    @Override
+    public String toString(){
+        return String.format(Locale.ROOT,"(lon=%.4f, lat=%.4f)", lonDeg(), latDeg());
     }
 }
