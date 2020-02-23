@@ -20,7 +20,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
     }
     
     /** 
-     * @param ra: (right ascension) correspond to longitude (given in hours)
+     * @param ra: (right ascension) correspond to longitude (given in hours) // CHANGE TO RADIANS?
      * @param dec: (declination) correspond to latitude (given in radians)
      * @return: returns new equatorial coordinates
      */
