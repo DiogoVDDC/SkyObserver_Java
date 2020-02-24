@@ -2,6 +2,9 @@ package ch.epfl.rigel.coordinates;
 
 import ch.epfl.rigel.math.Angle;
 
+/**
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 abstract class SphericalCoordinates {
     
     private double lat;

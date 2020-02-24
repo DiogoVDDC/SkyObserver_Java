@@ -9,6 +9,9 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
+/**
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 public final class GeographicCoordinates extends SphericalCoordinates{
 
     // longitude interval in terms of radians, 180 to -180 degrees
@@ -20,7 +23,7 @@ public final class GeographicCoordinates extends SphericalCoordinates{
         super(lat, lon);        
     }
 
-    //CHECK IF HAS TO BE PUBLIC
+    
     /**     
      * @param: longitude in degrees 
      * @param: latitude in degrees 
@@ -76,10 +79,9 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     public double latDeg() {
         return super.latDeg();
     }
-
-    // HOW DO I ADD THE DEGREE SYMBOL
+   
     @Override
     public String toString(){
-        return String.format(Locale.ROOT,"(lon=%.4f, lat=%.4f)", lonDeg(), latDeg());
+        return String.format(Locale.ROOT,"(lon=%.4f°, lat=%.4f°)", lonDeg(), latDeg());
     }
 }

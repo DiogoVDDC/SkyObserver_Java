@@ -7,6 +7,10 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
+/**
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
+
 public final class EquatorialCoordinates extends SphericalCoordinates{
 
     //longitude interval expressed in terms of hours, 0 to 24 hours
@@ -67,7 +71,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
     // HOW DO I ADD THE DEGREE SYMBOL
     @Override
     public String toString(){
-        return String.format(Locale.ROOT,"(ra=%.4fh, lat=%.4f)", lonDeg(), latDeg());
+        return String.format(Locale.ROOT,"(ra=%.4fh, lat=%.4f°)", lonDeg(), latDeg());
     }
 
 }
