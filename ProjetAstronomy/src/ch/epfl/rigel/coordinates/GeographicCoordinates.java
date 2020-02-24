@@ -29,7 +29,6 @@ public final class GeographicCoordinates extends SphericalCoordinates{
                 Angle.ofDeg(Preconditions.checkInInterval(lonInterval, lonDeg)));
     }
 
-     // SHOULD THEY NOT RATHER RETURN FALSE INSTEAD OF AN EXCPETION??
     /**     
      * @param: longitude in degrees 
      * @return: returns true is the longitude is in the correct interval

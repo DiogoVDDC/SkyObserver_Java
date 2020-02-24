@@ -44,6 +44,9 @@ public class GeographicCoordinatesTest {
         assertThrows(IllegalArgumentException.class, () ->{
             GeographicCoordinates.ofDeg(150, 91);
         });
+        assertThrows(IllegalArgumentException.class, () ->{
+            GeographicCoordinates.ofDeg(150, -91);
+        });
         
         assertThrows(IllegalArgumentException.class, () ->{
             GeographicCoordinates.ofDeg(400, 120); 
