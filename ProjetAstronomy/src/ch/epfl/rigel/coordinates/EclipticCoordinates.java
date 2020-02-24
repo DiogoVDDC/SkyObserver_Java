@@ -1,4 +1,4 @@
-package ch.epfl.rigel.coordinates;
+    package ch.epfl.rigel.coordinates;
 
 import java.util.Locale;
 import ch.epfl.rigel.Preconditions;
@@ -12,7 +12,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 
 public final class EclipticCoordinates extends SphericalCoordinates{
 
-    // latitude interval in terms of radians, -pi to pi radians
+    // latitude interval in terms of radians, -pi/2 to pi/2 radians
     private final static ClosedInterval latInterval = ClosedInterval.symmetric(Math.PI);
     // longitude interval in terms of radians, 0 to 2pi radians
     private final static RightOpenInterval lonInterval = RightOpenInterval.of(0, 2*Math.PI);

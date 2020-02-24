@@ -60,8 +60,6 @@ public final class ClosedInterval extends Interval {
      * @return: whether or not a certain value is contained in the interval
      */
     public boolean contains(double v) {
-        System.out.println("low" + low());
-        System.out.println("high" + high());
         return ((v >= low()) && (v <= high()));
     }
 

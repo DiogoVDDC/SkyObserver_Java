@@ -33,7 +33,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      * throw an IllegalArgumentException.
      */
     public static HorizontalCoordinates of(double az, double alt) {
-        return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, alt), Preconditions.checkInInterval(azInterval, az));
+        return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, alt),
+                Preconditions.checkInInterval(azInterval, az));
     }
         
     /**
@@ -45,8 +46,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      * throw an IllegalArgumentException.
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        return new HorizontalCoordinates(Angle.ofDeg(Preconditions.checkInInterval(altInterval, Angle.ofDeg(altDeg))), 
-                Angle.ofDeg(Preconditions.checkInInterval(azInterval, Angle.ofDeg(azDeg))));
+        return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, Angle.ofDeg(altDeg)), 
+                Preconditions.checkInInterval(azInterval, Angle.ofDeg(azDeg)));
     }
     
     public double az() {
@@ -67,7 +68,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      * @param e: the string representation of the east.
      * @param s: the string representation of the south.
      * @param w: the string representation of the west.
-     * @return: the corresponding octant of the angle written using the given string representation of the cardinal points.
+     * @return: the corresponding octant of the angle written using the given string representation 
+     * of the cardinal points.
      */
     public String azOctantName(String n, String e, String s, String w) {
         // Reduce the 360°(two pi) span of a full circle to height equally distributed slices representing the 8 octant.
