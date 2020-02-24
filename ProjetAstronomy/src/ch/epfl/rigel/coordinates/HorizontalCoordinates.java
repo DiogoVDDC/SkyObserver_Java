@@ -15,9 +15,9 @@ import ch.epfl.rigel.math.RightOpenInterval;
 public final class HorizontalCoordinates extends SphericalCoordinates{
 
     // Interval in which the azimuth angle must be contained.
-    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, 360);
+    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, Math.PI*2);
     // Interval in which the altitude angle must be contained.
-    private static final ClosedInterval altInterval = ClosedInterval.symmetric(180);
+    private static final ClosedInterval altInterval = ClosedInterval.symmetric(Math.PI);
     
     private HorizontalCoordinates(double alt, double az) {
         super(alt, az);
@@ -45,7 +45,8 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      * throw an IllegalArgumentException.
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        return new HorizontalCoordinates(Angle.ofDeg(Preconditions.checkInInterval(altInterval, altDeg)), Angle.ofDeg(Preconditions.checkInInterval(azInterval, azDeg)));
+        return new HorizontalCoordinates(Angle.ofDeg(Preconditions.checkInInterval(altInterval, Angle.ofDeg(altDeg))), 
+                Angle.ofDeg(Preconditions.checkInInterval(azInterval, Angle.ofDeg(azDeg))));
     }
     
     public double az() {
