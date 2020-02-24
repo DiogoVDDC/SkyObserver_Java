@@ -27,12 +27,12 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @param: latitude in degrees 
      * @return: returns a new geographic coordinates object
      */
-     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) { //Maybe use the isValidLonDeg et isValidLatDeg instead of preconditions?
+     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) { 
         return new GeographicCoordinates( Angle.ofDeg(Preconditions.checkInInterval(latInterval, latDeg)),
                 Angle.ofDeg(Preconditions.checkInInterval(lonInterval, lonDeg)));
     }
 
-   
+
     /**     
      * @param: longitude in degrees 
      * @return: returns true is the longitude is in the correct interval

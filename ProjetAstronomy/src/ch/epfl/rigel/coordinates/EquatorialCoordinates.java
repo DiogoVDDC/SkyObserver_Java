@@ -14,7 +14,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 public final class EquatorialCoordinates extends SphericalCoordinates{
 
     //longitude interval expressed in terms of hours, 0 to 24 hours
-    private static final RightOpenInterval lonInterval = RightOpenInterval.of(0, 24);
+    private static final RightOpenInterval lonInterval = RightOpenInterval.of(0, 2* Math.PI);
     //latitude interval expressed in terms of radians, -pi/2 to pi/2 degrees
     private static final ClosedInterval latInterval = ClosedInterval.symmetric(Math.PI);
 
@@ -24,13 +24,12 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
     }
     
     /** 
-     * @param ra: (right ascension) correspond to longitude (given in hours) // CHANGE TO RADIANS?
+     * @param ra: (right ascension) correspond to longitude (given in radians) 
      * @param dec: (declination) correspond to latitude (given in radians)
      * @return: returns new equatorial coordinates
      */
     public static EquatorialCoordinates of(double ra, double dec) {
-        return new EquatorialCoordinates(Preconditions.checkInInterval(latInterval, dec),
-                Angle.ofHr(Preconditions.checkInInterval(lonInterval, ra)));
+        return new EquatorialCoordinates(Preconditions.checkInInterval(latInterval, dec), Preconditions.checkInInterval(lonInterval, ra));
     } 
     
     /**     
