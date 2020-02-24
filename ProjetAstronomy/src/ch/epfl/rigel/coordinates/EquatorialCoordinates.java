@@ -13,7 +13,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 
 public final class EquatorialCoordinates extends SphericalCoordinates{
 
-    //longitude interval expressed in terms of hours, 0 to 24 hours
+    //longitude interval expressed in terms of radians, 0 to 2*pi
     private static final RightOpenInterval lonInterval = RightOpenInterval.of(0, 2* Math.PI);
     //latitude interval expressed in terms of radians, -pi/2 to pi/2 degrees
     private static final ClosedInterval latInterval = ClosedInterval.symmetric(Math.PI);

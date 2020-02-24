@@ -1,89 +1,139 @@
 package ch.epfl.coordinates;
 
-import static org.junit.Assert.assertFalse;
+
+
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
 
 public class HorizontalCoordinatesTest {
+   
+
     @Test
-    void withLegalArgumentsTests() {
-        GeographicCoordinates coord = GeographicCoordinates.ofDeg(150, 50);
-        assertEquals(150, coord.lonDeg());
-        assertEquals(50, coord.latDeg());
+    void isValidAngularDistanceTest() {
+        HorizontalCoordinates h1 = HorizontalCoordinates.ofDeg(6.5682, 46.5183);
+        HorizontalCoordinates h2 = HorizontalCoordinates.ofDeg(8.5476, 47.3763);        
+        assertEquals(0.0279, h1.angularDistanceTo(h2), 1e-3);
         
-        assertEquals(Angle.ofDeg(150), coord.lon());
-        assertEquals(Angle.ofDeg(50), coord.lat());
-        
-        
-        GeographicCoordinates coord_2 = GeographicCoordinates.ofDeg(179, 50);
-        assertEquals(179, coord_2.lonDeg());
-        assertEquals(50, coord_2.latDeg());
-        
-        GeographicCoordinates coord_3 = GeographicCoordinates.ofDeg(150, 90);
-        assertEquals(150, coord_3.lonDeg());
-        assertEquals(90, coord_3.latDeg());
-        
-        GeographicCoordinates coord_4 = GeographicCoordinates.ofDeg(150, -90);
-        assertEquals(150, coord_4.lonDeg());
-        assertEquals(-90, coord_4.latDeg());
+        HorizontalCoordinates h3 = HorizontalCoordinates.of(Math.PI/6, Math.PI/2);
+        HorizontalCoordinates h4 = HorizontalCoordinates.of(Math.PI, Math.PI/8);        
+        assertEquals(1.1780, h3.angularDistanceTo(h4), 1e-3);       
     }
-        
+    
     @Test
-    void withIllegalArgumentsTests() {
+    void HorizontalIllegalArgumentsTests(){        
+        
+        assertDoesNotThrow(() -> HorizontalCoordinates.of(0, -Math.PI/2));
+        
+        assertDoesNotThrow(() -> HorizontalCoordinates.of(0, Math.PI/2));   
+        
+        
         assertThrows(IllegalArgumentException.class, () ->{
-            GeographicCoordinates.ofDeg(180, 50); 
-        });
-        assertThrows(IllegalArgumentException.class, () ->{
-            GeographicCoordinates.ofDeg(150, 91);
-        });
-        assertThrows(IllegalArgumentException.class, () ->{
-            GeographicCoordinates.ofDeg(150, -91);
+            HorizontalCoordinates.of(2*Math.PI, 0);
         });
         
         assertThrows(IllegalArgumentException.class, () ->{
-            GeographicCoordinates.ofDeg(400, 120); 
+            HorizontalCoordinates.of(-Math.PI, 0);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.of(0, 2*Math.PI);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.of(0, 2*Math.PI); 
+        });
+        
+        assertDoesNotThrow(() -> HorizontalCoordinates.ofDeg(0, -90));
+        
+        assertDoesNotThrow(() -> HorizontalCoordinates.ofDeg(0, 90)); 
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.ofDeg(360, 0);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.ofDeg(-180, 0);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.ofDeg(0, 360);
+        });
+        
+        assertThrows(IllegalArgumentException.class, () ->{
+            HorizontalCoordinates.of(0, 360); 
         });
     }
     
     @Test
-    void isValidLonDegTests() {
-        assertTrue(GeographicCoordinates.isValidLonDeg(-160));
-        assertTrue(GeographicCoordinates.isValidLonDeg(-34.5478));
-        assertTrue(GeographicCoordinates.isValidLonDeg(-10));
-        assertTrue(GeographicCoordinates.isValidLonDeg(160));
-        assertTrue(GeographicCoordinates.isValidLonDeg(113.5739));
-        assertTrue(GeographicCoordinates.isValidLonDeg(0));
-        assertTrue(GeographicCoordinates.isValidLonDeg(179));
-        assertTrue(GeographicCoordinates.isValidLonDeg(-180));
-        assertTrue(GeographicCoordinates.isValidLonDeg(179.9999));
+    void withLegalArgumentsTests() {
+        HorizontalCoordinates coord = HorizontalCoordinates.ofDeg(150, 50);
+        assertEquals(150, coord.azDeg());
+        assertEquals(50, coord.altDeg());
         
-        assertFalse(GeographicCoordinates.isValidLonDeg(-190));
-        assertFalse(GeographicCoordinates.isValidLonDeg(-180.001));
-        assertFalse(GeographicCoordinates.isValidLonDeg(-200));
-        assertFalse(GeographicCoordinates.isValidLonDeg(180));
-        assertFalse(GeographicCoordinates.isValidLonDeg(192.3628));
-        assertFalse(GeographicCoordinates.isValidLonDeg(200.1234));
+        assertEquals(Angle.ofDeg(150), coord.az());
+        assertEquals(Angle.ofDeg(50), coord.alt());
+        
+        
+        HorizontalCoordinates coord_2 = HorizontalCoordinates.ofDeg(179, 50);
+        assertEquals(179, coord_2.azDeg());
+        assertEquals(50, coord_2.altDeg());
+        
+        HorizontalCoordinates coord_3 = HorizontalCoordinates.ofDeg(150, 90);
+        assertEquals(150, coord_3.azDeg());
+        assertEquals(90, coord_3.altDeg());
+        
+        HorizontalCoordinates coord_4 = HorizontalCoordinates.ofDeg(150, -90);
+        assertEquals(150, coord_4.azDeg());
+        assertEquals(-90, coord_4.altDeg());
+        
+        
+        HorizontalCoordinates coord_5 = HorizontalCoordinates.of(Angle.ofDeg(150), Angle.ofDeg(50));
+        assertEquals(150, coord_5.azDeg());
+        assertEquals(50, coord_5.altDeg());
+        
+        assertEquals(Angle.ofDeg(150), coord_5.az());
+        assertEquals(Angle.ofDeg(50), coord_5.alt());
+        
+        
+        HorizontalCoordinates coord_6 = HorizontalCoordinates.of(Angle.ofDeg(179), Angle.ofDeg(50));
+        assertEquals(179, coord_6.azDeg());
+        assertEquals(50, coord_6.altDeg());
+        
+        HorizontalCoordinates coord_7 = HorizontalCoordinates.of(Angle.ofDeg(150), Angle.ofDeg(90));
+        assertEquals(150, coord_7.azDeg());
+        assertEquals(90, coord_7.altDeg());
+        
+        HorizontalCoordinates coord_8 = HorizontalCoordinates.of(Angle.ofDeg(150), Angle.ofDeg(-90));
+        assertEquals(150, coord_8.azDeg());
+        assertEquals(-90, coord_8.altDeg());
     }
-
+    
     @Test
-    void isValidLatDegTests() {
-        assertTrue(GeographicCoordinates.isValidLatDeg(-30));
-        assertTrue(GeographicCoordinates.isValidLatDeg(30));
-        assertTrue(GeographicCoordinates.isValidLatDeg(-21.234324));
-        assertTrue(GeographicCoordinates.isValidLatDeg(60.43627));
-        assertTrue(GeographicCoordinates.isValidLatDeg(-90));
-        assertTrue(GeographicCoordinates.isValidLatDeg(90));
-        assertTrue(GeographicCoordinates.isValidLatDeg(0));
+    void validArgumentworksOctantName() {       
+        assertEquals("NO", HorizontalCoordinates.ofDeg(335, 0)
+                .azOctantName("N", "E", "S", "O"));
         
-        assertFalse(GeographicCoordinates.isValidLatDeg(90.0001));
-        assertFalse(GeographicCoordinates.isValidLatDeg(100));
-        assertFalse(GeographicCoordinates.isValidLatDeg(-100));
-        assertFalse(GeographicCoordinates.isValidLatDeg(-90.0001));
+        assertEquals("NE", HorizontalCoordinates.ofDeg(45, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("N", HorizontalCoordinates.ofDeg(355, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("E", HorizontalCoordinates.ofDeg(95, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("SE", HorizontalCoordinates.ofDeg(112.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("S", HorizontalCoordinates.ofDeg(170, 0)
+                .azOctantName("N", "E", "S", "O"));
     }
 }

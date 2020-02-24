@@ -12,9 +12,9 @@ import ch.epfl.rigel.math.RightOpenInterval;
  */
 public final class GeographicCoordinates extends SphericalCoordinates{
 
-    // longitude interval in terms of radiant, 180 to -180 degrees //degrees or radiant??
+    // longitude interval in terms of degrees, 180 to -180 degrees 
     private static final RightOpenInterval lonInterval = RightOpenInterval.symmetric(360);
-    // latitude interval in terms of radiant, 90 to -90 degrees  //degrees or radiant??
+    // latitude interval in terms of degrees, 90 to -90 degrees 
     private static final ClosedInterval latInterval = ClosedInterval.symmetric(180);
   
     private GeographicCoordinates(double lat, double lon) {
@@ -27,12 +27,12 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @param: latitude in degrees 
      * @return: returns a new geographic coordinates object
      */
-     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) { 
+     public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
         return new GeographicCoordinates( Angle.ofDeg(Preconditions.checkInInterval(latInterval, latDeg)),
                 Angle.ofDeg(Preconditions.checkInInterval(lonInterval, lonDeg)));
     }
 
-
+   
     /**     
      * @param: longitude in degrees 
      * @return: returns true is the longitude is in the correct interval

@@ -15,9 +15,9 @@ import ch.epfl.rigel.math.RightOpenInterval;
 public final class HorizontalCoordinates extends SphericalCoordinates{
 
     // Interval in which the azimuth angle must be contained.
-    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, 360);
+    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, 2*Math.PI);
     // Interval in which the altitude angle must be contained.
-    private static final ClosedInterval altInterval = ClosedInterval.symmetric(180);
+    private static final ClosedInterval altInterval = ClosedInterval.symmetric(Math.PI);
     
     private HorizontalCoordinates(double alt, double az) {
         super(alt, az);
@@ -26,11 +26,9 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
     
     /**
      * Auxiliary constructor to create an horizontal coordatine in radians.
-     * @param az: the azimuth angle in radians.
-     * @param alt: the altitude angle in radians.
-     * @return: the newly created horizontal coordinates.
-     * @throws: If the given angles aren't in the interval ([-90,90] for alt and [0, 360[ for az), it will
-     * throw an IllegalArgumentException.
+     * @param az: the azimuth angle in radians between 0 and 2pi.
+     * @param alt: the altitude angle in radians between -pi/2 and pi/2.
+     * @return: the newly created horizontal coordinates.     
      */
     public static HorizontalCoordinates of(double az, double alt) {
         return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, alt), Preconditions.checkInInterval(azInterval, az));
@@ -40,12 +38,10 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      * Auxiliary constructor to create an horizontal coordinate using angles given in degrees.
      * @param azDeg: the azimuth angle in degrees.
      * @param altDeg: the altitude angle in degrees.
-     * @return: the newly created horizontal coordinates.
-     * @throws: If the given angles aren't in the interval ([-90,90] for alt and [0, 360[ for az), it will
-     * throw an IllegalArgumentException.
+     * @return: the newly created horizontal coordinates.    
      */
     public static HorizontalCoordinates ofDeg(double azDeg, double altDeg) {
-        return new HorizontalCoordinates(Angle.ofDeg(Preconditions.checkInInterval(altInterval, altDeg)), Angle.ofDeg(Preconditions.checkInInterval(azInterval, azDeg)));
+        return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, Angle.ofDeg(altDeg)), Preconditions.checkInInterval(azInterval,  Angle.ofDeg(azDeg)));
     }
     
     public double az() {
@@ -72,7 +68,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
         // Reduce the 360°(two pi) span of a full circle to height equally distributed slices representing the 8 octant.
         int normalizationAz = (int)Math.round((az() * 8) / (Math.PI * 2));
         switch(normalizationAz) {
-            case(0):
+            case(0) : case(8):
                 return n;
             case(1):
                 return n + e;
@@ -110,12 +106,12 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Allows to know the distance bewtween to coordinates.
+     * Allows to know the distance between to coordinates.
      * @param that: the coordinates with which the distance must be computed.
-     * @return: the distance between the two coordinates.
+     * @return: the distance between the two coordinates in radians.
      */
     public double angularDistanceTo(HorizontalCoordinates that) {
-        return Math.acos(Math.sin(that.alt()) * Math.sin(alt()) + Math.cos(that.alt()) * Math.cos(alt()) * Math.cos(that.az()-az()));
+        return (Math.acos(Math.sin(that.alt()) * Math.sin(alt()) + Math.cos(that.alt()) * Math.cos(alt()) * Math.cos(that.az()-az())));
     }
     
     @Override
