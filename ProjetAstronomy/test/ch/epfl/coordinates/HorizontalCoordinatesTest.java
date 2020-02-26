@@ -1,15 +1,10 @@
 package ch.epfl.coordinates;
 
-
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
-
-import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
 
@@ -135,5 +130,59 @@ public class HorizontalCoordinatesTest {
         
         assertEquals("S", HorizontalCoordinates.ofDeg(170, 0)
                 .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("S", HorizontalCoordinates.ofDeg(170, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("S", HorizontalCoordinates.ofDeg(195, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("SO", HorizontalCoordinates.ofDeg(245, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("SO", HorizontalCoordinates.ofDeg(210, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("O", HorizontalCoordinates.ofDeg(270, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("NO", HorizontalCoordinates.ofDeg(300, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("NO", HorizontalCoordinates.ofDeg(292.76, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("NO", HorizontalCoordinates.ofDeg(292.76, 0)
+                .azOctantName("N", "E", "S", "O"));     
+                
+        
+        assertEquals("N", HorizontalCoordinates.ofDeg(337.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("NE", HorizontalCoordinates.ofDeg(22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("E", HorizontalCoordinates.ofDeg(67.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("SE", HorizontalCoordinates.ofDeg(90 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("S", HorizontalCoordinates.ofDeg(135 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("SO", HorizontalCoordinates.ofDeg(180 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("O", HorizontalCoordinates.ofDeg(225 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("NO", HorizontalCoordinates.ofDeg(270 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+        assertEquals("N", HorizontalCoordinates.ofDeg(315 + 22.5, 0)
+                .azOctantName("N", "E", "S", "O"));
+        
+            
     }
 }
