@@ -1,4 +1,4 @@
-package ch.epfl.rigel.coordinates;
+    package ch.epfl.rigel.coordinates;
 
 import java.util.Locale;
 
@@ -15,7 +15,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 public final class HorizontalCoordinates extends SphericalCoordinates{
 
     // Interval in which the azimuth angle must be contained.
-    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, 2*Math.PI);
+    private static final RightOpenInterval azInterval = RightOpenInterval.of(0, Angle.TAU);
     // Interval in which the altitude angle must be contained.
     private static final ClosedInterval altInterval = ClosedInterval.symmetric(Math.PI);
     
@@ -66,7 +66,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      */
     public String azOctantName(String n, String e, String s, String w) {
         // Reduce the 360°(two pi) span of a full circle to height equally distributed slices representing the 8 octant.
-        int normalizationAz = (int)Math.round((az() * 8) / (Math.PI * 2));
+        int normalizationAz = (int)Math.round((az() * 8) / (Angle.TAU));
         switch(normalizationAz) {
             case(0) : case(8):
                 return n;
