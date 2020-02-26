@@ -45,11 +45,7 @@ public class EclipticCoordinatesTest {
         assertThrows(IllegalArgumentException.class, () ->{
             EclipticCoordinates.of(-1, 0);
         });
-        assertThrows(IllegalArgumentException.class, () ->{
-            EclipticCoordinates.of(0, -Math.PI/2-0.00001);
-        });
-        assertThrows(IllegalArgumentException.class, () ->{
-            EclipticCoordinates.of(0, Math.PI/2 + 0.0001);
-        });
+        assertDoesNotThrow(() -> EclipticCoordinates.of(0, -Math.PI/2));
+        assertDoesNotThrow(() -> EclipticCoordinates.of(0, Math.PI/2));
     }
 }

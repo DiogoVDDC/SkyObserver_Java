@@ -63,10 +63,9 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
         return super.latDeg();
     }
 
-    // HOW DO I ADD THE DEGREE SYMBOL
     @Override
     public String toString(){
-        return String.format(Locale.ROOT,"(ra=%.4fh, lat=%.4f)", lonDeg(), latDeg());
+        return String.format(Locale.ROOT,"(ra=%.4fh, dec=%.4f°)", Angle.toHr(lon()), latDeg());
     }
 
 }

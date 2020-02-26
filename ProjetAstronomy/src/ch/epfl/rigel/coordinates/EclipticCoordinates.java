@@ -34,7 +34,8 @@ public final class EclipticCoordinates extends SphericalCoordinates{
      * @throws: If the angles aren't in the correct interval ([-90, 90] for lat and [0, 360[ for lon), throws an IllegalArgumentExcpetion.
      */
     public static EclipticCoordinates of(double lon, double lat) {
-        return new EclipticCoordinates(Preconditions.checkInInterval(latInterval, lat), Preconditions.checkInInterval(lonInterval, lon));
+        return new EclipticCoordinates(Preconditions.checkInInterval(latInterval, lat),
+                Preconditions.checkInInterval(lonInterval, lon));
     }
     
     /**
