@@ -17,9 +17,7 @@ public class Main {
         System.out.println(e2);
         
         HorizontalCoordinates e3 = HorizontalCoordinates.of(Math.PI/2, Math.PI/2);
-        System.out.println(e3);
-        
-    
+        System.out.println(e3);    
       
     }
 }
