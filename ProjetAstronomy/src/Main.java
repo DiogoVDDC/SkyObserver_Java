@@ -1,10 +1,25 @@
 
-import ch.epfl.rigel.math.Polynomial;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
+import ch.epfl.rigel.astronomy.Epoch;
+
 
 
 public class Main {
     public static void main(String[] args) {
         
+        ZonedDateTime d = ZonedDateTime.of(
+                LocalDate.of(2000, Month.JANUARY, 3),
+                LocalTime.of(18, 0),
+                ZoneOffset.UTC);
+            System.out.println(Epoch.J2000.julianCenturiesUntil(d));
+    }
+     
+
 //        Interval interval = RightOpenInterval.of(-5, -2);
 //        Preconditions.checkInInterval(interval, -3);
 //        System.out.println(interval);
@@ -23,6 +38,7 @@ public class Main {
 //        Interval interval = RightOpenInterval.of(-5, -2);
 //        Preconditions.checkInInterval(interval, -3);
 //        System.out.println(interval);
+            
 
-    }
+
 }

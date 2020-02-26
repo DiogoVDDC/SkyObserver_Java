@@ -1,17 +1,37 @@
+
 package ch.epfl.rigel.astronomy;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 public enum Epoch {
-    J2000(),
-    J2010,;
     
-    double daysUntil(ZonedDateTime when) {
-        
+    J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0),
+            ZoneOffset.UTC)),
+    J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1), LocalTime.of(0, 0),
+            ZoneOffset.UTC));
+    
+    
+    
+    private ZonedDateTime date;
+    
+    private Epoch(ZonedDateTime date) {
+        this.date = date;
     }
     
-    double julianCenturiesUntil(ZonedDateTime when) {
-        
+    
+    public double daysUntil(ZonedDateTime when) {
+        double d = this.date.until(when, ChronoUnit.HOURS);
+        return d/24;
     }
-        
-        
+    
+    
+    public double julianCenturiesUntil(ZonedDateTime when) {
+        double d = this.date.until(when, ChronoUnit.HOURS);
+        return d/36525;
+    }
 }

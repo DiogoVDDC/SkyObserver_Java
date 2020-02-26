@@ -44,6 +44,9 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
         return new HorizontalCoordinates(Preconditions.checkInInterval(altInterval, Angle.ofDeg(altDeg)), Preconditions.checkInInterval(azInterval,  Angle.ofDeg(azDeg)));
     }
     
+    /**
+     * @return: returns azimuth in radian.
+     */
     public double az() {
         return lon();
     }
