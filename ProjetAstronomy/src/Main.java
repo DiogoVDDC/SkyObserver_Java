@@ -16,7 +16,7 @@ public class Main {
                 LocalDate.of(2000, Month.JANUARY, 3),
                 LocalTime.of(18, 0),
                 ZoneOffset.UTC);
-            System.out.println(Epoch.J2000.julianCenturiesUntil(d));
+            System.out.println(Epoch.J2000.daysUntil(d));
     }
      
 
