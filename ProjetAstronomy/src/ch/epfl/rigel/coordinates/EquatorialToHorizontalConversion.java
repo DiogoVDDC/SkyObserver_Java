@@ -11,7 +11,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     private final double sinOfObservationLatitude;
     private final double localSideRealTime;
 
-    
+    //
     public EquatorialToHorizontalConversion(ZonedDateTime when, GeographicCoordinates where) {        
         cosOfObservationLatitude = Math.cos(where.lat());
         sinOfObservationLatitude = Math.sin(where.lat());
