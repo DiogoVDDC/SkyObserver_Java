@@ -31,7 +31,6 @@ public enum Epoch {
     
     
     public double julianCenturiesUntil(ZonedDateTime when) {
-        double h = this.date.until(when, ChronoUnit.HOURS);
-        return h/24/36525;
+        double h = this.date.until(when, ChronoUnit.MILLIS);
     }
 }
