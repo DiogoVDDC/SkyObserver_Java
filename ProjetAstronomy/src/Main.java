@@ -17,8 +17,15 @@ public class Main {
                 LocalTime.of(18, 0),
                 ZoneOffset.UTC);
             System.out.println(Epoch.J2000.daysUntil(d));
+            
+            
+            ZonedDateTime d1 = ZonedDateTime.of(
+                    LocalDate.of(0, Month.JANUARY, 1),
+                    LocalTime.of(0, 0),
+                    ZoneOffset.UTC);
+                System.out.println(Epoch.J2000.julianCenturiesUntil(d1));
     }
-     
+}
 
 //        Interval interval = RightOpenInterval.of(-5, -2);
 //        Preconditions.checkInInterval(interval, -3);
@@ -41,4 +48,4 @@ public class Main {
             
 
 
-}
+
