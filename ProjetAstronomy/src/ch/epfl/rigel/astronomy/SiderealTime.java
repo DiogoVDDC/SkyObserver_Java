@@ -20,6 +20,7 @@ public final class SiderealTime {
     private static final Polynomial polyS0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
     private static final Polynomial polyS1 = Polynomial.of(1.002737909, 0);
     private static final RightOpenInterval hoursInterval = RightOpenInterval.of(0, 24);
+    private static final double millis_per_hour = 1/ (1000.0*60.0*60.0);
     
     // The constructor is set to private and does nothing to disallow the instantiation of this class.
     private SiderealTime() {}
@@ -33,17 +34,10 @@ public final class SiderealTime {
         ZonedDateTime offSettedDate = when.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime truncatedToDay = offSettedDate.truncatedTo(ChronoUnit.DAYS);
         double T = Epoch.J2000.julianCenturiesUntil(truncatedToDay);
-        double t = (truncatedToDay.until(when, ChronoUnit.MILLIS))/(double)(1000*60*60);
+        double t = (truncatedToDay.until(offSettedDate, ChronoUnit.MILLIS)) * millis_per_hour;
         double s0 = polyS0.at(T);
         double s1 = polyS1.at(t);
-        System.out.println(T);
-        System.out.println(t);
-        System.out.println(s0);
-        System.out.println(s1);
-        System.out.println(s0+s1);
-        System.out.println((s0+s1));
-//        System.out.println(Angle.normalizePositive(Angle.ofHr(s0+s1)));
-        return Angle.ofHr(hoursInterval.reduce(s0+s1));
+        return Angle.normalizePositive(Angle.ofHr(s0+s1));
     }
     
     /**
