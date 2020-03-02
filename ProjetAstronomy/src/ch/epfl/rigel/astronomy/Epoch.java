@@ -33,9 +33,10 @@ public enum Epoch {
      * @return: the amount of days separating the given date and this.
      */
     public double daysUntil(ZonedDateTime when) {
-     // To avoid loosing precision, we use milliseconds instead of hours and then convert back to hours.
+        // To avoid loosing precision, we use milliseconds instead of hours and then convert back to hours.
         double h = this.date.until(when, ChronoUnit.MILLIS);
-        return h/(1000*60*60*24);
+        return h/(double)(1000*60*60*24);
+        
     }
     
     /**
@@ -44,8 +45,6 @@ public enum Epoch {
      * @return: the amount of julian centuries separating the two dates.
      */
     public double julianCenturiesUntil(ZonedDateTime when) {
-        // To avoid loosing precision, we use milliseconds instead of hours and then convert back to hours.
-        double h = this.date.until(when, ChronoUnit.MILLIS);
-        return h/(1000*60*60*24*36525);
+        return daysUntil(when)/36525.0;
     }
 }
