@@ -8,6 +8,7 @@ import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
 /**
+ * Representation of GeographicCoordinates in horizontal system.
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class GeographicCoordinates extends SphericalCoordinates{

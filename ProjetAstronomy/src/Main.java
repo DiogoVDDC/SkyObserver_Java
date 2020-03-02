@@ -6,6 +6,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import ch.epfl.rigel.astronomy.Epoch;
+import ch.epfl.rigel.astronomy.SiderealTime;
+import ch.epfl.rigel.math.Angle;
 
 
 
@@ -13,17 +15,18 @@ public class Main {
     public static void main(String[] args) {
         
         ZonedDateTime d = ZonedDateTime.of(
-                LocalDate.of(2000, Month.JANUARY, 3),
-                LocalTime.of(18, 0),
+                LocalDate.of(1980, Month.APRIL, 22),
+                LocalTime.of(14, 36, 51, 670000000),
                 ZoneOffset.UTC);
-            System.out.println(Epoch.J2000.daysUntil(d));
-            
-            
-            ZonedDateTime d1 = ZonedDateTime.of(
-                    LocalDate.of(0, Month.JANUARY, 1),
-                    LocalTime.of(0, 0),
-                    ZoneOffset.UTC);
-                System.out.println(Epoch.J2000.julianCenturiesUntil(d1));
+        
+           
+        System.out.println(Angle.toHr(SiderealTime.greenwich(d)));
+        
+        ZonedDateTime d1 = ZonedDateTime.of(
+                LocalDate.of(2100, Month.JANUARY, 1),
+                LocalTime.of(12,00),
+                ZoneOffset.UTC);
+       // System.out.println(Epoch.J2000.julianCenturiesUntil(d1));
     }
 }
 

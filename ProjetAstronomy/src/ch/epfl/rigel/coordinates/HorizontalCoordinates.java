@@ -10,7 +10,7 @@ import ch.epfl.rigel.math.RightOpenInterval;
 /**
  * Representation of coordinates in horizontal system.
  * @author Theo Houle (312432)
- *
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class HorizontalCoordinates extends SphericalCoordinates{
 
