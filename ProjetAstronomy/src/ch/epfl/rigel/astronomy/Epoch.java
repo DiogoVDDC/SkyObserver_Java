@@ -22,7 +22,6 @@ public enum Epoch {
     
     // The precise date of the two enums.
     private ZonedDateTime date;
-    private final double  (1000*60*60*24);
     private Epoch(ZonedDateTime date) {
         this.date = date;
     }
