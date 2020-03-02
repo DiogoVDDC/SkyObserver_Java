@@ -85,7 +85,10 @@ public final class Polynomial {
         }
 
         //Adding the last coefficient separately to avoid having it multiplied by x.
-        if (coefficients[coefficients.length-1] == 0) str.append(coefficients[coefficients.length-1]);
+
+        if(coefficients[coefficients.length-1] !=0) {
+            str.append(coefficients[coefficients.length-1]);
+        }
         return str.toString();
     }
 
