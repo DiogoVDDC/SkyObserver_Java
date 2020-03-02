@@ -42,7 +42,6 @@ public final class SiderealTime {
         System.out.println(s1);
         System.out.println(s0+s1);
         System.out.println((s0+s1));
-//        System.out.println(Angle.normalizePositive(Angle.ofHr(s0+s1)));
         return Angle.ofHr(hoursInterval.reduce(s0+s1));
     }
     
