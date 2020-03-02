@@ -1,4 +1,4 @@
-package ch.epfl.coordinates;
+package ch.epfl.rigel.coordinates;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

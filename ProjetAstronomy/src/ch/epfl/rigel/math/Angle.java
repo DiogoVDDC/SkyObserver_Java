@@ -36,10 +36,9 @@ public final class Angle {
      */
     public static double normalizePositive(double rad) {   
 
-        double multipleTAU = Math.floor(rad / TAU);       
+        double multipleTAU = Math.floor(rad / TAU);
 
-        rad -= TAU  * multipleTAU;       
-
+        rad -= TAU  * multipleTAU;
         return rad;
 
     }
