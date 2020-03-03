@@ -25,8 +25,8 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      * @returns: new equatorial coordinates after conversion
      */
     public EquatorialCoordinates apply(EclipticCoordinates ecl) {          
-        double ra = Math.atan2((Math.sin(ecl.lat())*cosOfEclipticObliquity 
-                - Math.tan(ecl.lon())*sinOfEclipticObliquity), Math.cos(ecl.lat()));
+        double ra = Math.atan2((Math.sin(ecl.lon())*cosOfEclipticObliquity 
+                - Math.tan(ecl.lat())*sinOfEclipticObliquity), Math.cos(ecl.lon()));
         
         double dec= Math.asin(Math.sin(ecl.lat())*cosOfEclipticObliquity 
                 + Math.cos(ecl.lat())*sinOfEclipticObliquity*Math.sin(ecl.lon()));
@@ -39,8 +39,12 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
      */
     public EclipticToEquatorialConversion(ZonedDateTime when) {
         // calculates ecliptic obliquity using polynimial approximation
-        eclipticObliquity = Polynomial.of(Angle.ofArcsec(0.00181), Angle.ofArcsec(0.0006)
-                , Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(Epoch.J2000.julianCenturiesUntil(when));
+        eclipticObliquity = Polynomial.of(Angle.ofArcsec(0.00181), -Angle.ofArcsec(0.0006)
+                , -Angle.ofArcsec(46.815), Angle.ofDMS(23, 26, 21.45)).at(Epoch.J2000.julianCenturiesUntil(when));
+       
+        System.out.println("julian centuries until " + Epoch.J2000.julianCenturiesUntil(when));
+        System.out.println("expected ecliptic obliquity " + Angle.ofDeg(23.43805531));
+        System.out.println("ecliptic obliquity " + eclipticObliquity);
         
         cosOfEclipticObliquity = Math.cos(eclipticObliquity);
         sinOfEclipticObliquity = Math.sin(eclipticObliquity);
