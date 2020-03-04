@@ -66,7 +66,6 @@ public final class Angle {
         }
 
         double angle_deg = deg + min* ARC_MINUTE_PER_DEG + sec * ARC_SECOND_PER_DEG;
-
         return Math.toRadians(angle_deg);
     }
 
