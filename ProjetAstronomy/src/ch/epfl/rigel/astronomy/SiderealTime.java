@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.Polynomial;
-import ch.epfl.rigel.math.RightOpenInterval;
 
 /**
  * Allows to compute the sidereal time of a given location at given date at a given time.
@@ -35,7 +34,7 @@ public final class SiderealTime {
         double T = Epoch.J2000.julianCenturiesUntil(truncatedToDay);
         double t = (truncatedToDay.until(offSettedDate, ChronoUnit.MILLIS)) * MILLIS_PER_HOUR;
         double s0 = polyS0.at(T);
-        double s1 = polyS1.at(t);      
+        double s1 = polyS1.at(t);
         return Angle.normalizePositive(Angle.ofHr(s0+s1));
     }
     
