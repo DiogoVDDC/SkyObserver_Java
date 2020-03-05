@@ -26,6 +26,10 @@ class SiderealTimeTest {
                 LocalTime.of(0, 0),
                 ZoneOffset.UTC);
         assertEquals(1.73133420074,SiderealTime.greenwich(d2), 1e-6);
+         ZonedDateTime d3 = ZonedDateTime.of(LocalDate.of(1980, Month.APRIL, 22),
+                 LocalTime.of(14, 36, 51, (int)6.7e8),
+                 ZoneOffset.UTC);
+         assertEquals(Angle.ofHr(4.668119327), SiderealTime.greenwich(d3), 1e-6);
     }
 
 }

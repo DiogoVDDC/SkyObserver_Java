@@ -34,8 +34,8 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @returns: new horizontal coordinates after conversion
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ) { 
-        double angleHour = localSideRealTime - equ.ra();
-        System.out.println(Angle.toHr(Angle.normalizePositive(angleHour)));
+        double angleHour = Angle.ofDeg(12.68964);// localSideRealTime - equ.ra();
+ 
         // Altitude calculation.
         double alt = Math.asin(( Math.sin(equ.dec()) * sinOfObservLat )
                     + ( Math.cos(equ.dec()) * cosOfObservLat * Math.cos(angleHour) ));
