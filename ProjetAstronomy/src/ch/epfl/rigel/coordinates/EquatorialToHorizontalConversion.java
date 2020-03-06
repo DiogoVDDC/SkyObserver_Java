@@ -29,7 +29,7 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
 
     @Override
     /**
-     * Converts
+     * Converts equatorial coordinates to horizontal coordinates
      * @param: equatorial coordinates to be converted
      * @returns: new horizontal coordinates after conversion
      */

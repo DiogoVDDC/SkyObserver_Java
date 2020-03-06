@@ -3,6 +3,7 @@ package ch.epfl.rigel.coordinates;
 import ch.epfl.rigel.math.Angle;
 
 /**
+ * Abstract representation of spherical coordinates
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 abstract class SphericalCoordinates {

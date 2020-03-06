@@ -20,7 +20,6 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     
     @Override
     /**
-     * 
      * @param: ecliptic coordinates to be converted
      * @returns: new equatorial coordinates after conversion
      */
