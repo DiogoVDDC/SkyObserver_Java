@@ -45,6 +45,7 @@ public enum Epoch {
      * @return: the amount of julian centuries separating the two dates.
      */
     public double julianCenturiesUntil(ZonedDateTime when) {
+        double h = this.date.until(when, ChronoUnit.MILLIS);
         return daysUntil(when)/DAYS_JULIAN_CENTURY;
     }
 }
