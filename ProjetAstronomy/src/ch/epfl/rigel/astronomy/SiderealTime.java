@@ -29,9 +29,11 @@ public final class SiderealTime {
      * @return: the sidereal time of greenwich at the given moment.
      */
     public static double greenwich(ZonedDateTime when) {
+        System.out.println(Epoch.J2000.julianCenturiesUntil(when));
         ZonedDateTime offSettedDate = when.withZoneSameInstant(ZoneOffset.UTC);
         ZonedDateTime truncatedToDay = offSettedDate.truncatedTo(ChronoUnit.DAYS);
         double T = Epoch.J2000.julianCenturiesUntil(truncatedToDay);
+        System.out.println(T);
         double t = (truncatedToDay.until(offSettedDate, ChronoUnit.MILLIS)) * MILLIS_PER_HOUR;
         double s0 = polyS0.at(T);
         double s1 = polyS1.at(t);
@@ -45,7 +47,7 @@ public final class SiderealTime {
      * @return: The sidereal time of a the given location at the given time.
      */
     public static double local(ZonedDateTime when, GeographicCoordinates where) {
-        return greenwich(when) + where.lon();
+        return Angle.normalizePositive(greenwich(when) + where.lon());
     }
     
 }
