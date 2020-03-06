@@ -3,7 +3,7 @@ package ch.epfl.rigel.coordinates;
 import java.util.Locale;
 
 /**
- * Representation of cartesian coordinates
+ * Representation of Cartesian coordinates
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class CartesianCoordinates {
