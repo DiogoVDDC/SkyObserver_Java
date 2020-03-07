@@ -25,10 +25,18 @@ public final class CartesianCoordinates {
         return new CartesianCoordinates(x, y);
     }    
     
+    /**
+     * Getter for the x coordinate.
+     * @return
+     */
     public double x() {
         return x;
     }
     
+    /**
+     * Getter for the y coordinate.
+     * @return
+     */
     public double  y() {
         return y;
     }

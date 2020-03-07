@@ -9,20 +9,20 @@ import java.util.function.Function;
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
     
-    private final double cosOfCenterLatitude;
-    private final double sinOfCenterLatitude;
-    private final double centerLongitude;
-    private final double centerLatitude;
+    private final double cosOfCenterLat;
+    private final double sinOfCenterLat;
+    private final double centerLon;
+    private final double centerLat;
 
     /**
      * Initialises constants to facilitate calculations and calculation load
      * @param center: center at which the projection will be centered
      */
     public StereographicProjection(HorizontalCoordinates center) {
-        cosOfCenterLatitude = Math.cos(center.lat());
-        sinOfCenterLatitude = Math.sin(center.lat());
-        centerLongitude = center.lon();
-        centerLatitude = center.lat();
+        cosOfCenterLat = Math.cos(center.lat());
+        sinOfCenterLat = Math.sin(center.lat());
+        centerLon = center.lon();
+        centerLat = center.lat();
     }   
     
    
@@ -31,7 +31,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return returns cartesian coordinates of the circle corresponding to the projection
      */
     public CartesianCoordinates circleCenterForParallel(HorizontalCoordinates hor) {                          
-        return CartesianCoordinates.of(0, cosOfCenterLatitude/(Math.sin(hor.alt()) + sinOfCenterLatitude));
+        return CartesianCoordinates.of(0, cosOfCenterLat/(Math.sin(hor.alt()) + sinOfCenterLat));
     }
     
     /**
@@ -39,7 +39,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return returns the radius of the circle corresponding to the projection
      */
     public double circleRadiusForParallel(HorizontalCoordinates parallel) {
-        return Math.cos(parallel.alt())/(Math.sin(parallel.alt()) + sinOfCenterLatitude);
+        return Math.cos(parallel.alt())/(Math.sin(parallel.alt()) + sinOfCenterLat);
     }
     
     
@@ -56,11 +56,12 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return: returns cartesian coordinates of the projection of the horizontal coordinates 
      */
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
-        double lonVariation = azAlt.alt() - centerLongitude;
-        double d = 1/(1+ Math.sin(azAlt.alt()*sinOfCenterLatitude + Math.cos(azAlt.alt())*cosOfCenterLatitude*Math.cos(lonVariation)));
-        
-        return CartesianCoordinates.of(d*Math.cos(azAlt.alt())*Math.sin(lonVariation)
-                    , d*(Math.sin(azAlt.alt())*cosOfCenterLatitude - Math.cos(azAlt.alt())*sinOfCenterLatitude*Math.cos(lonVariation)));
+        double lat = azAlt.alt();
+        double deltaY = azAlt.alt() - centerLon;
+        double d = 1/(1+ Math.sin(lat) * sinOfCenterLat + Math.cos(lat)*cosOfCenterLat*Math.cos(deltaY));
+        double x = d * Math.cos(lat) * Math.sin(deltaY);
+        double y = d * (Math.sin(lat) * cosOfCenterLat - Math.cos(lat) * cosOfCenterLat * Math.cos(deltaY));
+        return CartesianCoordinates.of(x, y);
     }
     
     /**
@@ -68,13 +69,12 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return: returns horizontal coordinates from the projection of the cartesian coordinates 
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
-        double rho = Math.sqrt(Math.pow(xy.x(), 2) + Math.pow(xy.y(), 2));
-        double sinC =  (2*rho)/(Math.pow(rho, 2) + 1);
-        double cosC =  (1 - Math.pow(rho, 2))/(Math.pow(rho, 2) + 1);
-        double alt = (Math.atan2(xy.x()*sinC, rho*cosOfCenterLatitude 
-                            * cosC - xy.y()*sinOfCenterLatitude * sinC)) + centerLongitude;
-        
-        double az = Math.asin(cosC*sinOfCenterLatitude + (xy.y()*sinC*cosOfCenterLatitude)/rho);
+        double rho = Math.sqrt( xy.x()*xy.x() + xy.y()*xy.y() );
+        double sinC =  (2*rho)/(rho*rho + 1);
+        double cosC =  (1 - rho*rho)/(rho*rho + 1);
+        double az = (Math.atan2( xy.x() * sinC,
+                    rho * cosOfCenterLat * cosC - xy.y() * sinOfCenterLat * sinC)) + centerLon;
+        double alt = Math.asin(cosC * sinOfCenterLat + (xy.y() * sinC * cosOfCenterLat) / rho);
         
         return HorizontalCoordinates.of(az, alt);
     }    
@@ -83,7 +83,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return string representation of the center of the projection
      */
     public String toString(){
-        return String.format(Locale.ROOT,"(center_lon=%.4f°, center_lat=%.4f°)", centerLongitude, centerLatitude);
+        return String.format(Locale.ROOT,"StereographicProjection : (center lon=%.4f°, center lat=%.4f°)", centerLon, centerLat);
     }
     
     @Override
