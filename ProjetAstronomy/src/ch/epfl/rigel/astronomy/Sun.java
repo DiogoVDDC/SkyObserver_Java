@@ -25,7 +25,7 @@ public class Sun extends CelestialObject{
      * @param meanAnomaly: mean anomaly of the sun.
      */
     public Sun(EclipticCoordinates eclipticPos, EquatorialCoordinates equatorialPos, float angularSize, float meanAnomaly) {
-        super("Soleil", equatorialPos, angularSize, (float) -26.7);
+        super("Soleil", equatorialPos, angularSize, (float)-26.7);
         Objects.requireNonNull(eclipticPos);
         this.eclipticPos = eclipticPos;
         this.meanAnomaly = meanAnomaly;
