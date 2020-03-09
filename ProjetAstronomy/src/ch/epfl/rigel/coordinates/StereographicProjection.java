@@ -57,10 +57,10 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
         double lat = azAlt.alt();
-        double deltaY = azAlt.alt() - centerLon;
-        double d = 1/(1+ Math.sin(lat) * sinOfCenterLat + Math.cos(lat)*cosOfCenterLat*Math.cos(deltaY));
-        double x = d * Math.cos(lat) * Math.sin(deltaY);
-        double y = d * (Math.sin(lat) * cosOfCenterLat - Math.cos(lat) * cosOfCenterLat * Math.cos(deltaY));
+        double deltaLamba = azAlt.lon() - centerLon;
+        double d = 1/(1+ Math.sin(lat) * sinOfCenterLat + Math.cos(lat) * cosOfCenterLat * Math.cos(deltaLamba));
+        double x = d * Math.cos(lat) * Math.sin(deltaLamba);
+        double y = d * (Math.sin(lat) * cosOfCenterLat - Math.cos(lat) * sinOfCenterLat * Math.cos(deltaLamba));
         return CartesianCoordinates.of(x, y);
     }
     
@@ -83,7 +83,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return string representation of the center of the projection
      */
     public String toString(){
-        return String.format(Locale.ROOT,"StereographicProjection : (center lon=%.4f°, center lat=%.4f°)", centerLon, centerLat);
+        return String.format(Locale.ROOT,"StereographicProjection: (center lon=%.4f°, center lat=%.4f°)", centerLon, centerLat);
     }
     
     @Override
