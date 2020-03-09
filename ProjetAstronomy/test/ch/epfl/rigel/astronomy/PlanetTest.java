@@ -18,11 +18,10 @@ class PlanetTest {
         assertEquals(1, planet.equatorialPos().dec());
         assertEquals("cul", planet.info());
     }
-    
     @Test 
     void throwsOnIllegalValues() {
         assertThrows(IllegalArgumentException.class, () ->{
-           new Planet("cul", EquatorialCoordinates.of(1, 1), -2, 10); 
+           new Planet("poulet", EquatorialCoordinates.of(1, 1), -2, 10); 
         });
         assertThrows(NullPointerException.class, () ->{
             new Planet("cul", null, -2, 10); 
