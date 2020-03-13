@@ -15,7 +15,7 @@ public final class Star extends CelestialObject{
         return hipparcosId;
     }
     
-    public float colorTemperature() {
+    public int colorTemperature() {
         return colorIndex;
     }
 
