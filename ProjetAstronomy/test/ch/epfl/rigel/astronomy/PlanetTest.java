@@ -30,4 +30,7 @@ class PlanetTest {
             new Planet(null, EquatorialCoordinates.of(1, 1), -2, 10); 
          });
     }
+    
+    
+    
 }

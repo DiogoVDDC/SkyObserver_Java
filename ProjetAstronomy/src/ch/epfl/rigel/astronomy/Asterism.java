@@ -10,6 +10,7 @@ public final class Asterism {
     private final List<Star> asterism;
     
     public Asterism(List<Star> stars){
+        this.asterism = null;
         Objects.requireNonNull(stars);
         Preconditions.checkArgument(!stars.isEmpty());
         
