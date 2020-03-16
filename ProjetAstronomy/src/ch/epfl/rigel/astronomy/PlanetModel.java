@@ -10,7 +10,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 
 	MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
 	        0.387098, 7.0051, 48.449, 6.74, -0.42),
-	VENUS("Vénus", 0.615207, 272.30044, 131.54, 0.006812,
+	VENUS("Vï¿½nus", 0.615207, 272.30044, 131.54, 0.006812,
 	      0.723329, 3.3947, 76.769, 16.92, -4.40),
 	EARTH("Terre", 0.999996, 99.556772, 103.2055, 0.016671,
 	      0.999985, 0, 0, 0, 0),
@@ -88,20 +88,21 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		double rProj = r * Math.cos(helioCenEclipticLat);
 		//Longitude projected on ecliptic plan.
 		double lonInOwnOrbitProj = Math.atan2((Math.sin(lonInOwnOrbit - lonOrbitalNode) * Math.cos(orbitTiltAtEcliptic)),
-									Math.cos(lonInOwnOrbit - lonOrbitalNode));
+									Math.cos(lonInOwnOrbit - lonOrbitalNode)) + lonOrbitalNode;
 		
 		double eclipticLon;
 		switch(frenchName) {
 			case "Mercure":
-			case "Vénus":
+			case "VÃ©nus":
+			case "Terre":
 				//Calculus of longitude for inner planets.
 				eclipticLon = Math.PI + lonInOwnOrbitEarth + Math.atan2(rProj * Math.sin(lonInOwnOrbitEarth - lonInOwnOrbitProj),
 									rEarth - rProj * Math.cos(lonInOwnOrbitEarth - lonInOwnOrbitProj));
 				break;
 			default:
 				//Calculus of longitude for outer planets.
-				eclipticLon = lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
-								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth));
+				eclipticLon = Angle.normalizePositive(lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
+								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth)));
 				break;
 		}
 		
