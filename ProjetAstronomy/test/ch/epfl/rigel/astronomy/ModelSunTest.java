@@ -25,10 +25,10 @@ public class ModelSunTest {
         
        EclipticToEquatorialConversion conv = new EclipticToEquatorialConversion(d1);
        
-       Sun sun1 = SunModel.SUN.at(daysSinceJ2010, conv);
+       Sun sun = SunModel.SUN.at(daysSinceJ2010, conv);
        
-       assertEquals(Angle.ofHr(8.39), sun1.equatorialPos().ra(), 1e-6);
-       assertEquals(Angle.ofDMS(19, 21, 10), sun1.equatorialPos().dec(), 1e-6);
+       assertEquals(8.392682808297808, sun.equatorialPos().raHr(), 1e-6);
+       assertEquals(19.35288373097352 , sun.equatorialPos().decDeg(), 1e-6);
      
     }
     
@@ -43,8 +43,18 @@ public class ModelSunTest {
         
        EclipticToEquatorialConversion conv = new EclipticToEquatorialConversion(d1);
        
-       Sun sun1 = SunModel.SUN.at(daysSinceJ2010, conv);       
+       Sun sun= SunModel.SUN.at(daysSinceJ2010, conv);       
       
-       assertEquals(Angle.ofDMS(0, 31, 30), sun1.angularSize(), 1e-6);
+       assertEquals(Angle.ofDMS(0, 31, 30), sun.angularSize(), 1e-6);
+    }
+    
+    
+    @Test
+    void test() {
+    	EclipticToEquatorialConversion conv = new EclipticToEquatorialConversion(ZonedDateTime.of(
+                					LocalDate.of(2010, Month.FEBRUARY, 27),
+                					LocalTime.of(0,0),
+                					ZoneOffset.UTC));
+    	assertEquals(5.9325494700300885, SunModel.SUN.at(27 + 31, conv).equatorialPos().ra());
     }
 }
