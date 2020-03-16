@@ -29,7 +29,7 @@ public final class Angle {
     private Angle () {}
 
     /**
-     * Normalize an angle in radian to the interval [0,τ[.
+     * Normalize an angle in radian to the interval [0,2pi[.
      * 
      * @param rad(Double): angle in radians to normalize.
      * @return (Double): normalized angle.

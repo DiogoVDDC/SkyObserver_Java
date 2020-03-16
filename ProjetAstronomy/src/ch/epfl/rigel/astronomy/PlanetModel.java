@@ -58,16 +58,17 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		this.orbitEccentricity = orbitEccentricity;
 		this.semiMajorAxis = semiMajorAxis;
 		this.orbitTiltAtEcliptic = Angle.ofDeg(orbitTiltAtEcliptic);
-		this.lonOrbitalNode = Angle.toDeg(lonOrbitalNode);
+		this.lonOrbitalNode = Angle.ofDeg(lonOrbitalNode);
 		this.angularSize1UA = Angle.ofArcsec(angularSize1UA);
 		this.magnitude1UA = magnitude1UA;
 	}
 	
 	private double trueAnomaly(double daysSinceJ2010, PlanetModel planet) {
 		//Mean anomaly
-		double M = ( Angle.TAU / 365.242191 ) * (daysSinceJ2010 / planet.revoPeriod) + planet.lonAtJ2010 - planet.lonAtPerigee;
+		double N = Angle.normalizePositive(( Angle.TAU / 365.242191 ) * (daysSinceJ2010 / planet.revoPeriod));
+		double M = N + planet.lonAtJ2010 - planet.lonAtPerigee;
 		//True anomaly
-		return M + (2 * planet.orbitEccentricity * Math.sin(M));
+		return Angle.normalizePositive(M + (2 * planet.orbitEccentricity * Math.sin(M)));
 	}
 	
 	@Override
@@ -79,13 +80,15 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		double rEarth = (EARTH.semiMajorAxis * (1 - Math.pow(EARTH.orbitEccentricity, 2))) / (1 + EARTH.orbitEccentricity * Math.cos(trueAnomEarth));
 		
 		// Longitude of the planet and earth  in the plan of it's own orbit.
-		double lonInOwnOrbit = trueAnom + lonAtPerigee;
-		double lonInOwnOrbitEarth = trueAnomEarth + EARTH.lonAtPerigee;
+		double lonInOwnOrbit = Angle.normalizePositive(trueAnom + lonAtPerigee);
+		double lonInOwnOrbitEarth = Angle.normalizePositive(trueAnomEarth + EARTH.lonAtPerigee);
 		
 		// Heliocentric ecliptic latitude of the planet.
 		double helioCenEclipticLat = Math.asin(Math.sin(lonInOwnOrbit - lonOrbitalNode) * Math.sin(orbitTiltAtEcliptic));
+		
 		// The radius of the planet projected on ecliptic plan.
 		double rProj = r * Math.cos(helioCenEclipticLat);
+		
 		//Longitude projected on ecliptic plan.
 		double lonInOwnOrbitProj = Math.atan2((Math.sin(lonInOwnOrbit - lonOrbitalNode) * Math.cos(orbitTiltAtEcliptic)),
 									Math.cos(lonInOwnOrbit - lonOrbitalNode)) + lonOrbitalNode;
@@ -94,7 +97,6 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		switch(frenchName) {
 			case "Mercure":
 			case "Vénus":
-			case "Terre":
 				//Calculus of longitude for inner planets.
 				eclipticLon = Math.PI + lonInOwnOrbitEarth + Math.atan2(rProj * Math.sin(lonInOwnOrbitEarth - lonInOwnOrbitProj),
 									rEarth - rProj * Math.cos(lonInOwnOrbitEarth - lonInOwnOrbitProj));
@@ -107,11 +109,11 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		}
 		
 		//Latitude of the planet
-		double eclipticLat = Math.atan2((rProj * Math.tan(helioCenEclipticLat) * Math.sin(eclipticLon - lonInOwnOrbitProj)),
-						rEarth * Math.sin(lonInOwnOrbitProj) - lonInOwnOrbitEarth);
-				
+		double eclipticLat = Math.atan( ( rProj * Math.tan(helioCenEclipticLat) * Math.sin(eclipticLon - lonInOwnOrbitProj) ) /
+						( rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth) ) );
+		
 		//Ecliptic coordinates of the planet
-		EclipticCoordinates eclipticPos = EclipticCoordinates.of(eclipticLon, eclipticLat);
+		EclipticCoordinates eclipticPos = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), eclipticLat); //Angle.normalizePositive(eclipticLon), Angle.normalizePositive(eclipticLat));
 		
 		//Distance from earth squared
 		double distFromEarth = Math.pow(rEarth, 2) + Math.pow(r, 2) - 2 * rEarth * r *Math.cos(lonInOwnOrbit - lonInOwnOrbitEarth) * Math.cos(helioCenEclipticLat); 
@@ -122,7 +124,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		//Phase of the planet.
 		double F = (1 + Math.cos(eclipticLon - lonInOwnOrbit)) / 2;
 		//Magnitude of the planet
-		double magnitude = magnitude1UA + 5 * Math.log10((r * Math.sqrt(distFromEarth)) / Math.sqrt(F)); 
+		double magnitude = magnitude1UA + 5 * Math.log10( (r * Math.sqrt(distFromEarth)) / Math.sqrt(F) ); 
 		
 		return new Planet(frenchName, eclipticToEquatorialConversion.apply(eclipticPos), (float)angularSize, (float)magnitude);
 	}
