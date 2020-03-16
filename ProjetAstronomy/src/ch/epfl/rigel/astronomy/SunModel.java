@@ -31,7 +31,7 @@ public enum SunModel implements CelestialObjectModel<Sun>{
 		
 		double angularSize = Angle.ofDeg(0.533128 * ( (1 + orbitEccentricity * Math.cos(v)) / (1 - Math.pow(orbitEccentricity, 2))));
 		
-		return new Sun(eclipticPos, eclipticToEquatorialConversion.apply(eclipticPos), (float)angularSize, (float)M);
+		return new Sun(eclipticPos, eclipticToEquatorialConversion.apply(eclipticPos), (float)angularSize, (float)Angle.normalizePositive(M));
 	}
 	
 
