@@ -97,6 +97,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		switch(frenchName) {
 			case "Mercure":
 			case "Vénus":
+
 				//Calculus of longitude for inner planets.
 				eclipticLon = Math.PI + lonInOwnOrbitEarth + Math.atan2(rProj * Math.sin(lonInOwnOrbitEarth - lonInOwnOrbitProj),
 									rEarth - rProj * Math.cos(lonInOwnOrbitEarth - lonInOwnOrbitProj));
