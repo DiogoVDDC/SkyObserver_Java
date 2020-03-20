@@ -10,7 +10,6 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
@@ -54,7 +53,7 @@ public class PlanetModelTest {
     void test() {
     	EclipticToEquatorialConversion con = new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), 
     									LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC));
-    	//assertEquals(11.18715493470978, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().raHr());
+    	assertEquals(11.18715493470978, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().raHr());
     	assertEquals(6.356635506685756, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().decDeg()); 
     	
     }
@@ -63,7 +62,7 @@ public class PlanetModelTest {
     void test2() {
     	EclipticToEquatorialConversion con = new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), 
 				LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC));
-    	//assertEquals(16.820074565897194, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().raHr());
+    	assertEquals(16.820074565897194, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().raHr());
     	assertEquals(-24.500872462861274, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().decDeg());
     }
     

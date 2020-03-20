@@ -8,14 +8,8 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 public class Main {
     public static void main(String[] args) {
-        Star star = new Star(2, "OUI", EquatorialCoordinates.of(2, 1), 2f, .5f);
-        List<Star> lis = new ArrayList<Star>(Collections.nCopies(4, star));
-        Asterism ast = new Asterism(lis);
-        System.out.println(ast.stars());
-        Star star2 = new Star(2, "NON", EquatorialCoordinates.of(2, 1), 2f, .5f);
-        List<Star> lis2 = ast.stars();
-        
-        System.out.println(lis2.get(1));
+        Star s = new Star(123, "Diogo", EquatorialCoordinates.of(0, 0), 1f , -0.03f);
+        System.out.println(s.colorTemperature());
     }
 }
        

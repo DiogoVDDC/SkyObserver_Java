@@ -10,8 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 /**
  * Enumeration of the two reference epoch J2000 & J2010.
- * @author Theo Houle (312432) 
- *
+ * @author Theo Houle (312432)  *
  */
 public enum Epoch {    
     J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0),

@@ -7,6 +7,10 @@ import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
+/**
+ * Representation of EquatorialCoordinates.
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 public final class EquatorialCoordinates extends SphericalCoordinates{
 
     //longitude interval expressed in terms of radians, 0 to 2*pi
