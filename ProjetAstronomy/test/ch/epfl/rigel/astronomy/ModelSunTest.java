@@ -56,5 +56,9 @@ public class ModelSunTest {
                 					LocalTime.of(0,0),
                 					ZoneOffset.UTC));
     	assertEquals(5.9325494700300885, SunModel.SUN.at(27 + 31, conv).equatorialPos().ra());
+    	
+    	assertEquals(8.392682808297808, SunModel.SUN.at(-2349, new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.JULY, 
+    	        27), LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC))).equatorialPos().raHr());
+    	        
     }
 }

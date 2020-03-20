@@ -2,6 +2,10 @@ package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 
+/**
+ * Representation of Celestial Object.
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 public interface CelestialObjectModel<O> {
 	
 	/**

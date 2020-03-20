@@ -7,9 +7,8 @@ import java.util.Objects;
 import ch.epfl.rigel.Preconditions;
 
 /**
- * Classe representating an asterism.
+ * Class representating an asterism.
  * @author Theo Houle (312432)
- *
  */
 public final class Asterism {
     

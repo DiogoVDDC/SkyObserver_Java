@@ -6,11 +6,15 @@ import ch.epfl.rigel.coordinates.EclipticCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 
+/**
+ * Representation of different planet
+ * @author Theo Houle (312432) *
+ */
 public enum PlanetModel implements CelestialObjectModel<Planet> {
 
 	MERCURY("Mercure", 0.24085, 75.5671, 77.612, 0.205627,
 	        0.387098, 7.0051, 48.449, 6.74, -0.42),
-	VENUS("Vénus", 0.615207, 272.30044, 131.54, 0.006812,
+	VENUS("VÃ©nus", 0.615207, 272.30044, 131.54, 0.006812,
 	      0.723329, 3.3947, 76.769, 16.92, -4.40),
 	EARTH("Terre", 0.999996, 99.556772, 103.2055, 0.016671,
 	      0.999985, 0, 0, 0, 0),
@@ -96,22 +100,22 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		double eclipticLon;
 		switch(frenchName) {
 			case "Mercure":
-			case "Vénus":
-			case "Terre":
+			case "VÃ©nus":
+
 				//Calculus of longitude for inner planets.
 				eclipticLon = Math.PI + lonInOwnOrbitEarth + Math.atan2(rProj * Math.sin(lonInOwnOrbitEarth - lonInOwnOrbitProj),
 									rEarth - rProj * Math.cos(lonInOwnOrbitEarth - lonInOwnOrbitProj));
 				break;
 			default:
 				//Calculus of longitude for outer planets.
-				eclipticLon = lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
-								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth));
+				eclipticLon = Angle.normalizePositive(lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
+								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth)));
 				break;
 		}
 		
 		//Latitude of the planet
-		double eclipticLat = Math.atan( ( rProj * Math.tan(helioCenEclipticLat) * Math.sin(eclipticLon - lonInOwnOrbitProj) ) /
-						( rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth) ) );
+		double eclipticLat = Math.atan((rProj * Math.tan(helioCenEclipticLat) * Math.sin(eclipticLon - lonInOwnOrbitProj)) /
+						(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth)));
 		
 		//Ecliptic coordinates of the planet
 		EclipticCoordinates eclipticPos = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), eclipticLat); //Angle.normalizePositive(eclipticLon), Angle.normalizePositive(eclipticLat));
