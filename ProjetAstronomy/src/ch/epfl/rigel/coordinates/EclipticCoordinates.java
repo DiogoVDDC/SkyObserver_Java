@@ -9,7 +9,6 @@ import ch.epfl.rigel.math.RightOpenInterval;
  * Representation of coordinates in ecliptic system.
  * @author Theo Houle (312432)
  */
-
 public final class EclipticCoordinates extends SphericalCoordinates{
 
     // latitude interval in terms of radians, -pi/2 to pi/2 radians
