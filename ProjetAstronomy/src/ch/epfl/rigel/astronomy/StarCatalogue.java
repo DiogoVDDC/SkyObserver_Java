@@ -77,8 +77,9 @@ public final class StarCatalogue {
 			while ((b = s.readLine()) != null) {
 				String[] strTab = b.split(",");
 				for  (Star star :starsInAste) {
-					//Check if the line corresponds to a star in the asterism in which case it adds the line index in the list.
-					if (strTab[1] == Integer.toString(star.hipparcosId())) {
+					//Check if the line corresponds to a star in the asterism in which case it adds the line index in the list. 
+					//The position 1 corresponds to the hipparcos ID.
+					if (Integer.valueOf(strTab[1]) == star.hipparcosId()) {
 						indices.set(starsInAste.indexOf(star), line);
 					}
 				}
