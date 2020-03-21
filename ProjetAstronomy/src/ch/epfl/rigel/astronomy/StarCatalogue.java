@@ -1,8 +1,10 @@
 package ch.epfl.rigel.astronomy;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,26 +70,17 @@ public final class StarCatalogue {
 	private List<Integer> getIndices(Asterism asterism) throws IOException{
 		List<Star> starsInAste = asterism.stars();
 		List<Integer> indices = new ArrayList<>(starsInAste.size());
-		try (InputStream s = new FileInputStream("hygdata_v3.csv")) {
-			int b = 0;
+		try (BufferedReader s = new BufferedReader( new InputStreamReader( new FileInputStream("resources/hygdata_v3.csv"), StandardCharsets.US_ASCII))) {
+			String b;
 			//Pointer to know at which line we are.
 			int line = 0;
-			// A string which will be the content of each line of the file.
-			String str = "";
-			while ((b = s.read()) != -1) {
-				//Check if the caracter corresponds to a change of line : if not, add the character to the string
-			    // else, it is the end of the line and therefore check if the line is a star in the asterism and 
-				// if yes, add it's line index in the list and then reset the line string("str").
-				if (b != 10) {
-					str += (char)b;
-				} else {
-					String[] strTab = str.split(",");
-					for  (Star star :starsInAste) {
-						if (strTab[1] == Integer.toString(star.hipparcosId())) {
-							indices.set(starsInAste.indexOf(star), line);
-						}
+			while ((b = s.readLine()) != null) {
+				String[] strTab = b.split(",");
+				for  (Star star :starsInAste) {
+					//Check if the line corresponds to a star in the asterism in which case it adds the line index in the list.
+					if (strTab[1] == Integer.toString(star.hipparcosId())) {
+						indices.set(starsInAste.indexOf(star), line);
 					}
-					str = "";
 				}
 				line += 1;
 			}

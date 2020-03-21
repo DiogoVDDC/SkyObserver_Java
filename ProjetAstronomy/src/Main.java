@@ -1,18 +1,21 @@
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import ch.epfl.rigel.astronomy.Asterism;
-import ch.epfl.rigel.astronomy.Star;
-import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 public class Main {
-    public static void main(String[] args) {
-        Star s = new Star(123, "Diogo", EquatorialCoordinates.of(0, 0), 1f , -0.03f);
-        System.out.println(s.colorTemperature());
+    public static void main(String[] args) throws IOException {
+//        Star s = new Star(123, "Diogo", EquatorialCoordinates.of(0, 0), 1f , -0.03f);
+//        System.out.println(s.colorTemperature());
+        
+        
+        try (BufferedReader s = new BufferedReader( new FileReader("resources/hygdata_v3.csv"))){
+        	String b;
+        	int line = 0;
+        	while ((b = s.readLine()) != null && line < 1200) {
+        		System.out.println(b);
+        		line += 1;
+        	}
+        }
     }
 }
        
