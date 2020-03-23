@@ -3,6 +3,8 @@ package ch.epfl.rigel.coordinates;
 import java.util.Locale;
 import java.util.function.Function;
 
+import ch.epfl.rigel.math.Angle;
+
 /**
  * Enables Stereographic Projection of coordinates
  * @author Diogo Valdivieso Damasio Da Costa (311673)
@@ -72,8 +74,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
         double rho = Math.sqrt( xy.x()*xy.x() + xy.y()*xy.y() );
         double sinC =  (2*rho)/(rho*rho + 1);
         double cosC =  (1 - rho*rho)/(rho*rho + 1);
-        double az = (Math.atan2( xy.x() * sinC,
-                    rho * cosOfCenterLat * cosC - xy.y() * sinOfCenterLat * sinC)) + centerLon;
+        double az = Angle.normalizePositive((Math.atan2( xy.x() * sinC,
+                    rho * cosOfCenterLat * cosC - xy.y() * sinOfCenterLat * sinC)) + centerLon);
         double alt = Math.asin(cosC * sinOfCenterLat + (xy.y() * sinC * cosOfCenterLat) / rho);
         
         return HorizontalCoordinates.of(az, alt);

@@ -16,45 +16,11 @@ import ch.epfl.rigel.math.Angle;
 public class PlanetModelTest {
 
     @Test
-    void InnerPlanetMercuryAt() {
-        ZonedDateTime d1 = ZonedDateTime.of(
-                LocalDate.of(2003, Month.NOVEMBER, 22),
-                LocalTime.of(0,0),
-                ZoneOffset.UTC);
-        
-        double daysSinceJ2010 = Epoch.J2010.daysUntil(d1);
-        
-        EclipticToEquatorialConversion conv1 = new EclipticToEquatorialConversion(d1);
-        
-        Planet jup = PlanetModel.JUPITER.at(daysSinceJ2010, conv1);
-        
-        assertEquals(Angle.ofHr(11+ 11/60 + 14 / 3600), jup.equatorialPos().ra());
-        assertEquals(Angle.ofDMS(6, 21, 25), jup.equatorialPos().dec());
-    }
-    
-    @Test
-    void OuterPlanetJupiter() {
-        ZonedDateTime d1 = ZonedDateTime.of(
-                LocalDate.of(2003, Month.NOVEMBER, 22),
-                LocalTime.of(0,0),
-                ZoneOffset.UTC);
-        
-        double daysSinceJ2010 = Epoch.J2010.daysUntil(d1);
-        
-        EclipticToEquatorialConversion conv1 = new EclipticToEquatorialConversion(d1);
-        
-        Planet mec = PlanetModel.MERCURY.at(daysSinceJ2010, conv1);
-        
-        assertEquals(Angle.ofHr(16.42), mec.equatorialPos().ra());
-        assertEquals(Angle.ofDMS(-24, 30, 9), mec.equatorialPos().dec());
-    }
-    
-    @Test
     void test() {
     	EclipticToEquatorialConversion con = new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), 
     									LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC));
-    	assertEquals(11.18715493470978, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().raHr());
-    	assertEquals(6.356635506685756, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().decDeg()); 
+    	assertEquals(11.18715493470968, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().raHr());
+    	assertEquals(6.3566355066857465, PlanetModel.JUPITER.at(-2231.0, con).equatorialPos().decDeg()); 
     	
     }
     
@@ -62,8 +28,8 @@ public class PlanetModelTest {
     void test2() {
     	EclipticToEquatorialConversion con = new EclipticToEquatorialConversion(ZonedDateTime.of(LocalDate.of(2003, Month.NOVEMBER, 22), 
 				LocalTime.of(0, 0, 0, 0), ZoneOffset.UTC));
-    	assertEquals(16.820074565897194, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().raHr());
-    	assertEquals(-24.500872462861274, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().decDeg());
+    	assertEquals(16.820074565897148, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().raHr());
+    	assertEquals(-24.500872462861217, PlanetModel.MERCURY.at(-2231.0, con).equatorialPos().decDeg());
     }
     
     @Test

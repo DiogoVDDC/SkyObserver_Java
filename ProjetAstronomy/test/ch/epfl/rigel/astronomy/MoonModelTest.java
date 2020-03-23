@@ -23,7 +23,7 @@ public class MoonModelTest {
             ZoneOffset.UTC));
         
         
-     //   assertEquals(14.211456457835897, MoonModel.MOON.at(-2313, conv).equatorialPos().raHr());
+        assertEquals(14.211456457836277, MoonModel.MOON.at(-2313, conv).equatorialPos().raHr());
       
         EclipticToEquatorialConversion conv1 = new EclipticToEquatorialConversion(ZonedDateTime.of(
                 LocalDate.of(2003,  Month.SEPTEMBER, 1),

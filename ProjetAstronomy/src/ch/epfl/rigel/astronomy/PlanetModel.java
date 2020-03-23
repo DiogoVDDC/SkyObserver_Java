@@ -69,10 +69,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 	
 	private double trueAnomaly(double daysSinceJ2010, PlanetModel planet) {
 		//Mean anomaly
-		double N = Angle.normalizePositive(( Angle.TAU / 365.242191 ) * (daysSinceJ2010 / planet.revoPeriod));
+		double N = ( Angle.TAU / 365.242191 ) * (daysSinceJ2010 / planet.revoPeriod);
 		double M = N + planet.lonAtJ2010 - planet.lonAtPerigee;
 		//True anomaly
-		return Angle.normalizePositive(M + (2 * planet.orbitEccentricity * Math.sin(M)));
+		return M + (2 * planet.orbitEccentricity * Math.sin(M));
 	}
 	
 	@Override
@@ -84,8 +84,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		double rEarth = (EARTH.semiMajorAxis * (1 - Math.pow(EARTH.orbitEccentricity, 2))) / (1 + EARTH.orbitEccentricity * Math.cos(trueAnomEarth));
 		
 		// Longitude of the planet and earth  in the plan of it's own orbit.
-		double lonInOwnOrbit = Angle.normalizePositive(trueAnom + lonAtPerigee);
-		double lonInOwnOrbitEarth = Angle.normalizePositive(trueAnomEarth + EARTH.lonAtPerigee);
+		double lonInOwnOrbit = trueAnom + lonAtPerigee;
+		double lonInOwnOrbitEarth = trueAnomEarth + EARTH.lonAtPerigee;
 		
 		// Heliocentric ecliptic latitude of the planet.
 		double helioCenEclipticLat = Math.asin(Math.sin(lonInOwnOrbit - lonOrbitalNode) * Math.sin(orbitTiltAtEcliptic));
@@ -108,8 +108,8 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 				break;
 			default:
 				//Calculus of longitude for outer planets.
-				eclipticLon = Angle.normalizePositive(lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
-								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth)));
+				eclipticLon = lonInOwnOrbitProj + Math.atan2(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth),
+								rProj - rEarth * Math.cos(lonInOwnOrbitProj - lonInOwnOrbitEarth));
 				break;
 		}
 		
@@ -118,7 +118,7 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 						(rEarth * Math.sin(lonInOwnOrbitProj - lonInOwnOrbitEarth)));
 		
 		//Ecliptic coordinates of the planet
-		EclipticCoordinates eclipticPos = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), eclipticLat); //Angle.normalizePositive(eclipticLon), Angle.normalizePositive(eclipticLat));
+		EclipticCoordinates eclipticPos = EclipticCoordinates.of(Angle.normalizePositive(eclipticLon), eclipticLat); 
 		
 		//Distance from earth squared
 		double distFromEarth = Math.pow(rEarth, 2) + Math.pow(r, 2) - 2 * rEarth * r *Math.cos(lonInOwnOrbit - lonInOwnOrbitEarth) * Math.cos(helioCenEclipticLat); 

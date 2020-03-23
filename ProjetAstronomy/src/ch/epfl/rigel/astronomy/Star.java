@@ -22,8 +22,13 @@ public final class Star extends CelestialObject{
      * @param colorIndex: color of the star 
      */
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude , float colorIndex) {
-        super(name, equatorialPos, 0, magnitude);     
-        this.colorIndex = colorIndex;
+        super(name, equatorialPos, 0, magnitude); 
+        
+        if(hipparcosId < 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        this.colorIndex = (float) Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
         this.hipparcosId = hipparcosId;
     }
     
@@ -31,7 +36,7 @@ public final class Star extends CelestialObject{
      * @return hipparcosId: returns the unique id associated to the star
      */
     public int hipparcosId() {
-        return (int) Preconditions.checkInInterval(ClosedInterval.of(-0.5, 0.5), hipparcosId);
+        return hipparcosId;
     }
     
     /**
