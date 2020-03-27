@@ -55,7 +55,8 @@ public enum HygDatabaseLoader implements Loader{
             bayer = splitLine[columnEnum.BAYER.ordinal()];
             con = splitLine[columnEnum.CON.ordinal()];
 
-            if(splitLine[columnEnum.PROPER.ordinal()] != null) {
+            
+            if(splitLine[columnEnum.PROPER.ordinal()] == null) {
                 name = bayer + con;                    
             } else {
                 name = splitLine[columnEnum.PROPER.ordinal()];
@@ -63,6 +64,7 @@ public enum HygDatabaseLoader implements Loader{
 
             // creates new star to be added to the starList
             Star star = new Star(hipparcosId, name, equatorialPos, magnitude, colorIndex);
+            // add the star to the builder
             builder.addStar(star);
         }        
     }

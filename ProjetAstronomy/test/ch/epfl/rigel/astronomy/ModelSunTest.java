@@ -27,8 +27,8 @@ public class ModelSunTest {
        
        Sun sun = SunModel.SUN.at(daysSinceJ2010, conv);
        
-       assertEquals(8.392682808297808, sun.equatorialPos().raHr(), 1e-6);
-       assertEquals(19.35288373097352 , sun.equatorialPos().decDeg(), 1e-6);
+       assertEquals(8.392682808297808, sun.equatorialPos().raHr(), 1e-13);
+       assertEquals(19.35288373097352 , sun.equatorialPos().decDeg(), 1e-13);
      
     }
     
