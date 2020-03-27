@@ -23,7 +23,9 @@ import ch.epfl.rigel.Preconditions;
 public final class StarCatalogue {
     
     //List of stars of the catalogue.
-    private final List<Star> starList;
+    private  List<Star> starList;
+    //List of asterism of the catalogue.
+    private  List<Asterism> asterisms;
     //Map with key asterism and a list of indices (in the hyg star catalogue) of each star for the asterism. 
     private final Map<Asterism, List<Integer>> asterismMap;
 
@@ -45,6 +47,7 @@ public final class StarCatalogue {
         }
         
         this.starList = List.copyOf(stars);
+        this.asterisms = List.copyOf(asterisms);
     }
     
     /**
@@ -69,7 +72,7 @@ public final class StarCatalogue {
      * @return
      */
     public Set<Asterism> asterisms() {
-        return asterismMap.keySet();
+        return Set.copyOf(asterismMap.keySet());
     }
     
     /**
@@ -100,7 +103,6 @@ public final class StarCatalogue {
         }
         return starIndexList;
     } 
-    
     
     public interface Loader{        
         /**
