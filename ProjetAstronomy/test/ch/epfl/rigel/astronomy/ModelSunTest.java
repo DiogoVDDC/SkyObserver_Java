@@ -29,7 +29,7 @@ public class ModelSunTest {
        
        assertEquals(8.392682808297808, sun.equatorialPos().raHr(), 1e-13);
        assertEquals(19.35288373097352 , sun.equatorialPos().decDeg(), 1e-13);
-     
+       
     }
     
     @Test 
@@ -50,7 +50,7 @@ public class ModelSunTest {
     
     
     @Test
-    void test() {
+    void SunPosTest2() {
     	EclipticToEquatorialConversion conv = new EclipticToEquatorialConversion(ZonedDateTime.of(
                 					LocalDate.of(2010, Month.FEBRUARY, 27),
                 					LocalTime.of(0,0),
