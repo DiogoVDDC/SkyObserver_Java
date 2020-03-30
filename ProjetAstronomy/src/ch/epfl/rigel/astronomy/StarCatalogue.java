@@ -28,6 +28,8 @@ public final class StarCatalogue {
     private  List<Asterism> asterisms;
     //Map with key asterism and a list of indices (in the hyg star catalogue) of each star for the asterism. 
     private final Map<Asterism, List<Integer>> asterismMap;
+    
+    private final Map<Star, Integer> starIndexMap;
 
     /**
      * Constructor for the catalogue.
@@ -36,19 +38,29 @@ public final class StarCatalogue {
      * @throws IOException: If error while reading the hyg stars catalogue file.
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) throws IOException{
-        this.starList = List.copyOf(stars);
+        this.starList = List.copyOf(stars);        
         this.asterisms = List.copyOf(asterisms);
-
+        
+        starIndexMap = new HashMap<Star, Integer>() ;
+        
+        for(int i = 0; i < starList.size(); i++) {
+            starIndexMap.put(starList.get(i), i);
+        }
+        
+   
         asterismMap = new HashMap<>();
         //Check if all stars in the list are in the asterisms.
 
+        List<Integer> asterismStarIndexList = new ArrayList<Integer>();
+        
         for (Asterism a: asterisms) {
             for (Star s : a.stars()) {
                 Preconditions.checkArgument(stars().contains(s));
-                //Adds to the map the asterism and the corresponding list of indices.
-                System.out.println("Adding star to map");
-                asterismMap.put(a, getStarIndex(a.stars()));
+                asterismStarIndexList.add(starIndexMap.get(s));                      
             }
+            //Adds to the map the asterism and the corresponding list of indices.
+            asterismMap.put(a, asterismStarIndexList);
+            asterismStarIndexList.clear();
         }
     }
 
@@ -80,28 +92,7 @@ public final class StarCatalogue {
         return Set.copyOf(asterismMap.keySet());
     }
 
-    /**
-     * Allows to get for a given asterism the list of indices of the stars in the same order.
-     * @param asterism
-     * @return : list of indices of each star according to hyg star catalogue.
-     * @throws IOException :if there is an error while reading hyg catalogue.
-     */
-    private List<Integer> getStarIndex(List<Star> starsInAsterism) throws IOException{        
-
-        List<Integer> starIndexList = new ArrayList<>(starsInAsterism.size());
-        
-        for(Star s :starsInAsterism) {
-            for(int i = 0; i < starList.size(); i++) {
-                if(s.hipparcosId() ==  starList.get(i).hipparcosId()) {
-                    starIndexList.add(starList.indexOf(s));
-                }
-            }   
-        }
-       
-        return starIndexList;
-    } 
-
-    public interface Loader{        
+   public interface Loader{        
         /**
          * Defines a generic load method to add the stars and asterisms to the builder
          * @param inputStream: the data that needs to be added to the builder
@@ -165,25 +156,4 @@ public final class StarCatalogue {
             return new StarCatalogue(starList, asterismList);
         }
     }
-    
-//    
-//    try (BufferedReader s = new BufferedReader( new InputStreamReader( new FileInputStream("resources/hygdata_v3.csv"), StandardCharsets.US_ASCII))) {
-//        String b;
-//        //index which indicates the current line
-//        int line = 0;
-//        while ((b = s.readLine()) != null) {
-//            String[] lineSplitComma = b.split(",");
-//            if(line !=0) {
-//                for  (Star star :starsInAsterism) {
-//                    //Check if the line corresponds to a star in the asterism in which case it adds the line index in the list. 
-//                    //The position 1 corresponds to the hipparcos ID.
-//                    if (Integer.parseInt(lineSplitComma[1]) == star.hipparcosId()) {
-//                        starIndexList.add(starsInAsterism.indexOf(star), line);
-//                    }
-//                }
-//            }
-//            line += 1;
-//        }
-//    }
-
 }
