@@ -72,8 +72,7 @@ public abstract class CelestialObject {
      * @return: the text to print.
      */
     public String info() {
-        return String.format(Locale.ROOT,"(name=%s, equatorial pos=%s, angular size= %.4f, magnitude = %.4f)", 
-                    name, equatorialPos, angularSize, magnitude );
+        return name;
     }
     
     @Override

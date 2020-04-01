@@ -92,9 +92,8 @@ public enum HygDatabaseLoader implements Loader{
     	            }                
     	     
     	            // creates new star to be added to the starList
-    	            Star star = new Star(hipparcosId, name, equatorialPos, magnitude, colorIndex);
-    	            
-    	            System.out.println("star in hig loader" + star.toString());
+    	            Star star = new Star(hipparcosId, name, equatorialPos, magnitude, colorIndex);    	            
+    	          
     	            // add the star to the builder
     	            builder.addStar(star);
 	            } 

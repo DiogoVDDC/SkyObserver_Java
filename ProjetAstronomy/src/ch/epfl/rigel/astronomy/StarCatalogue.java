@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import ch.epfl.rigel.Preconditions;
 /**
  * Class allowing to create a catalogue of stars.
  * @author Theo Houle (312432)
- *
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class StarCatalogue {
 
@@ -56,10 +57,12 @@ public final class StarCatalogue {
         for (Asterism a: asterisms) {
             for (Star s : a.stars()) {
                 Preconditions.checkArgument(stars().contains(s));
+               //System.out.println("star index list" + starIndexMap.get(s).toString());
                 asterismStarIndexList.add(starIndexMap.get(s));                      
-            }
+            }            
+            
             //Adds to the map the asterism and the corresponding list of indices.
-            asterismMap.put(a, asterismStarIndexList);
+            asterismMap.put(a, List.copyOf(asterismStarIndexList));
             asterismStarIndexList.clear();
         }
     }
@@ -69,10 +72,10 @@ public final class StarCatalogue {
      * @param asterism : the asterism.
      * @return : the list of indices.
      */
-    public List<Integer> asterismIndices(Asterism asterism) {
+    public List<Integer> asterismIndices(Asterism asterism) {    
         // throw exception if asterism is not contained in Map
         Preconditions.checkArgument(asterismMap.containsKey(asterism));
-
+       
         return asterismMap.get(asterism);
     }
 
