@@ -13,6 +13,11 @@ import java.util.Map;
 import ch.epfl.rigel.astronomy.StarCatalogue.Builder;
 import ch.epfl.rigel.astronomy.StarCatalogue.Loader;
 
+/**
+ * 
+ * @author Theo Houle (312432)
+ *
+ */
 public enum AsterismLoader implements Loader{
     INSTANCE;
     
