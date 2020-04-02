@@ -3,9 +3,9 @@ package ch.epfl.rigel.math;
 import ch.epfl.rigel.Preconditions;
 
 /**
- * Representation of a Polynomial
- * 
+ * Representation of a Polynomial.
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
 public final class Polynomial {
@@ -93,11 +93,17 @@ public final class Polynomial {
     }
 
     @Override
+    /**
+     * Redefined to prevent using it.
+     */
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    /**
+     * Redefinde to prevent using it.
+     */
     public int hashCode() {
         throw new UnsupportedOperationException();
     }

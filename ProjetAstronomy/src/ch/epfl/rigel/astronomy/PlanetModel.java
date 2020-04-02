@@ -8,7 +8,8 @@ import ch.epfl.rigel.math.Angle;
 
 /**
  * Representation of different planet
- * @author Theo Houle (312432) *
+ * @author Theo Houle (312432) 
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public enum PlanetModel implements CelestialObjectModel<Planet> {
 
@@ -97,7 +98,10 @@ public enum PlanetModel implements CelestialObjectModel<Planet> {
 		double lonInOwnOrbitProj = Math.atan2((Math.sin(lonInOwnOrbit - lonOrbitalNode) * Math.cos(orbitTiltAtEcliptic)),
 									Math.cos(lonInOwnOrbit - lonOrbitalNode)) + lonOrbitalNode;
 		
+		//Creating the ecliptic longitude variable which will be defined next.
 		double eclipticLon;
+		
+		//Based on the distance to earth, the calculation of the longitude is different.
 		switch(frenchName) {
 			case "Mercure":
 			case "Vénus":

@@ -11,14 +11,18 @@ import ch.epfl.rigel.math.Angle;
  */
 public final class StereographicProjection implements Function<HorizontalCoordinates, CartesianCoordinates> {
     
+	//Cosine of the latitude of the centre position.
     private final double cosOfCenterLat;
+    //Sine of the latitude of the centre position.
     private final double sinOfCenterLat;
+    //Longitude of the centre position.
     private final double centerLon;
+    //Latitude of the centre position.
     private final double centerLat;
 
     /**
-     * Initialises constants to facilitate calculations and calculation load
-     * @param center: center at which the projection will be centered
+     * Initialises constants to facilitate calculations and calculation load.
+     * @param center: centre at which the projection will be .
      */
     public StereographicProjection(HorizontalCoordinates center) {
         cosOfCenterLat = Math.cos(center.lat());
@@ -29,16 +33,16 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     
    
     /**
-     * @param hor: point for which parallel line pass through
-     * @return returns cartesian coordinates of the circle corresponding to the projection
+     * @param hor: point for which parallel line pass through.
+     * @return returns cartesian coordinates of the circle corresponding to the projection.
      */
     public CartesianCoordinates circleCenterForParallel(HorizontalCoordinates hor) {                          
         return CartesianCoordinates.of(0, cosOfCenterLat/(Math.sin(hor.alt()) + sinOfCenterLat));
     }
     
     /**
-     * @param parallel: coordinates for which the radius of the projection will be evaluated
-     * @return returns the radius of the circle corresponding to the projection
+     * @param parallel: coordinates for which the radius of the projection will be evaluated.
+     * @return returns the radius of the circle corresponding to the projection.
      */
     public double circleRadiusForParallel(HorizontalCoordinates parallel) {
         return Math.cos(parallel.alt())/(Math.sin(parallel.alt()) + sinOfCenterLat);
@@ -46,7 +50,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     
     
     /**
-    * @param rad: angular size of the sphere
+    * @param rad: angular size of the sphere.
     * @return returns diameter of a projected sphere of angular size rad.
     */
     public double applyToAngle(double rad) {
@@ -54,8 +58,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     /**
-     * @param azAlt: horizontal coordinates which will be projected to cartesian coordinates
-     * @return: returns cartesian coordinates of the projection of the horizontal coordinates 
+     * @param azAlt: horizontal coordinates which will be projected to cartesian coordinates.
+     * @return: returns cartesian coordinates of the projection of the horizontal coordinates.
      */
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
         double lat = azAlt.alt();
@@ -67,8 +71,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     /**
-     * @param xy: cartesian coordinates which will be projected to horizontal coordinates
-     * @return: returns horizontal coordinates from the projection of the cartesian coordinates 
+     * @param xy: cartesian coordinates which will be projected to horizontal coordinates.
+     * @return: returns horizontal coordinates from the projection of the cartesian coordinates. 
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
         double rho = Math.sqrt( xy.x()*xy.x() + xy.y()*xy.y() );
@@ -89,11 +93,17 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     @Override
+    /**
+     * Redifined to prevent using it.
+     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    /**
+     * Redifined to prevent using it.
+     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }

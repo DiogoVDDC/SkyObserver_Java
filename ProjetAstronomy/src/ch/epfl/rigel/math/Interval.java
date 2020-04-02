@@ -4,6 +4,7 @@ package ch.epfl.rigel.math;
  * Representation of a Intervals
  * 
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
 
@@ -12,6 +13,7 @@ abstract public class Interval {
     private final double high;
 
     /**
+     * Constructor for Interval.
      * @param: the lower bound of the interval.
      * @param: the upper bound of the interval.
      */
@@ -21,6 +23,7 @@ abstract public class Interval {
     }
 
     /**
+     * Getter for the lower bound of the interval.
      * @return: the lower bound of the interval.
      */
     public double low() {
@@ -28,6 +31,7 @@ abstract public class Interval {
     }
 
     /**
+     * Getter for the upper bound of the interval.
      * @return: the upper bound of the interval.
      */
     public double high() {
@@ -35,7 +39,7 @@ abstract public class Interval {
     }
 
     /**
-     * Allows to create a polynomial in decreasing power.    
+     * Allows to know the size of the interval. 
      * @return: the size of the interval.
      */
     public double size() {
@@ -49,11 +53,17 @@ abstract public class Interval {
     abstract public boolean contains(double v);
 
     @Override
+    /**
+     * Redefined to prevent using it.
+     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    /**
+     * Redefined to prevent using it.
+     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }

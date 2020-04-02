@@ -10,23 +10,31 @@ import ch.epfl.rigel.math.RightOpenInterval;
 /**
  * Representation of GeographicCoordinates.
  * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
+ *
  */
 public final class GeographicCoordinates extends SphericalCoordinates{
 
-    // longitude interval in terms of degrees, 180 to -180 degrees 
+    // longitude interval in terms of degrees, 180 to -180 degrees.
     private static final RightOpenInterval lonInterval = RightOpenInterval.symmetric(360);
-    // latitude interval in terms of degrees, 90 to -90 degrees 
+    // latitude interval in terms of degrees, 90 to -90 degrees.
     private static final ClosedInterval latInterval = ClosedInterval.symmetric(180);
   
+    /**
+     * Constructor for GeographicCoordinates.
+     * @param lat: lattitude of the position.
+     * @param lon: longitude of the position.
+     */
     private GeographicCoordinates(double lat, double lon) {
         super(lat, lon);        
     }
 
     
     /**     
-     * @param: longitude in degrees 
-     * @param: latitude in degrees 
-     * @return: returns a new geographic coordinates object
+     * Allows to create geographic coordinates using degrees.
+     * @param: longitude in degrees.
+     * @param: latitude in degrees..
+     * @return: returns a new geographic coordinates object.
      */
      public static GeographicCoordinates ofDeg(double lonDeg, double latDeg) {
         return new GeographicCoordinates( Angle.ofDeg(Preconditions.checkInInterval(latInterval, latDeg)),
@@ -34,9 +42,10 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
    
-    /**     
-     * @param: longitude in degrees 
-     * @return: returns true is the longitude is in the correct interval
+    /**   
+     * Allows to know if the longitude is in the right interval.  
+     * @param: longitude in degrees.
+     * @return: returns true is the longitude is in the correct interval.
      */
     public static boolean isValidLonDeg(double lonDeg) {
         try {
@@ -49,8 +58,9 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**     
-     * @param: latitude in degrees 
-     * @return: returns true is the latitude is in the correct interval
+     * Allows to know if the lattitude is in the right interval.
+     * @param: latitude in degrees.
+     * @return: returns true is the latitude is in the correct interval.
      */
     public static boolean isValidLatDeg(double latDeg) {
         try {
@@ -63,14 +73,15 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**     
-     * @return: returns longitude in radians
+     * Getter for the longitude in radiant.
+     * @return: returns longitude in radiant.
      */
- 
     public double lon() {
         return super.lon();
     }
 
     /**     
+     * Getter got the Longitude in degrees.
      * @return: returns longitude in degrees
      */
     public double lonDeg() {
@@ -78,13 +89,15 @@ public final class GeographicCoordinates extends SphericalCoordinates{
     }
 
     /**     
-     * @return: returns latitude in radians
+     * Getter for the latitude in radiant.
+     * @return: returns latitude in radiant.
      */
     public double lat() {
         return super.lat();
     }
 
-    /**     
+    /**
+     * Getter for the latitude in degrees.     
      * @return: returns latitude in degrees
      */
     public double latDeg() {

@@ -1,13 +1,13 @@
 package ch.epfl.rigel.astronomy;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
-import ch.epfl.rigel.math.Angle;
+
 /**
  * abstract class representing a celestial object.
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
 public abstract class CelestialObject {
@@ -17,7 +17,7 @@ public abstract class CelestialObject {
     private final EquatorialCoordinates equatorialPos;
     //magnitude of the object(float because takes less space in memory).
     private final float magnitude;
-    //Angularsize of the object(float because takes less space in memory).
+    //Angular size of the object(float because takes less space in memory).
     private final float angularSize;
     
     /**
