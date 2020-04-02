@@ -1,8 +1,10 @@
 package ch.epfl.rigel.astronomy;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
+import ch.epfl.rigel.math.Angle;
 /**
  * abstract class representing a celestial object.
  * @author Theo Houle (312432)
@@ -67,7 +69,7 @@ public abstract class CelestialObject {
     }
     /**
      * Allows to get an informative text about the object.
-     * @return: the text to print. CUl
+     * @return: the text to print.
      */
     public String info() {
         return name;
