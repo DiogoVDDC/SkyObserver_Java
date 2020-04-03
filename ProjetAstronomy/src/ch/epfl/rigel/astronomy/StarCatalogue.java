@@ -56,8 +56,7 @@ public final class StarCatalogue {
         
         for (Asterism a: asterisms) {
             for (Star s : a.stars()) {
-                Preconditions.checkArgument(stars().contains(s));
-               //System.out.println("star index list" + starIndexMap.get(s).toString());
+                Preconditions.checkArgument(stars().contains(s));              
                 asterismStarIndexList.add(starIndexMap.get(s));                      
             }            
             
