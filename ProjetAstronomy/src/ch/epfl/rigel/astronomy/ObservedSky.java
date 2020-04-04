@@ -42,7 +42,7 @@ public class ObservedSky {
 	//Catalogue of stars and asterisms.
 	private final StarCatalogue catalogue;
 	//List containing every celestial objects
-	private final Map<CartesianCoordinates, CelestialObject> posCelestialObjectMap;
+	private final Map<CelestialObject, CartesianCoordinates> celestialObjectPosMap;
 	
 	/**
 	 * Constructor of ObservedSky. Given the time, position, stars, and stereographique projection, 
@@ -69,34 +69,37 @@ public class ObservedSky {
 		EquatorialToHorizontalConversion convEquToHor = new EquatorialToHorizontalConversion(when, where);
 		
 		//Initialization of the map which will contain every celestial objects and their positions.
-		posCelestialObjectMap = new HashMap<>();
+		celestialObjectPosMap = new HashMap<>();
 		
 		//Modelization of the moon and it's position in Cartesian coordinates.
 		moon = MoonModel.MOON.at(daysSinceJ2010, convEclToEqu);
 		moonPosition = projection.apply(convEquToHor.apply(moon.equatorialPos()));
 		//Adding the moon and it's position in the map containing all object and their positions.
-		posCelestialObjectMap.put(moonPosition, moon);
+		celestialObjectPosMap.put(moon, moonPosition);
 		
 		//Modelization of the sun and it's position in Cartesian coordinates.
 		sun = SunModel.SUN.at(daysSinceJ2010, convEclToEqu);
 		sunPosition = projection.apply(convEquToHor.apply(sun.equatorialPos()));
 		//Adding the sun and it's position in the map containing all object and their positions.
-		posCelestialObjectMap.put(sunPosition, sun);
+		celestialObjectPosMap.put(sun, sunPosition);
 		
 		//Modelization of the solar system planets and their positions in Cartesian coordinates.
-		planets = new Planet[7];
-		planetPositions = new Double[14];
-		for (PlanetModel planetModel : PlanetModel.ALL) {
-			//Modelization of the planet at the given moment.
-			Planet planet = planetModel.at(daysSinceJ2010, convEclToEqu);
-			//Conversion to cartesian coordinates of the planet.
-			CartesianCoordinates planetPos = projection.apply(convEquToHor.apply(planet.equatorialPos()));
-			planets[planetModel.ordinal()] = planet;
-			
-			planetPositions[2 * planetModel.ordinal()] = planetPos.x();
-			planetPositions[2 * planetModel.ordinal() + 1] = planetPos.y();
-			//Adding the planet and it's position in the map containing all object and their positions.
-			posCelestialObjectMap.put(planetPos, planet);
+		planets = new Planet[8];
+		planetPositions = new Double[16];
+		for (PlanetModel planetModel : PlanetModel.ALL) {		    
+		    if(planetModel.name() != "EARTH") {
+		        System.out.println(planetModel.name());
+    			//Modelization of the planet at the given moment.
+    			Planet planet = planetModel.at(daysSinceJ2010, convEclToEqu);
+    			//Conversion to cartesian coordinates of the planet.
+    			CartesianCoordinates planetPos = projection.apply(convEquToHor.apply(planet.equatorialPos()));
+    			planets[planetModel.ordinal()] = planet;
+    			
+    			planetPositions[2 * planetModel.ordinal()] = planetPos.x();
+    			planetPositions[2 * planetModel.ordinal() + 1] = planetPos.y();
+    			//Adding the planet and it's position in the map containing all object and their positions.
+    			celestialObjectPosMap.put(planet, planetPos);
+		    }
 		}
 		
 		
@@ -108,7 +111,7 @@ public class ObservedSky {
 			starPositions[2 * i] = starPos.x();
 			starPositions[2 * i + 1] = starPos.y();
 			//Adding the star and it's position in the map containing all object and their positions.
-			posCelestialObjectMap.put(starPos, star);
+			celestialObjectPosMap.put(star, starPos);
 		}
 	}
 	
@@ -206,11 +209,12 @@ public class ObservedSky {
 	public Optional<CelestialObject> objectClosestTo(CartesianCoordinates pos, Double maxRange) {
 	    
 		//Map containing all the objects in a square that are in the range before comparing the distances.
-		Map<CartesianCoordinates, CelestialObject> inRadiusObjects = new HashMap<>();
-		for (Entry<CartesianCoordinates, CelestialObject> obj : posCelestialObjectMap.entrySet()) {
-			CartesianCoordinates objPos = obj.getKey();
+		Map<CelestialObject,  CartesianCoordinates> inRadiusObjects = new HashMap<>();
+		
+		for (Entry<CelestialObject, CartesianCoordinates> obj : celestialObjectPosMap.entrySet()) {
+			CartesianCoordinates objPos = obj.getValue();
 			if (Math.abs(objPos.x()-pos.x()) <= maxRange  && Math.abs(objPos.y()-pos.y()) <= maxRange) {
-				inRadiusObjects.put(objPos, obj.getValue());
+				inRadiusObjects.put(obj.getKey(), objPos);
 			}
 		}
 
@@ -218,13 +222,13 @@ public class ObservedSky {
 		//Null by default to be able to know whether the for loop found a an object in the given range or not.
 		CelestialObject closest = null;
 		//Computes the distance, if smaller than the current smallest, updates the distance and the closest object.
-		for (CartesianCoordinates coord : posCelestialObjectMap.keySet()) {
-			double dist = getDistance(pos, coord);
+		for (CelestialObject obj : celestialObjectPosMap.keySet()) {
+			double dist = getDistance(pos, celestialObjectPosMap.get(obj));
 
 			//Updates distance if new min distance is found
 			if (dist < minDist) {
-				minDist = getDistance(pos, coord);
-				closest = posCelestialObjectMap.get(coord);
+				minDist = dist;
+				closest = obj;
 			}
 		}
 		
