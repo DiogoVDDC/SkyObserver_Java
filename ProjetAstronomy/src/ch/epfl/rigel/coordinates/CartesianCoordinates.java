@@ -5,12 +5,21 @@ import java.util.Locale;
 /**
  * Representation of Cartesian coordinates
  * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
+ *
  */
 public final class CartesianCoordinates {
     
+	//X coordinate of the position.
     private double x;
+    //Y coordinate of the position.
     private double y;
 
+    /**
+     * Constructor for cartesian coordinates.
+     * @param x: x coordinate.
+     * @param y: y coorinate.
+     */
     private CartesianCoordinates(double x, double y) {
         this.x = x;
         this.y = y;

@@ -8,6 +8,7 @@ import ch.epfl.rigel.Preconditions;
  * Allow to create a closed interval.
  * 
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
 public final class ClosedInterval extends Interval {
@@ -33,7 +34,7 @@ public final class ClosedInterval extends Interval {
     }
     
     /**
-     * Constructor to create a closed interval centralized on 0 and symmetric with the given width.
+     * Constructor to create a closed interval centred on 0 and symmetric with the given width.
      * 
      * @param size: the size of the interval.
      * @return: the newly created closed interval.
@@ -44,9 +45,9 @@ public final class ClosedInterval extends Interval {
     }
     
     /**
-     * Method to normalize a given number to the given interval.
-     * @param v: the number to normalize.
-     * @return: the normalized angle.
+     * Method to normalise a given number to the given interval.
+     * @param v: the number to normalise.
+     * @return: the normalised angle.
      */
     public double clip(double v) {
         if(v <= low()) return low();

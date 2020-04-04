@@ -2,19 +2,21 @@
 
 import java.util.Locale;
 import ch.epfl.rigel.Preconditions;
+import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import ch.epfl.rigel.math.RightOpenInterval;
 
 /**
  * Representation of coordinates in ecliptic system.
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class EclipticCoordinates extends SphericalCoordinates{
 
     // latitude interval in terms of radians, -pi/2 to pi/2 radians
     private final static ClosedInterval latInterval = ClosedInterval.symmetric(Math.PI);
     // longitude interval in terms of radians, 0 to 2pi radians
-    private final static RightOpenInterval lonInterval = RightOpenInterval.of(0, 2*Math.PI);
+    private final static RightOpenInterval lonInterval = RightOpenInterval.of(0, Angle.TAU);
     
     /**
      * Private constructor used only by the auxiliary constructor.
