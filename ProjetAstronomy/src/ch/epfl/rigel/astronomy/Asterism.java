@@ -9,6 +9,7 @@ import ch.epfl.rigel.Preconditions;
 /**
  * Class representating an asterism.
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public final class Asterism {
     

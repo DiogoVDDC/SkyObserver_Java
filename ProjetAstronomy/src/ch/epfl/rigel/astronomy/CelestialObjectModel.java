@@ -5,6 +5,7 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 /**
  * Representation of Celestial Object.
  * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
  */
 public interface CelestialObjectModel<O> {
 	

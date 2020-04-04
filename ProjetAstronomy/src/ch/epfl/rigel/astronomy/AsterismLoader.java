@@ -6,16 +6,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.plaf.SliderUI;
-
 import ch.epfl.rigel.astronomy.StarCatalogue.Builder;
 import ch.epfl.rigel.astronomy.StarCatalogue.Loader;
 
+/**
+ * Enum used to load an asterism from an asterism catalogue.
+ * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ *
+ */
 public enum AsterismLoader implements Loader{
     INSTANCE;
 
@@ -31,6 +34,7 @@ public enum AsterismLoader implements Loader{
             starIdMap.put(builder.stars().get(i).hipparcosId(), builder.stars().get(i));
         }
 
+        //String which will contain the lines of the document.
         String b;
         
         try(BufferedReader s = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.US_ASCII))){
@@ -42,17 +46,11 @@ public enum AsterismLoader implements Loader{
 
                 // get the hipparcosId in a string array
                 String[] splitLine = b.split(",");
-                
-//                System.out.println(Arrays.toString(splitLine));
-//                
-//                System.out.println(Arrays.toString(starIdMap.keySet().toArray()));
 
                 //add the star associated with the id
                 for(int i = 0; i < splitLine.length; i++) {
                     starList.add(starIdMap.get(Integer.parseInt(splitLine[i])));
                 }
-                
-              //  System.out.println("added star list" + starList.toString());
 
                 // create new asterism from star list
                 Asterism asterism = new Asterism(starList);

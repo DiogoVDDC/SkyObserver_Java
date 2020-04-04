@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
@@ -35,7 +36,7 @@ public class ObservedSky {
 	//one for it's x coordinate and the second for the y coordinate.
 	private final Double[] planetPositions;
 	//
-	private final Star[] stars;
+	private final List<Star> stars;
 	//Position of the stars stored the same way as the planets' positions.
 	private final Double[] starPositions;
 	//Catalogue of stars and asterisms.
@@ -58,7 +59,7 @@ public class ObservedSky {
 		
 		this.catalogue = catalogue;
 		
-		stars = (Star[]) catalogue.stars().toArray();
+		stars = catalogue.stars();
 		
 		//Number of days since J2010 for the given date "when".
 		double daysSinceJ2010 = Epoch.J2010.daysUntil(when);
@@ -101,7 +102,7 @@ public class ObservedSky {
 		
 		//Defining the stars positions in Cartesian coordinates.
 		starPositions = new Double[catalogue.stars().size()*2];
-		for (int i = 0; i < stars.length; i++) {
+		for (int i = 0; i < stars.size(); i++) {
 			Star star = catalogue.stars().get(i);
 			CartesianCoordinates starPos = projection.apply(convEquToHor.apply(star.equatorialPos()));
 			starPositions[2 * i] = starPos.x();
@@ -165,8 +166,8 @@ public class ObservedSky {
 	 * Getter for the stars.
 	 * @return: table containing each stars.
 	 */
-	public Star[] stars() {
-		return stars.clone();
+	public List<Star> stars() {
+		return List.copyOf(stars());
 	}
 	
 	/**
