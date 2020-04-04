@@ -57,17 +57,17 @@ public class ObservedSkyTest {
         
         sky = new ObservedSky(time, geoCoords, stereo, catalogue);
         
-        assertEquals("Tau Phe", sky.objectClosestTo(stereo
+        assertEquals("TauPhe", sky.objectClosestTo(stereo
                 .apply(new EquatorialToHorizontalConversion(time, geoCoords)
                         .apply(EquatorialCoordinates.of(0.004696959812148989,
                                 -0.861893035343076))),
                 0.1).get().name());
 
-//        assertEquals(Optional.empty(), sky.objectClosestTo(stereo
-//                .apply(new EquatorialToHorizontalConversion(time, geoCoords)
-//                        .apply(EquatorialCoordinates.of(0.004696959812148989,
-//                                -0.8618930353430763))),
-//                0.001));
+        assertEquals(Optional.empty(), sky.objectClosestTo(stereo
+                .apply(new EquatorialToHorizontalConversion(time, geoCoords)
+                        .apply(EquatorialCoordinates.of(0.004696959812148989,
+                                -0.8618930353430763))),
+                0.001));
     }
 
 }
