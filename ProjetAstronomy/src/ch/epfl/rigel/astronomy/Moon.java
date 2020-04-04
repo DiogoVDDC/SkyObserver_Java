@@ -8,10 +8,11 @@ import ch.epfl.rigel.math.ClosedInterval;
 
 /**
  * Class representing the moon.
- * @author Theo Houle  $(312432)
+ * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
-public class Moon extends CelestialObject{
+public final class Moon extends CelestialObject{
 
     //Interval in which the phase must be contained.
     private final static ClosedInterval phaseInterval = ClosedInterval.of(0, 1);
@@ -24,6 +25,7 @@ public class Moon extends CelestialObject{
      * @param angularSize: angular size of the moon.
      * @param magnitude: magnitude of the moon.
      * @param phase: phase of the moon.
+     * @throws IllegalArgumentException if  the phase isn't in the interval [0,1].
      */
     public Moon(EquatorialCoordinates equatorialPos, float angularSize,
             float magnitude, float phase) {
@@ -31,6 +33,7 @@ public class Moon extends CelestialObject{
         Preconditions.checkInInterval(phaseInterval, phase);
         this.phase = phase;
     }
+    
     @Override
     public String info() {
         return String.format(Locale.ROOT, "Lune (%.1f%%)", phase*100);

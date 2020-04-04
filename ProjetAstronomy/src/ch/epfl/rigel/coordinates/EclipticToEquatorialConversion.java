@@ -9,13 +9,17 @@ import ch.epfl.rigel.math.Polynomial;
 
 /**
  * Allows the convertion from ecliptic to equatorial coordinates
- * @author Diogo Valdivieso Damasio Da Costa (311673) 
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
+ *
  */
-
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates>{
 
+	//Ecliptic obliquity.
     private final double eclipticObliquity;
+    //Cosine of the ecliptic obliquity
     private final double cosOfEclipticObliquity;
+    //Sine of the eccliptic obliquity.
     private final double sinOfEclipticObliquity;
     
     @Override
@@ -46,11 +50,17 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     }
     
     @Override
+    /**
+     * Redifined to prevent using it.
+     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    /**
+     * Redifined to prevent using it.
+     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }

@@ -4,12 +4,14 @@ import ch.epfl.rigel.math.Interval;
 
 /**
  * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
+ *
  */
 
 public final class Preconditions {
 
     /**
-     * Empty constructor to prevent instantiation of the Precondition class.
+     * Private constructor to prevent instantiation of the Precondition class.
      */
     private Preconditions () {}
     

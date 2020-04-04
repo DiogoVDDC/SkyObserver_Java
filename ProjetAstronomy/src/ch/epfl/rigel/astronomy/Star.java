@@ -7,10 +7,14 @@ import ch.epfl.rigel.math.ClosedInterval;
 /**
  * Representation of different planet
  * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Theo Houle (312432)
+ *
  */
 public final class Star extends CelestialObject{
     
+	//Hipparcos ID of the star.
     private int hipparcosId;
+    //Color index of the star.
     private float colorIndex;
     
     /**
@@ -19,15 +23,15 @@ public final class Star extends CelestialObject{
      * @param name: name to identify a star
      * @param equatorialPos: the position of the star in equatorial coordinates
      * @param magnitude: magnitude of the star
-     * @param colorIndex: color of the star 
+     * @param colorIndex: color of the star
+     * @throws IllegalArgumentException if the hipparcosId is less than 0 or
+     * if the colorIndex isn't in the interval [-0.5, 5.5].
      */
     public Star(int hipparcosId, String name, EquatorialCoordinates equatorialPos, float magnitude , float colorIndex) {
         super(name, equatorialPos, 0, magnitude); 
-        
-        if(hipparcosId < 0) {
-            throw new IllegalArgumentException();
-        }
-        
+        //Check that the hipparcosID is positive.
+        Preconditions.checkArgument(hipparcosId >= 0);
+        //Check if the colorIndex is in the right interval.
         this.colorIndex = (float) Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
         this.hipparcosId = hipparcosId;
     }

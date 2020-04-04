@@ -1,13 +1,8 @@
 package ch.epfl.rigel.astronomy;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +20,6 @@ public final class StarCatalogue {
 
     //List of stars of the catalogue.
     private  List<Star> starList;
-    //List of asterism of the catalogue.
-    private  List<Asterism> asterisms;
     //Map with key asterism and a list of indices (in the hyg star catalogue) of each star for the asterism. 
     private final Map<Asterism, List<Integer>> asterismMap;
     
@@ -39,8 +32,7 @@ public final class StarCatalogue {
      * @throws IOException: If error while reading the hyg stars catalogue file.
      */
     public StarCatalogue(List<Star> stars, List<Asterism> asterisms) throws IOException{
-        this.starList = List.copyOf(stars);        
-        this.asterisms = List.copyOf(asterisms);
+        this.starList = List.copyOf(stars);
         
         starIndexMap = new HashMap<Star, Integer>() ;
         
@@ -94,6 +86,12 @@ public final class StarCatalogue {
         return Set.copyOf(asterismMap.keySet());
     }
 
+    /**
+     * Represents a loader of star and asterism catalogues.
+     * @author Theo Houle (312432)
+     * @author Diogo Valdivieso Damasio Da Costa (311673)
+     *
+     */
    public interface Loader{        
         /**
          * Defines a generic load method to add the stars and asterisms to the builder
@@ -104,6 +102,12 @@ public final class StarCatalogue {
         public abstract void load(InputStream inputStream, Builder builder) throws IOException;
     }
 
+   /**
+    * Represents a builder of star catalogue.
+    * @author Theo Houle (312432)
+    * @author Diogo Valdivieso Damasio Da Costa (311673)
+    *
+    */
     public final static class Builder {
         private List<Star> starList = new ArrayList<Star>();
         private List<Asterism> asterismList = new ArrayList<Asterism>();

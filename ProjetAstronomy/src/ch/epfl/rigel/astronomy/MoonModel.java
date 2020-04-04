@@ -5,6 +5,12 @@ import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 
+/**
+ * Enum allowing to create a model of the moon at a given time.
+ * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ *
+ */
 public enum MoonModel implements CelestialObjectModel<Moon>{
     // in degrees 
     MOON(91.929336,130.143076,291.682547,5.145396,0.0549);
@@ -21,6 +27,14 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
     private final double orbitEccen;
     private ClosedInterval phaseInterval = ClosedInterval.of(0, 1);
 
+    /**
+     * MoonModel constructor.
+     * @param averageLon: Mean longitude of the moon (in degrees).
+     * @param averagePerigreeLon: Mean longitude at Perigee (in degrees).
+     * @param nodeLon: Longitude of the ascending node (in degrees).
+     * @param orbitTilt: Tilt angle of the orbit (in degrees).
+     * @param orbitEccentricity: Eccentricity of the orbit
+     */
     MoonModel(double averageLon, double averagePerigreeLon, double nodeLon, double orbitTilt, double orbitEccentricity) {
         this.averageLon = Angle.ofDeg(averageLon);
         this.averageLonPerigee = Angle.ofDeg(averagePerigreeLon);
@@ -74,12 +88,16 @@ public enum MoonModel implements CelestialObjectModel<Moon>{
         //Ecliptic lattitude of the moon
         double eclipticLat = Math.asin(Math.sin(trueOrbitLon - correctedNodeLon) * Math.sin(orbitTilt));
         
+        //Ecliptic coordinates of the moon based on the previously calculated longitude and lattitude.
         EclipticCoordinates eclipticCoord = EclipticCoordinates.of(eclipticLon, eclipticLat);        
         
+        //Phase of the moon.
         double phase = phaseInterval.clip(((1 - Math.cos(trueOrbitLon - sun.eclipticPos().lon()))/2));
         
+        //Distance between earth and the moon.
         double rho = (1 - Math.pow(orbitEccen,2))/(1 + orbitEccen*Math.cos(correctedAnomaly + centerCorrection));
         
+        //Angular size of the moon.
         double angularSize = Angle.ofDeg(0.5181/rho);
                 
         return new Moon(eclipticToEquatorialConversion.apply(eclipticCoord), (float)angularSize, 0, (float)phase);

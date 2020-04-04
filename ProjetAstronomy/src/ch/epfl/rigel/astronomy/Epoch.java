@@ -10,7 +10,8 @@ import java.time.temporal.ChronoUnit;
 
 /**
  * Enumeration of the two reference epoch J2000 & J2010.
- * @author Theo Houle (312432)  *
+ * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public enum Epoch {    
     J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0),
@@ -18,8 +19,8 @@ public enum Epoch {
     J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1), LocalTime.of(0, 0),
             ZoneOffset.UTC));
     
-    private final double MILLI_TO_DAYS = 1000.0*60.0*60.0*24.0;
-    private final double DAYS_JULIAN_CENTURY = 36525.0;
+    private final double MILLI_PER_DAYS = 1000.0*60.0*60.0*24.0;
+    private final double DAYS_PER_JULIAN_CENTURY = 36525.0;
     // The precise date of the two enums.
     private ZonedDateTime date;
     
@@ -35,7 +36,7 @@ public enum Epoch {
     public double daysUntil(ZonedDateTime when) {
         // To avoid loosing precision, we use milliseconds instead of hours and then convert back to hours.
         double h = this.date.until(when, ChronoUnit.MILLIS);
-        return h/MILLI_TO_DAYS;
+        return h/MILLI_PER_DAYS;
     }
     
     /**
@@ -44,7 +45,6 @@ public enum Epoch {
      * @return: the amount of julian centuries separating the two dates.
      */
     public double julianCenturiesUntil(ZonedDateTime when) {
-        double h = this.date.until(when, ChronoUnit.MILLIS);
-        return daysUntil(when)/DAYS_JULIAN_CENTURY;
+        return daysUntil(when)/DAYS_PER_JULIAN_CENTURY;
     }
 }

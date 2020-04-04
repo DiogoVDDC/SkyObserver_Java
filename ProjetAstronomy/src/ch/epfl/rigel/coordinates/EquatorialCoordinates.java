@@ -9,16 +9,21 @@ import ch.epfl.rigel.math.RightOpenInterval;
 
 /**
  * Representation of EquatorialCoordinates.
- * @author Diogo Valdivieso Damasio Da Costa (311673)
+ * @author Diogo Valdivieso Damasio Da Costa (311673) 
+ * @author Theo Houle (312432)
  */
 public final class EquatorialCoordinates extends SphericalCoordinates{
 
     //longitude interval expressed in terms of radians, 0 to 2*pi
-    private static final RightOpenInterval lonInterval = RightOpenInterval.of(0, 2* Math.PI);
+    private static final RightOpenInterval lonInterval = RightOpenInterval.of(0, Angle.TAU);
     //latitude interval expressed in terms of radians, -pi/2 to pi/2 degrees
     private static final ClosedInterval latInterval = ClosedInterval.symmetric(Math.PI);
 
-
+    /**
+     * Constructor for EquatorialCoordinates.
+     * @param lat: latitude of the position
+     * @param lon: longitude of the position.
+     */
     private EquatorialCoordinates(double lat, double lon) {
         super(lat, lon);        
     }

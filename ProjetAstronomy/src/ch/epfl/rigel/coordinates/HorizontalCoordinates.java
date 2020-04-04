@@ -45,21 +45,6 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
     }
     
     /**
-     * @return: returns azimuth in radian.
-     */
-    public double az() {
-        return lon();
-    }
-    
-    /**
-     * Getter for the azimuth in degrees.
-     * @return: the azimuth converted in degrees.
-     */
-    public double azDeg() {
-        return lonDeg();
-    }
-    
-    /**
      * Allows to know in which octant of the 8 cardinals point the azimut angle is in.
      * @param n: the string representation of the north.
      * @param e: the string representation of the east.
@@ -93,7 +78,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
     }
 
     /**
-     * Getter for the altitude.
+     * Getter for the altitude in radiant.
      * @return: the altitude of the coordinates.
      */
     public double alt() {
@@ -106,6 +91,22 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
      */
     public double altDeg() {
         return latDeg();
+    }
+    
+    /**
+     * Getter got the azimuth in radiant.
+     * @return: returns azimuth in radiant.
+     */
+    public double az() {
+        return lon();
+    }
+    
+    /**
+     * Getter for the azimuth in degrees.
+     * @return: the azimuth converted in degrees.
+     */
+    public double azDeg() {
+        return lonDeg();
     }
 
     /**

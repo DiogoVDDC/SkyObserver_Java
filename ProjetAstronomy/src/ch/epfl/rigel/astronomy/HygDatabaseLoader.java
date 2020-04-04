@@ -10,18 +10,13 @@ import ch.epfl.rigel.astronomy.StarCatalogue.Builder;
 import ch.epfl.rigel.astronomy.StarCatalogue.Loader;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
+/**
+ * Enum used to load the stars for the hyg star catalogue.
+ * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 public enum HygDatabaseLoader implements Loader{
     INSTANCE;
-
-    private int hipparcosId;// MOVE IN LOAD?
-    private float colorIndex;// MOVE IN LOAD?
-    private float magnitude;// MOVE IN LOAD?
-    private double rarad;// MOVE IN LOAD?
-    private double decrad;// MOVE IN LOAD?
-    private String bayer;// MOVE IN LOAD?
-    private String con; // MOVE IN LOAD?
-    private EquatorialCoordinates equatorialPos; // MOVE IN LOAD?
-    private String name; // MOVE IN LOAD?
     
     // Enum to get the ordinal of the columns
     private enum columnEnum{
@@ -34,22 +29,32 @@ public enum HygDatabaseLoader implements Loader{
     @Override
     public void load(InputStream inputStream, Builder builder) throws IOException {
         
+    	//String used to contain the content of each line.
         String b;
+        //Pointer to keep track of the current line.
         int line = 0;
+        
         try(BufferedReader s = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.US_ASCII))){       
-	        // reads line by line of the input stream
-	        while ((b = s.readLine()) != null) {       
+	        // reads line by line of the input stream until no more to read(null).
+	        while ((b = s.readLine()) != null) {             
 	
 	            // skips the first line that has the column names
 	            if(line != 0) {	                
     	            //splits the lines in columns
     	            String[] splitLine = b.split(",");  
-    	            hipparcosId = 0;
-    	            magnitude = 0;
-    	            colorIndex = 0;
-    	            rarad = 0;
-    	            decrad = 0;    	            
+    	            
+    	            //Hipparcos number of the star.
+    	            int hipparcosId = 0;
+    	            //Magnitude of the star
+    	            float magnitude = 0;
+    	            //Color index of the star.
+    	            float colorIndex = 0;
+    	            //Right ascension of the star in radiant.
+    	            double rarad = 0;
+    	            //Declination of the star in radiant.
+    	            double decrad = 0;    	            
     	           
+    	            //Definig the above elements based on the values of the catalogue.
     	            if(!splitLine[columnEnum.HIP.ordinal()].isBlank()) {
     	                hipparcosId = Integer.parseInt(splitLine[columnEnum.HIP.ordinal()]);
     	            }
@@ -74,30 +79,33 @@ public enum HygDatabaseLoader implements Loader{
     	                decrad = Double.parseDouble(splitLine[columnEnum.DECRAD.ordinal()]); 
     	            }
 
-    	            equatorialPos = EquatorialCoordinates.of(rarad, decrad);
+    	            //Building the equatorial coordinates of the star given rarad and decrad.
+    	            EquatorialCoordinates equatorialPos = EquatorialCoordinates.of(rarad, decrad);
     	            
-    	            if(!splitLine[columnEnum.BAYER.ordinal()].isBlank()) {
-    	                bayer = splitLine[columnEnum.BAYER.ordinal()];
+    	            //Define the name of the star,  if the column for the name in the
+    	            //catalogue is empty, the name consists of the bayer name and the
+    	            //shortened name of it's constellation. If the bayer name
+    	            //is empty, then it's replaced with "? ".
+    	            String name;
+    	            if(!(splitLine[columnEnum.PROPER.ordinal()].isBlank())) {
+    	                name = splitLine[columnEnum.PROPER.ordinal()];        	      
     	            } else {
-    	                bayer = "? ";
-    	            }
+    	            	String bayer;
+    	            	if (!splitLine[columnEnum.BAYER.ordinal()].isBlank()) {
+    	            		bayer = splitLine[columnEnum.BAYER.ordinal()];
+    	            	} else {
+    	            		bayer = "? ";
+    	            	}
+    	            	String con = splitLine[columnEnum.CON.ordinal()]; 	 
+    	            	name = bayer + con;
+    	            }     
 
-    	            con = splitLine[columnEnum.CON.ordinal()]; 	     
-    	
-    	            
-    	            if(splitLine[columnEnum.PROPER.ordinal()].isBlank()) {
-    	                name = bayer + con;        	      
-    	            } else {
-    	                name = splitLine[columnEnum.PROPER.ordinal()];
-    	            }                
-    	     
     	            // creates new star to be added to the starList
     	            Star star = new Star(hipparcosId, name, equatorialPos, magnitude, colorIndex);    	            
     	          
     	            // add the star to the builder
     	            builder.addStar(star);
 	            } 
-	            
 	            line++;
 	        }        
         }

@@ -11,6 +11,7 @@ import ch.epfl.rigel.math.Polynomial;
 /**
  * Allows to compute the sidereal time of a given location at given date at a given time.
  * @author Theo Houle (312432)
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
 public final class SiderealTime {
@@ -29,14 +30,19 @@ public final class SiderealTime {
      * @return: the sidereal time of greenwich at the given moment.
      */
     public static double greenwich(ZonedDateTime when) {
-        System.out.println(Epoch.J2000.julianCenturiesUntil(when));
+    	//Convert the given time to be in UTC time.
         ZonedDateTime offSettedDate = when.withZoneSameInstant(ZoneOffset.UTC);
+        //Truncate the date to have the begining (at 00h00).
         ZonedDateTime truncatedToDay = offSettedDate.truncatedTo(ChronoUnit.DAYS);
+        //Number of julian centuries since the begining of the given date.
         double T = Epoch.J2000.julianCenturiesUntil(truncatedToDay);
-        System.out.println(T);
+        //Number of hours since the begining of the day.
         double t = (truncatedToDay.until(offSettedDate, ChronoUnit.MILLIS)) * MILLIS_PER_HOUR;
+        
+        //Given the previously calculated values T and t, compute the values s0 and s1 using the specific polynomes.
         double s0 = polyS0.at(T);
         double s1 = polyS1.at(t);
+        //Return the sidereal time normalized between [0, t[.
         return Angle.normalizePositive(Angle.ofHr(s0+s1));
     }
     
