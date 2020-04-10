@@ -85,7 +85,8 @@ public class ObservedSky {
 		
 		//Modelization of the solar system planets and their positions in Cartesian coordinates.
 		planets = new ArrayList<>(7);
-		planetPositions = new double[16];
+		planetPositions = new double[14];
+		int index  = 0;
 		for (PlanetModel planetModel : PlanetModel.ALL) {		    
 		    if(planetModel.name() != "EARTH") {
     			//Modelization of the planet at the given moment.
@@ -94,10 +95,12 @@ public class ObservedSky {
     			CartesianCoordinates planetPos = projection.apply(convEquToHor.apply(planet.equatorialPos()));
     			planets.add(planet);
     			
-    			planetPositions[2 * planetModel.ordinal()] = planetPos.x();
-    			planetPositions[2 * planetModel.ordinal() + 1] = planetPos.y();
+    			planetPositions[2 * index] = planetPos.x();
+    			planetPositions[2 * index + 1] = planetPos.y();
     			//Adding the planet and it's position in the map containing all object and their positions.
     			celestialObjectPosMap.put(planet, planetPos);
+    			
+    			index++;
 		    }
 		}
 		
