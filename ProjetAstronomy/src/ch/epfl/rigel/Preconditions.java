@@ -10,9 +10,8 @@ import ch.epfl.rigel.math.Interval;
 
 public final class Preconditions {
 
-    /**
-     * Private constructor to prevent instantiation of the Precondition class.
-     */
+
+    //Private constructor to prevent instantiation of the Precondition class.
     private Preconditions () {}
     
     /**

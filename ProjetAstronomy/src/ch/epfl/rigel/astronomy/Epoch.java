@@ -19,8 +19,8 @@ public enum Epoch {
     J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1), LocalTime.of(0, 0),
             ZoneOffset.UTC));
     
-    private final double MILLI_PER_DAYS = 1000.0*60.0*60.0*24.0;
-    private final double DAYS_PER_JULIAN_CENTURY = 36525.0;
+    private static final double MILLI_PER_DAYS = 1000.0*60.0*60.0*24.0;
+    private static final double DAYS_PER_JULIAN_CENTURY = 36525.0;
     // The precise date of the two enums.
     private ZonedDateTime date;
     

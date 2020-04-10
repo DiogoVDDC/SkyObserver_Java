@@ -59,7 +59,7 @@ public class ObservedSky {
 		
 		this.catalogue = catalogue;
 		
-		stars = catalogue.stars();
+		stars = List.copyOf(catalogue.stars());
 		
 		//Number of days since J2010 for the given date "when".
 		double daysSinceJ2010 = Epoch.J2010.daysUntil(when);
