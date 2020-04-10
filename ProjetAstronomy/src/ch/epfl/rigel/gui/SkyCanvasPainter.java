@@ -50,7 +50,7 @@ public final class SkyCanvasPainter {
 			Double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
 			
 			//Transforming the disk size according to the affine transformation.
-			Point2D transformedSize = transform.deltaTransform(d, d);
+			Point2D transformedSize = transform.deltaTransform(0, d);
 			
 			//Defining the star coordinates.
 			Double starX = transformedCoords[observedSky.stars().indexOf(star)*2];
@@ -80,7 +80,7 @@ public final class SkyCanvasPainter {
 			Double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
 			
 			//Transforming the disk size according to the affine transformation.
-			Point2D transformedSize = transform.deltaTransform(d,d);
+			Point2D transformedSize = transform.deltaTransform(0,d);
 			
 			//Defining the planet's coordinates.
 			Double planetX = transformedCoords[observedSky.planets().indexOf(planet)];
