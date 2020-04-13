@@ -37,6 +37,7 @@ public final class Star extends CelestialObject{
     }
     
     /**
+     * Getter for hipparcosId
      * @return hipparcosId: returns the unique id associated to the star
      */
     public int hipparcosId() {
@@ -44,6 +45,7 @@ public final class Star extends CelestialObject{
     }
     
     /**
+     * Getter for colortemperature
      * @return colortemperature: returns the temperature in kelvins rounded to 
      */
     public int colorTemperature() {

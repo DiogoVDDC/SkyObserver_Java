@@ -25,8 +25,8 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Getter for the longitude in radiant.
-     * @return: returns longitude in radiant.
+     * Getter for the longitude in radians.
+     * @return: returns longitude in radians.
      */
     double lon() {
         return lon;
@@ -41,14 +41,15 @@ abstract class SphericalCoordinates {
     }
 
     /**
-     * Getter for the latitude in radiant.
-     * @return: return latitude in radiant.
+     * Getter for the latitude in radians.
+     * @return: return latitude in radians.
      */
     double lat() {
         return lat;
     }
 
     /**
+     * Getter for latitude in degrees
      * @return: return latitude in degrees
      */
     double latDeg() {

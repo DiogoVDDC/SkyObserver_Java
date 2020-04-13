@@ -1,13 +1,13 @@
 package ch.epfl.rigel.astronomy;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
@@ -31,14 +31,14 @@ public class ObservedSky {
 	//Position in Cartesian coordinates of the moon
 	private final CartesianCoordinates moonPosition;
 	//Models of the 7 solar system planets at a given time.
-	private final Planet[] planets;	
+	private final List<Planet> planets;	
 	//Positions in Cartesian coordinates of the planets. Each star has two slot,
 	//one for it's x coordinate and the second for the y coordinate.
-	private final Double[] planetPositions;
+	private final double[] planetPositions;
 	//
 	private final List<Star> stars;
 	//Position of the stars stored the same way as the planets' positions.
-	private final Double[] starPositions;
+	private final double[] starPositions;
 	//Catalogue of stars and asterisms.
 	private final StarCatalogue catalogue;
 	//List containing every celestial objects
@@ -59,7 +59,7 @@ public class ObservedSky {
 		
 		this.catalogue = catalogue;
 		
-		stars = catalogue.stars();
+		stars = List.copyOf(catalogue.stars());
 		
 		//Number of days since J2010 for the given date "when".
 		double daysSinceJ2010 = Epoch.J2010.daysUntil(when);
@@ -84,27 +84,29 @@ public class ObservedSky {
 		celestialObjectPosMap.put(sun, sunPosition);
 		
 		//Modelization of the solar system planets and their positions in Cartesian coordinates.
-		planets = new Planet[8];
-		planetPositions = new Double[16];
+		planets = new ArrayList<>(7);
+		planetPositions = new double[14];
+		int index  = 0;
 		for (PlanetModel planetModel : PlanetModel.ALL) {		    
 		    if(planetModel.name() != "EARTH") {
-		        System.out.println(planetModel.name());
     			//Modelization of the planet at the given moment.
     			Planet planet = planetModel.at(daysSinceJ2010, convEclToEqu);
     			//Conversion to cartesian coordinates of the planet.
     			CartesianCoordinates planetPos = projection.apply(convEquToHor.apply(planet.equatorialPos()));
-    			planets[planetModel.ordinal()] = planet;
+    			planets.add(planet);
     			
-    			planetPositions[2 * planetModel.ordinal()] = planetPos.x();
-    			planetPositions[2 * planetModel.ordinal() + 1] = planetPos.y();
+    			planetPositions[2 * index] = planetPos.x();
+    			planetPositions[2 * index + 1] = planetPos.y();
     			//Adding the planet and it's position in the map containing all object and their positions.
     			celestialObjectPosMap.put(planet, planetPos);
+    			
+    			index++;
 		    }
 		}
 		
 		
 		//Defining the stars positions in Cartesian coordinates.
-		starPositions = new Double[catalogue.stars().size()*2];
+		starPositions = new double[catalogue.stars().size()*2];
 		for (int i = 0; i < stars.size(); i++) {
 			Star star = catalogue.stars().get(i);
 			CartesianCoordinates starPos = projection.apply(convEquToHor.apply(star.equatorialPos()));
@@ -151,8 +153,8 @@ public class ObservedSky {
 	 * Getter for the models of the planets.
 	 * @return: table containing each model of the planets.
 	 */
-	public Planet[] planets() {
-		return planets.clone();
+	public List<Planet> planets() {
+		return List.copyOf(planets);
 	}
 	
 	/**
@@ -161,7 +163,7 @@ public class ObservedSky {
 	 * Each planet has to slot, one for it's x coord and the other for the y
 	 * coord.
 	 */
-	public Double[] planetPositions() {
+	public double[] planetPositions() {
 		return planetPositions.clone();
 	}
 	
@@ -170,7 +172,7 @@ public class ObservedSky {
 	 * @return: table containing each stars.
 	 */
 	public List<Star> stars() {
-		return List.copyOf(stars());
+		return List.copyOf(stars);
 	}
 	
 	/**
@@ -178,7 +180,7 @@ public class ObservedSky {
 	 * @return: table containing each star's position arranged the same way
 	 * as the positions of the planets.
 	 */
-	public Double[] starPositions() {
+	public double[] starPositions() {
 		return starPositions.clone();
 	}
 	

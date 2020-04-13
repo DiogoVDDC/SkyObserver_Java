@@ -93,17 +93,11 @@ public final class Polynomial {
     }
 
     @Override
-    /**
-     * Redefined to prevent using it.
-     */
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    /**
-     * Redefinde to prevent using it.
-     */
     public int hashCode() {
         throw new UnsupportedOperationException();
     }

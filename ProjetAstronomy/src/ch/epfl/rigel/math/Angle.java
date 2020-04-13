@@ -29,8 +29,7 @@ public final class Angle {
     private Angle () {}
 
     /**
-     * Normalise an angle in radiant to the interval [0, tau[.
-     * 
+     * Normalise an angle in radiant to the interval [0, tau[.     
      * @param rad: angle in radiant to normalise.
      * @return: normalised angle.
      */
@@ -44,21 +43,20 @@ public final class Angle {
     }
 
     /**
-     * Transform angle from second to radiant.
-     * 
+     * Transform angle from second to radians.     
      * @param sec: angle to conversion.
-     * @return: converted angle in radiant.
+     * @return: converted angle in radians.
      */
     public static double ofArcsec(double sec) {
         return sec*ARC_SECOND_PER_RAD;
     }
 
     /**
-     * Transform an angle in DMS system to radiant.
+     * Transform an angle in DMS system to radians.
      * @param deg: degrees of the angle.
      * @param min: minutes of the angle.
      * @param sec: seconds of the angle.
-     * @return: the converted angle in radiant.
+     * @return: the converted angle in radians.
      */
     public static double ofDMS(int deg, int min, double sec) {
         if(  min < 0 || min >= 60 || sec < 0 || sec >= 60) {
@@ -70,9 +68,9 @@ public final class Angle {
     }
 
     /**
-     * Transform an angle from degrees to radiant.
+     * Transform an angle from degrees to radians.
      * @param deg(Double): the angle to convert.
-     * @return(Double): the angle converted in radiant.
+     * @return(Double): the angle converted in radians.
      */
     public static double ofDeg(double deg) {
         return Math.toRadians(deg);
@@ -88,9 +86,9 @@ public final class Angle {
     }
 
     /**
-     * Transform angle from hours to radiant.
+     * Transform angle from hours to radians.
      * @param hr(Double): the angle in hours to convert.
-     * @return(Double): the angle converted in radiant.
+     * @return(Double): the angle converted in radians.
      */
     public static double ofHr(double hr) {
         return hr* RAD_PER_ARC_HOUR;

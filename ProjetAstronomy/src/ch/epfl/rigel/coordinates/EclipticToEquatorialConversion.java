@@ -24,6 +24,7 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     
     @Override
     /**
+     * Transforms ecliptic coordinates to equatorial coordinates
      * @param: ecliptic coordinates to be converted
      * @returns: new equatorial coordinates after conversion
      */
@@ -50,17 +51,11 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
     }
     
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }

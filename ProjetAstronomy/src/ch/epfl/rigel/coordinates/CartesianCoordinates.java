@@ -6,7 +6,6 @@ import java.util.Locale;
  * Representation of Cartesian coordinates
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  * @author Theo Houle (312432)
- *
  */
 public final class CartesianCoordinates {
     
@@ -36,7 +35,7 @@ public final class CartesianCoordinates {
     
     /**
      * Getter for the x coordinate.
-     * @return
+     * @return: returns x coordinates
      */
     public double x() {
         return x;
@@ -44,7 +43,7 @@ public final class CartesianCoordinates {
     
     /**
      * Getter for the y coordinate.
-     * @return
+     * @return: returns y coordinates
      */
     public double  y() {
         return y;
@@ -58,11 +57,8 @@ public final class CartesianCoordinates {
     @Override
     public final int hashCode() {
         throw new UnsupportedOperationException();
-    }
-    
-    /**
-     * String representation of cartesian coordinates
-     */
+    }    
+   
     @Override
     public String toString() {
        return String.format(Locale.ROOT, "(x=%.4f, y=%.4f)", x, y);
