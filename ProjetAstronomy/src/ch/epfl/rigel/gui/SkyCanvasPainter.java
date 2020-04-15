@@ -134,18 +134,16 @@ public final class SkyCanvasPainter {
 	public void drawSun(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 		Point2D sunPos = transform.transform(observedSky.sunPosition().x(), observedSky.sunPosition().y());
 		double sunSize = projection.applyToAngle(observedSky.sun().angularSize()); 
-		double relativeSunSize = transform.deltaTransform(sunSize,0).magnitude();
-		double ajustedPosx = ajustedCoordinate(sunPos.getX(), relativeSunSize);
-        double ajustedPosy = ajustedCoordinate(sunPos.getY(), relativeSunSize);
+		double relSunSize = transform.deltaTransform(sunSize,0).magnitude();
 		
 		ctx.setFill(Color.YELLOW.deriveColor(0, 1, 1, 0.25));
-		ctx.fillOval(ajustedPosx - relativeSunSize*1.1, ajustedPosy - relativeSunSize*1.1, relativeSunSize*2.2, relativeSunSize*2.2);
+		ctx.fillOval(sunPos.getX() - relSunSize*1.1, sunPos.getY() - relSunSize*1.1, relSunSize*2.2, relSunSize*2.2);
 
 	    ctx.setFill(Color.YELLOW);
-        ctx.fillOval(ajustedPosx - (relativeSunSize+2)/2 , ajustedPosy - (relativeSunSize+2)/2, relativeSunSize+2, relativeSunSize+2);
+        ctx.fillOval(sunPos.getX() - (relSunSize+2)/2 , sunPos.getY() - (relSunSize+2)/2, relSunSize+2, relSunSize+2);
 
 		ctx.setFill(Color.WHITE);
-		ctx.fillOval(ajustedPosx - relativeSunSize/2, ajustedPosy - relativeSunSize/2, relativeSunSize, relativeSunSize);
+		ctx.fillOval(sunPos.getX() - relSunSize/2, sunPos.getY() - relSunSize/2, relSunSize, relSunSize);
 	}
 	
 	public void drawMoon(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
