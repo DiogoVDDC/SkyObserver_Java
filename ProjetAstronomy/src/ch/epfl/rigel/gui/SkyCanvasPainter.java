@@ -48,8 +48,7 @@ public final class SkyCanvasPainter {
 	public void drawStars(ObservedSky observedSky, StereographicProjection projection, Transform transform) throws IOException {
 		//Transforming all stars positions accoridng to the affine transformation.
 		double[] transformedCoords = new double[observedSky.starPositions().length];
-		transform.transform2DPoints(observedSky.starPositions(), 0, transformedCoords, 0, transformedCoords.length/2);
-		
+		transform.transform2DPoints(observedSky.starPositions(), 0, transformedCoords, 0, transformedCoords.length/2);		
 		
 		//Drawing the asterisms.
 		
@@ -57,7 +56,9 @@ public final class SkyCanvasPainter {
 		ctx.setStroke(Color.BLUE);
 		//Set stroke width to 1.
 		ctx.setLineWidth(1);
+		
 		Bounds bound = canvas.getBoundsInLocal();
+		
 		for (Asterism asterism : observedSky.asterisms()) {
 		    boolean previousIscontained = false;
 		    ctx.beginPath();
@@ -87,14 +88,14 @@ public final class SkyCanvasPainter {
 			Point2D transformedSize = transform.deltaTransform(0, d);
 			
 			//Defining the star coordinates.
-			Double starX = transformedCoords[observedSky.stars().indexOf(star)*2];
-			Double starY = transformedCoords[observedSky.stars().indexOf(star)*2+ 1];
+			Double ajustedStarX = ajustedCoordinate(transformedCoords[observedSky.stars().indexOf(star)*2], transformedSize.magnitude());
+			Double ajustedStarY = ajustedCoordinate(transformedCoords[observedSky.stars().indexOf(star)*2+ 1], transformedSize.magnitude());
 
 			//Set the color to the star's one based on it's color temperature.
 			ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
 			
 			//Drawing the star.
-			ctx.fillOval(starX, starY, transformedSize.magnitude(), transformedSize.magnitude());
+			ctx.fillOval(ajustedStarX, ajustedStarY, transformedSize.magnitude(), transformedSize.magnitude());
 		}
 	}
 	
@@ -120,11 +121,11 @@ public final class SkyCanvasPainter {
 			Point2D transformedSize = transform.deltaTransform(0,d);
 			
 			//Defining the planet's coordinates.
-			Double planetX = transformedCoords[observedSky.planets().indexOf(planet) * 2];
-			Double planetY = transformedCoords[observedSky.planets().indexOf(planet) * 2 + 1];
+			Double ajustedPlanetX = ajustedCoordinate(transformedCoords[observedSky.planets().indexOf(planet) * 2], transformedSize.magnitude());
+			Double ajustedPlanetY = ajustedCoordinate(transformedCoords[observedSky.planets().indexOf(planet) * 2 + 1], transformedSize.magnitude());
 			
 			//Drawing the planet on the canvas.
-			ctx.fillOval(planetX, planetY, transformedSize.magnitude(), transformedSize.magnitude());
+			ctx.fillOval(ajustedPlanetX, ajustedPlanetY, transformedSize.magnitude(), transformedSize.magnitude());
 		}
 		
 		
@@ -132,42 +133,45 @@ public final class SkyCanvasPainter {
 	
 	public void drawSun(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 		Point2D sunPos = transform.transform(observedSky.sunPosition().x(), observedSky.sunPosition().y());
-		double sunSize = projection.applyToAngle(observedSky.sun().angularSize()); //* (transform.getMxx() * 2);
-		double relSunSize = transform.deltaTransform(sunSize,0).magnitude();
+		double sunSize = projection.applyToAngle(observedSky.sun().angularSize()); 
+		double relativeSunSize = transform.deltaTransform(sunSize,0).magnitude();
+		double ajustedPosx = ajustedCoordinate(sunPos.getX(), relativeSunSize);
+        double ajustedPosy = ajustedCoordinate(sunPos.getY(), relativeSunSize);
 		
-		ctx.setFill(Color.YELLOW);
-        ctx.setGlobalAlpha(.25);
-		ctx.fillOval(sunPos.getX()-relSunSize*1.1, sunPos.getY()-relSunSize*1.1, relSunSize*2.2, relSunSize*2.2);
+		ctx.setFill(Color.YELLOW.deriveColor(0, 1, 1, 0.25));
+		ctx.fillOval(ajustedPosx - relativeSunSize*1.1, ajustedPosy - relativeSunSize*1.1, relativeSunSize*2.2, relativeSunSize*2.2);
 
-        ctx.setGlobalAlpha(1);
-        ctx.fillOval(sunPos.getX() - (relSunSize+2)/2 , sunPos.getY() - (relSunSize+2)/2, relSunSize+2, relSunSize+2);
+	    ctx.setFill(Color.YELLOW);
+        ctx.fillOval(ajustedPosx - (relativeSunSize+2)/2 , ajustedPosy - (relativeSunSize+2)/2, relativeSunSize+2, relativeSunSize+2);
 
 		ctx.setFill(Color.WHITE);
-		ctx.fillOval(sunPos.getX() - relSunSize/2, sunPos.getY() - relSunSize/2, relSunSize, relSunSize);
+		ctx.fillOval(ajustedPosx - relativeSunSize/2, ajustedPosy - relativeSunSize/2, relativeSunSize, relativeSunSize);
 	}
 	
 	public void drawMoon(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 		Point2D moonPos = transform.transform(observedSky.moonPosition().x(), observedSky.moonPosition().y());
 		double moonSize = projection.applyToAngle(observedSky.moon().angularSize());
-		Point2D relativeMoonSize = transform.deltaTransform(moonSize,moonSize);
+		Point2D relativeMoonSize = transform.deltaTransform(moonSize, 0);
+		double ajustedPosx = ajustedCoordinate(moonPos.getX(), relativeMoonSize.magnitude());
+		double ajustedPosy = ajustedCoordinate(moonPos.getY(), relativeMoonSize.magnitude());
         
 		ctx.setFill(Color.WHITE);
-		ctx.fillOval(moonPos.getX(), moonPos.getY(), relativeMoonSize.magnitude(), relativeMoonSize.magnitude());
+		ctx.fillOval(ajustedPosx, ajustedPosy, relativeMoonSize.magnitude(), relativeMoonSize.magnitude());
 	}
 	
 	public void drawHorizon(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 	    HorizontalCoordinates horizon = HorizontalCoordinates.ofDeg(0, 0);
 	    
-	    CartesianCoordinates horCoords = projection.circleCenterForParallel(horizon);
-	    Point2D transHorCoords = transform.transform(horCoords.x(), horCoords.y());
+	    CartesianCoordinates horizonCoords = projection.circleCenterForParallel(horizon);
+	    Point2D transHorizonCoords = transform.transform(horizonCoords.x(), horizonCoords.y());
 	    
-	    double horRadius = projection.circleRadiusForParallel(horizon);
-	    double transHorRadius = transform.deltaTransform(horRadius, 0).magnitude();
+	    double horizonRadius = projection.circleRadiusForParallel(horizon);
+	    double transHorizonRadius = transform.deltaTransform(horizonRadius, 0).magnitude();
 	    
 	    ctx.setStroke(Color.RED);
 	    ctx.setLineWidth(2);
-	    ctx.strokeOval(transHorCoords.getX() - transHorRadius, transHorCoords.getY() - transHorRadius,
-	            transHorRadius*2, transHorRadius*2);
+	    ctx.strokeOval(transHorizonCoords.getX() - transHorizonRadius, transHorizonCoords.getY() - transHorizonRadius,
+	            transHorizonRadius*2, transHorizonRadius*2);
 	    
 	    
 	    
@@ -175,11 +179,15 @@ public final class SkyCanvasPainter {
 	    ctx.setTextBaseline(VPos.BASELINE.TOP);
 	    ctx.setLineWidth(1);
 	    
-	    for(cardinalPoints card : cardinalPoints.values()) {
-	        CartesianCoordinates coord = card.getCartesianCoord(projection);
+	    for(cardinalPoints cardPoint : cardinalPoints.values()) {
+	        CartesianCoordinates coord = cardPoint.getCartesianCoord(projection);
 	        Point2D transCoord = transform.transform(coord.x(), coord.y());
-	        ctx.strokeText(card.getFrenchAbrev(), transCoord.getX(), transCoord.getY());
+	        ctx.strokeText(cardPoint.getFrenchAbrev(), transCoord.getX(), transCoord.getY());
 	    }
+	}
+	
+	private double ajustedCoordinate(double coordinate, double ovalWidth) {
+	    return coordinate - ovalWidth/2;
 	}
 	
 	private enum cardinalPoints{
@@ -193,15 +201,15 @@ public final class SkyCanvasPainter {
 	    NORTH_WEST("NO", HorizontalCoordinates.ofDeg(315, -.5));
 	    
 	    private final HorizontalCoordinates horCoord;
-	    private final String frenchAbrev;
+	    private final String frenchName;
 	    
 	    private cardinalPoints(String frenchAbrev, HorizontalCoordinates horCoord) {
 	        this.horCoord = horCoord;
-	        this.frenchAbrev = frenchAbrev;
+	        this.frenchName = frenchAbrev;
         }
 	    
 	    protected String getFrenchAbrev() {
-	        return frenchAbrev;
+	        return frenchName;
 	    }
 	    protected CartesianCoordinates getCartesianCoord(StereographicProjection projection) {
 	        return projection.apply(horCoord);
