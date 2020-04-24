@@ -59,7 +59,7 @@ public final class Angle {
      * @return: the converted angle in radians.
      */
     public static double ofDMS(int deg, int min, double sec) {
-        if(  min < 0 || min >= 60 || sec < 0 || sec >= 60) {
+        if(  min < 0 || min >= 60 || sec < 0 || sec >= 60 || deg < 0) {
             throw new IllegalArgumentException();
         }
 

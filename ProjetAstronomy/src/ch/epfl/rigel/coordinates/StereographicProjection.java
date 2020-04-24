@@ -34,7 +34,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
    
     /**
      * Calculates the center of the circle after projection
-     * @param hor: point for which parallel line pass through.
+     * @param hor: point for which 
+     * parallel line pass through.
      * @return returns cartesian coordinates of the circle corresponding to the projection.
      */
     public CartesianCoordinates circleCenterForParallel(HorizontalCoordinates hor) {                          
@@ -80,6 +81,11 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return: returns horizontal coordinates from the projection of the cartesian coordinates. 
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
+        // return the center of projection, if the point is the origin
+        if(xy.x() == 0 && xy.y() == 0) {
+            return HorizontalCoordinates.of(centerLon, centerLat);
+        }
+        
         double rho = Math.sqrt( xy.x()*xy.x() + xy.y()*xy.y() );
         double sinC =  (2*rho)/(rho*rho + 1);
         double cosC =  (1 - rho*rho)/(rho*rho + 1);
