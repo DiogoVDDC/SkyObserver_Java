@@ -1,15 +1,20 @@
 package ch.epfl.rigel.gui;
 
-import java.util.Locale;
+import java.time.Duration;
 
-import ch.epfl.rigel.math.Angle;
-
+/**
+ * Represent the different time accelerators
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
 public enum NamedTimeAccelerator {
 
+    // Different time accelerator
     TIMES_1("1x", TimeAccelerator.continuous(1)),
     TIMES_30("30x", TimeAccelerator.continuous(30)),
     TIMES_300("300x", TimeAccelerator.continuous(300)),
-    TIMES_3000("3000x", TimeAccelerator.continuous(3000));
+    TIMES_3000("3000x", TimeAccelerator.continuous(3000)),
+    DAY("jour", TimeAccelerator.discrete(60,  Duration.ofHours(24))),
+    SIDEREAL_DAY("jour sidéral", TimeAccelerator.discrete(60,  Duration.ofHours((long) 23.9344444444444444)));
     
     private String name;
     private TimeAccelerator timeAccelerator;
@@ -20,11 +25,18 @@ public enum NamedTimeAccelerator {
         this.timeAccelerator = timeAccelerator;
     }
     
-    
+    /**
+     * Getter for name
+     * @return: returns the name
+     */
     public String getName() {
         return this.name;
     }
     
+    /**
+     * Getter for time accelerator
+     * @return: returns time accelerator
+     */
     public TimeAccelerator getAccelerator() {
         return timeAccelerator;
     }

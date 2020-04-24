@@ -14,6 +14,11 @@ public final class DateTimeBean {
 	private final ObjectProperty<LocalTime> time;
 	private final ObjectProperty<ZoneId> zone;
 	
+	/**
+	 * @param date
+	 * @param time
+	 * @param zone
+	 */
 	public DateTimeBean(ObjectProperty<LocalDate> date, ObjectProperty<LocalTime> time,
 			ObjectProperty<ZoneId> zone) {
 		this.date = date;
@@ -93,6 +98,9 @@ public final class DateTimeBean {
 				zone.getValue());
 	}
 	
+	/**
+	 * @param newZonedDateTime: new date which we want to set as the current date
+	 */
 	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {
 		setDate(newZonedDateTime.toLocalDate());
 		setTime(newZonedDateTime.toLocalTime());
