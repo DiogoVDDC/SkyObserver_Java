@@ -81,7 +81,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @return: returns horizontal coordinates from the projection of the cartesian coordinates. 
      */
     public HorizontalCoordinates inverseApply(CartesianCoordinates xy) {
-        // return the center of projection, if the point is the origin
+        // return the center of projection, if the point is the origin 
         if(xy.x() == 0 && xy.y() == 0) {
             return HorizontalCoordinates.of(centerLon, centerLat);
         }
