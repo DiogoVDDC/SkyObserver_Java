@@ -113,8 +113,12 @@ public final class DateTimeBean {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * Setter for the whole triplet date, time and zone using ZonedDateTime.
 	 * @param newZonedDateTime: the new ZonedDateTime.
+=======
+	 * @param newZonedDateTime: new date which we want to set as the current date
+>>>>>>> branch 'master' of https://github.com/DiogoVDDC/ProjetAstronomy.git
 	 */
 	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {
 		date.setValue(newZonedDateTime.toLocalDate());
