@@ -45,22 +45,21 @@ public final class SkyCanvasPainter {
 		
 		for (Star star: observedSky.stars()) {
 			//Defining the star's disk size based on it's magnitude.
-			Double clippedMag = MAGNITUDE_INTERVAL.clip(star.magnitude());
-			Double f = (99 - 17 * clippedMag) / 140;
-			Double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
+			double clippedMag = MAGNITUDE_INTERVAL.clip(star.magnitude());
+			double f = (99 - 17 * clippedMag) / 140;
+			double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
 			
 			//Transforming the disk size according to the affine transformation.
-			Point2D transformedSize = transform.deltaTransform(0, d);
-			
-			//Defining the star coordinates.
-			Double starX = transformedCoords[observedSky.stars().indexOf(star)*2];
-			Double starY = transformedCoords[observedSky.stars().indexOf(star)*2+ 1];
+			double transformedSize = transform.deltaTransform(0, d).magnitude();
+			//Defining the star coordinates. 
+			double starX = transformedCoords[observedSky.stars().indexOf(star)*2] - transformedSize/2;
+			double starY = transformedCoords[observedSky.stars().indexOf(star)*2+ 1] - transformedSize/2;
 
 			//Set the color to the star's one based on it's color temperature.
 			ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
 			
 			//Drawing the star.
-			ctx.fillOval(starX, starY, transformedSize.magnitude(), transformedSize.magnitude());
+			ctx.fillOval(starX, starY, transformedSize, transformedSize);
 		}
 	}
 	
@@ -75,19 +74,19 @@ public final class SkyCanvasPainter {
 		
 		for(Planet planet: observedSky.planets()) {
 			//Defining the planet's disk size based on it's magnitude.
-			Double clippedMag = MAGNITUDE_INTERVAL.clip(planet.magnitude());
-			Double f = (99 - 17 * clippedMag) / 140;
-			Double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
+			double clippedMag = MAGNITUDE_INTERVAL.clip(planet.magnitude());
+			double f = (99 - 17 * clippedMag) / 140;
+			double d = f * 2 * Math.tan(Angle.ofDeg(0.5) / 4.);
 			
 			//Transforming the disk size according to the affine transformation.
-			Point2D transformedSize = transform.deltaTransform(0,d);
+			double transformedSize = transform.deltaTransform(0,d).magnitude();
 			
 			//Defining the planet's coordinates.
-			Double planetX = transformedCoords[observedSky.planets().indexOf(planet)];
-			Double planetY = transformedCoords[observedSky.planets().indexOf(planet) + 1];
+			double planetX = transformedCoords[observedSky.planets().indexOf(planet)] - transformedSize/2;
+			double planetY = transformedCoords[observedSky.planets().indexOf(planet) + 1] - transformedSize/2;
 			
 			//Drawing the planet on the canvas.
-			ctx.fillOval(planetX, planetY, transformedSize.magnitude(), transformedSize.magnitude());
+			ctx.fillOval(planetX, planetY, transformedSize, transformedSize);
 		}
 		
 		
@@ -95,22 +94,22 @@ public final class SkyCanvasPainter {
 	
 	public void drawSun(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 		Point2D sunPos = transform.transform(observedSky.sunPosition().x(), observedSky.sunPosition().y());
-		Double sunSize = observedSky.sun().angularSize();// 2 * Math.tan(.5/4.);
-		Point2D sunSizetransf = transform.deltaTransform(sunSize, sunSize);
+		double sunSize = projection.applyToAngle(observedSky.sun().angularSize());// 2 * Math.tan(.5/4.);
+		double sunSizetransf = transform.deltaTransform(0, sunSize).magnitude();
 		ctx.setFill(Color.WHITE);
-		ctx.fillOval(sunPos.getX(), sunPos.getY(), sunSizetransf.magnitude(), sunSizetransf.magnitude());
+		ctx.fillOval(sunPos.getX(), sunPos.getY(), sunSizetransf, sunSizetransf);
 		ctx.setFill(Color.YELLOW);
-		ctx.fillOval(sunPos.getX()+1, sunPos.getY()+1, sunSizetransf.magnitude()-2, sunSizetransf.magnitude()-2);
+		ctx.fillOval(sunPos.getX()+1, sunPos.getY()+1, sunSizetransf+2, sunSizetransf+2);
 		ctx.setGlobalAlpha(.25);
-		ctx.fillOval(sunPos.getX()- sunSizetransf.magnitude()*.55, sunPos.getY()- sunSizetransf.magnitude()*.55, sunSizetransf.magnitude()*2.2,	 sunSizetransf.magnitude()*2.2);
+		ctx.fillOval(sunPos.getX()- sunSizetransf*.55, sunPos.getY()- sunSizetransf *.55, sunSizetransf*2.2,	 sunSizetransf*2.2);
 		ctx.setGlobalAlpha(1);
 	}
 	
 	public void drawMoon(ObservedSky observedSky, StereographicProjection projection, Transform transform) {
 		Point2D moonPos = transform.transform(observedSky.moonPosition().x(), observedSky.moonPosition().x());
-		Double moonSize = observedSky.moon().angularSize();
-		Point2D moonSizeTransf = transform.deltaTransform(moonSize, moonSize);
+		double moonSize = projection.applyToAngle(observedSky.moon().angularSize());
+		double moonSizeTransf = transform.deltaTransform(0, moonSize).magnitude();
 		ctx.setFill(Color.WHITE);
-		ctx.fillOval(moonPos.getX(), moonPos.getY(), moonSizeTransf.magnitude(), moonSizeTransf.magnitude());
+		ctx.fillOval(moonPos.getX(), moonPos.getY(), moonSizeTransf, moonSizeTransf);
 	}
 }
