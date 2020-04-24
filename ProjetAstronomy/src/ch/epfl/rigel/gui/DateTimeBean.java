@@ -25,17 +25,14 @@ public final class DateTimeBean {
 	
 	/**
 	 * DateTimeBean constructor.
-	 * @param date: the initial local date.
-	 * @param time: the initial local time
-	 * @param zone: the initial zone.
 	 */
-	public DateTimeBean(LocalDate date, LocalTime time, ZoneId zone) {
-		this.date = new SimpleObjectProperty<>(date);
-		this.time = new SimpleObjectProperty<>(time);
-		this.zone = new SimpleObjectProperty<>(zone);
-	}
-	
-	/**
+	public DateTimeBean() {
+		this.date = new SimpleObjectProperty<LocalDate>(null);
+		this.time = new SimpleObjectProperty<LocalTime>(null);
+		this.zone = new SimpleObjectProperty<ZoneId>(null);
+	}	
+
+    /**
 	 * Getter for the date proerty.
 	 * @return: the date property.
 	 */
@@ -74,7 +71,7 @@ public final class DateTimeBean {
 	}
 	/**
 	 * Setter for the time property's time.
-	 * @param newTime:t the new local time.
+	 * @param newTime:set the new local time.
 	 */
 	public void setTime(LocalTime newTime) {
 		time.set(newTime);
@@ -113,16 +110,12 @@ public final class DateTimeBean {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * Setter for the whole triplet date, time and zone using ZonedDateTime.
 	 * @param newZonedDateTime: the new ZonedDateTime.
-=======
-	 * @param newZonedDateTime: new date which we want to set as the current date
->>>>>>> branch 'master' of https://github.com/DiogoVDDC/ProjetAstronomy.git
 	 */
-	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {
-		date.setValue(newZonedDateTime.toLocalDate());
-		time.setValue(newZonedDateTime.toLocalTime());
-		zone.setValue(newZonedDateTime.getZone());
+	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {	  
+		setDate(newZonedDateTime.toLocalDate());
+		setTime(newZonedDateTime.toLocalTime());
+		setZone(newZonedDateTime.getZone());
 	}
 }
