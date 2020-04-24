@@ -53,17 +53,11 @@ abstract public class Interval {
     abstract public boolean contains(double v);
 
     @Override
-    /**
-     * Redefined to prevent using it.
-     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    /**
-     * Redefined to prevent using it.
-     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }

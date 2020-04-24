@@ -57,7 +57,7 @@ public class ObservedSkyTest {
         
         sky = new ObservedSky(time, geoCoords, stereo, catalogue);
         
-        assertEquals("TauPhe", sky.objectClosestTo(stereo
+        assertEquals("Tau Phe", sky.objectClosestTo(stereo
                 .apply(new EquatorialToHorizontalConversion(time, geoCoords)
                         .apply(EquatorialCoordinates.of(0.004696959812148989,
                                 -0.861893035343076))),

@@ -29,6 +29,7 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
     }
     
     /** 
+     * Allows to create equatorial coordinates from right ascension and declination
      * @param ra: (right ascension) correspond to longitude (given in radians) 
      * @param dec: (declination) correspond to latitude (given in radians)
      * @return: returns new equatorial coordinates
@@ -37,21 +38,24 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
         return new EquatorialCoordinates(Preconditions.checkInInterval(latInterval, dec), Preconditions.checkInInterval(lonInterval, ra));
     } 
     
-    /**     
-     * @return:returns the right ascension (equivalent to longitude) in radians
+    /**    
+     * Getter for right ascension (equivalent to longitude)
+     * @return:returns the right ascension in radians
      */
     public double ra() {
         return super.lon();
     }
 
     /**     
-     * @return: returns the right ascension (equivalent to longitude) in degrees
+     * Getter for right ascension (equivalent to longitude)
+     * @return: returns the right ascension in degrees
      */
     public double raDeg() {
         return super.lonDeg();
     }
     
     /**     
+     * Getter for right ascension (equivalent to longitude)
      * @return: returns the right ascension (equivalent to longitude) in hours
      */
     public double raHr() {
@@ -59,14 +63,16 @@ public final class EquatorialCoordinates extends SphericalCoordinates{
     }
 
     /**     
-     * @return: the declination (equivalent to latitude) in radians
+     * Getter for declination (equivalent to latitude) 
+     * @return: the declination in radians
      */
     public double dec() {
         return super.lat();
     }
 
     /**     
-     * @return: the declination (equivalent to latitude) in degrees
+     * Getter for declination (equivalent to latitude) 
+     * @return: the declination in degrees
      */
     public double decDeg() {
         return super.latDeg();

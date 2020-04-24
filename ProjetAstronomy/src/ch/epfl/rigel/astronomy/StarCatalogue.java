@@ -22,7 +22,7 @@ public final class StarCatalogue {
     private  List<Star> starList;
     //Map with key asterism and a list of indices (in the hyg star catalogue) of each star for the asterism. 
     private final Map<Asterism, List<Integer>> asterismMap;
-    
+    //Map to facilitate finding the associated hypid associated to the star
     private final Map<Star, Integer> starIndexMap;
 
     /**
@@ -38,12 +38,11 @@ public final class StarCatalogue {
         
         for(int i = 0; i < starList.size(); i++) {
             starIndexMap.put(starList.get(i), i);
-        }
-        
+        }        
    
         asterismMap = new HashMap<>();
+        
         //Check if all stars in the list are in the asterisms.
-
         List<Integer> asterismStarIndexList = new ArrayList<Integer>();
         
         for (Asterism a: asterisms) {
@@ -80,7 +79,7 @@ public final class StarCatalogue {
 
     /**
      * Getter for the asterisms.
-     * @return
+     * @return: returns a set of asterisms
      */
     public Set<Asterism> asterisms() {
         return Set.copyOf(asterismMap.keySet());
@@ -90,7 +89,6 @@ public final class StarCatalogue {
      * Represents a loader of star and asterism catalogues.
      * @author Theo Houle (312432)
      * @author Diogo Valdivieso Damasio Da Costa (311673)
-     *
      */
    public interface Loader{        
         /**
@@ -106,13 +104,13 @@ public final class StarCatalogue {
     * Represents a builder of star catalogue.
     * @author Theo Houle (312432)
     * @author Diogo Valdivieso Damasio Da Costa (311673)
-    *
     */
     public final static class Builder {
         private List<Star> starList = new ArrayList<Star>();
         private List<Asterism> asterismList = new ArrayList<Asterism>();
 
         /**
+         * Adds stars to the list
          * @param star: the star to be added to the list
          * @return: returns the builder
          */
@@ -122,6 +120,7 @@ public final class StarCatalogue {
         }
 
         /**
+         * Adds asterism to the list
          * @param asterism: the asterism to be added to the list
          * @return: returns the builder
          */
@@ -131,6 +130,7 @@ public final class StarCatalogue {
         }
 
         /**
+         * Loads data from the catalogues
          * @param inputStream: the input data we want to insert into the star catalogue
          * @param loader: the type of loader we want to use to insert the data
          * @return: returns the builder 
@@ -142,6 +142,7 @@ public final class StarCatalogue {
         }
 
         /**
+         * Getter for star list
          * @return: returns an unmodifiableList of stars
          */
         public List<Star> stars(){
@@ -149,6 +150,7 @@ public final class StarCatalogue {
         }
 
         /**
+         * Getter for asterisms
          * @return: returns an unmodifiableList of asterism
          */
         public List<Asterism> asterisms() {
@@ -156,6 +158,7 @@ public final class StarCatalogue {
         }
 
         /**
+         * Builds the starcatalogue
          * @return: returns a starcatalogue
          */
         public StarCatalogue build() throws IOException {

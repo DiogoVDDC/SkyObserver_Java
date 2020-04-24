@@ -53,17 +53,11 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
     }
     
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public int hashCode() {
         throw new UnsupportedOperationException();
     }
     
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }

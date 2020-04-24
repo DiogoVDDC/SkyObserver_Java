@@ -54,7 +54,7 @@ public enum HygDatabaseLoader implements Loader{
     	            //Declination of the star in radiant.
     	            double decrad = 0;    	            
     	           
-    	            //Definig the above elements based on the values of the catalogue.
+    	            //Only changing the value of the attributs if they are not blank
     	            if(!splitLine[columnEnum.HIP.ordinal()].isBlank()) {
     	                hipparcosId = Integer.parseInt(splitLine[columnEnum.HIP.ordinal()]);
     	            }
@@ -97,7 +97,7 @@ public enum HygDatabaseLoader implements Loader{
     	            		bayer = "? ";
     	            	}
     	            	String con = splitLine[columnEnum.CON.ordinal()]; 	 
-    	            	name = bayer + con;
+    	            	name = bayer + " " + con;
     	            }     
 
     	            // creates new star to be added to the starList
@@ -108,6 +108,6 @@ public enum HygDatabaseLoader implements Loader{
 	            } 
 	            line++;
 	        }        
-        }
-    }
+        }           
+    }    
 }

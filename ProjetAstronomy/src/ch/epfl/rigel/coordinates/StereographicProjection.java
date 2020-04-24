@@ -33,6 +33,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     
    
     /**
+     * Calculates the center of the circle after projection
      * @param hor: point for which parallel line pass through.
      * @return returns cartesian coordinates of the circle corresponding to the projection.
      */
@@ -41,6 +42,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     /**
+     * Calculates radius of the circle correspoding to the projection
      * @param parallel: coordinates for which the radius of the projection will be evaluated.
      * @return returns the radius of the circle corresponding to the projection.
      */
@@ -50,6 +52,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     
     
     /**
+     * Calculates the diameter of a projected sphere
     * @param rad: angular size of the sphere.
     * @return returns diameter of a projected sphere of angular size rad.
     */
@@ -58,6 +61,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     /**
+     * Calculates the projection of horizontal coordinates to cartesian system
      * @param azAlt: horizontal coordinates which will be projected to cartesian coordinates.
      * @return: returns cartesian coordinates of the projection of the horizontal coordinates.
      */
@@ -71,6 +75,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }
     
     /**
+     * Calculates the horizontal coordinates from the cartesian projection
      * @param xy: cartesian coordinates which will be projected to horizontal coordinates.
      * @return: returns horizontal coordinates from the projection of the cartesian coordinates. 
      */
@@ -86,24 +91,18 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     }    
     
     /**
-     * @return string representation of the center of the projection
+     * @return: returns string representation of the center of the projection
      */
     public String toString(){
         return String.format(Locale.ROOT,"StereographicProjection: (center lon=%.4f°, center lat=%.4f°)", centerLon, centerLat);
     }
     
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public final boolean equals(Object obj) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    /**
-     * Redifined to prevent using it.
-     */
     public final int hashCode() {
         throw new UnsupportedOperationException();
     }
