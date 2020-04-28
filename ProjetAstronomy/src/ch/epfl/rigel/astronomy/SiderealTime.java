@@ -17,8 +17,8 @@ import ch.epfl.rigel.math.Polynomial;
 public final class SiderealTime {
     
     // Polynomials used for the computation of the sidereal time. 
-    private static final Polynomial polyS0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
-    private static final Polynomial polyS1 = Polynomial.of(1.002737909, 0);   
+    private static final Polynomial POLY_S0 = Polynomial.of(0.000025862, 2400.051336, 6.697374558);
+    private static final Polynomial POLY_S1 = Polynomial.of(1.002737909, 0);   
     private static final double MILLIS_PER_HOUR = 1/ (1000.0*60.0*60.0);
     
     // The constructor is set to private and does nothing to disallow the instantiation of this class.
@@ -40,8 +40,8 @@ public final class SiderealTime {
         double t = (truncatedToDay.until(offSettedDate, ChronoUnit.MILLIS)) * MILLIS_PER_HOUR;
         
         //Given the previously calculated values T and t, compute the values s0 and s1 using the specific polynomes.
-        double s0 = polyS0.at(T);
-        double s1 = polyS1.at(t);
+        double s0 = POLY_S0.at(T);
+        double s1 = POLY_S1.at(t);
         //Return the sidereal time normalized between [0, t[.
         return Angle.normalizePositive(Angle.ofHr(s0+s1));
     }

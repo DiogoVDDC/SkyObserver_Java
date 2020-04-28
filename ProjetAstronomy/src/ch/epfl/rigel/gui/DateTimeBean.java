@@ -23,9 +23,7 @@ public final class DateTimeBean {
 	//The zone property.
 	private final ObjectProperty<ZoneId> zone;
 	
-	/**
-	 * DateTimeBean constructor.
-	 */
+	//DateTimeBean constructor.
 	public DateTimeBean() {
 		this.date = new SimpleObjectProperty<LocalDate>(null);
 		this.time = new SimpleObjectProperty<LocalTime>(null);

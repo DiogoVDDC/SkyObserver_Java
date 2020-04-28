@@ -55,7 +55,7 @@ public final class TimeAnimator extends AnimationTimer{
 	@Override
 	public void handle(long now) {
 		//If handle is being called for the first time, stores the initial time value.
-		if (justStarted) {
+		if (justStarted) {		    
 			elapsedTime =  now;
 			justStarted = false;
 		} else {
