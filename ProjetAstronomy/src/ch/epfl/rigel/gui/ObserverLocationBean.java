@@ -1,7 +1,5 @@
 package ch.epfl.rigel.gui;
 
-import java.time.ZonedDateTime;
-
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -15,13 +13,13 @@ public final class ObserverLocationBean {
     //The latitude property.
     private final DoubleProperty latDeg;
     //Observable geographic coordinates.
-    private final ObservableObjectValue<GeographicCoordinates> observableCoordinatesValue;
+    private final ObservableObjectValue<GeographicCoordinates> coordinates;
     
     
     public ObserverLocationBean() {
         this.lonDeg = new SimpleDoubleProperty();
         this.latDeg = new SimpleDoubleProperty();        
-        observableCoordinatesValue = Bindings.createObjectBinding(
+        coordinates = Bindings.createObjectBinding(
                 () -> GeographicCoordinates.ofDeg(lonDeg.get(), latDeg.get())
                 ,lonDeg, latDeg);      
     }
@@ -76,28 +74,27 @@ public final class ObserverLocationBean {
     }
     
     /**
-     * Getter for the observable geographic coordinates.
+     * Getter for the coordinate property.
      * @return the observable geographic coordinates.
      */
-    public ObservableObjectValue<GeographicCoordinates>  getObservableObjectCoordinates(){
-        return observableCoordinatesValue;
+    public ObservableObjectValue<GeographicCoordinates>  coordinatesProperty(){
+        return coordinates;
     }
     
     /**
-     * Getter for the observable geographic coordinates value.
+     * Getter for the coordinate value.
      * @return the observable geographic coordinates value.
      */
-    public GeographicCoordinates getCoordinatesValue() {
-        return observableCoordinatesValue.getValue();
+    public GeographicCoordinates getCoordinates() {
+        return coordinates.getValue();
     }
     
     /**
      * Setter for the properties, latDeg and lonDeg. 
-     * @param latDeg: the latitude of the coordinate in degrees
-     * @param lonDeg: the longitude of the coordinate in degrees
+     * @param newCoords: the new coordinates.
      */
-    public void setZonedDateTime(double latDeg, double lonDeg) {    
-        setLonDeg(lonDeg);
-        setLatDeg(latDeg);
+    public void setCoordinates(GeographicCoordinates newCoords) {    
+        setLonDeg(newCoords.lonDeg());
+        setLatDeg(newCoords.latDeg());
     }
 }

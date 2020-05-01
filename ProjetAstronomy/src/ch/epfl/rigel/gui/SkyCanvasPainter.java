@@ -242,6 +242,21 @@ public final class SkyCanvasPainter {
 	        ctx.strokeText(cardPoint.getFrenchAbrev(), transCoord.getX(), transCoord.getY());
 	    }
 	}
+	
+	/**
+	 * Allows to draw all celestial object of the sky.
+	 * @param observedSky: the observed sky
+	 * @param projection: the stereographique projection.
+	 * @param transform: the plane to canvas projection.
+	 * @throws IOException: if there an issue while the painter draws the stars.
+	 */
+	public void drawAllCelestialObjects(ObservedSky observedSky, StereographicProjection projection, Transform transform) throws IOException {
+		drawStars(observedSky, projection, transform);
+		drawPlanets(observedSky, projection, transform);
+		drawSun(observedSky, projection, transform);
+		drawMoon(observedSky, projection, transform);
+	}
+	
 	/**
 	 *  Given the center coordinates of the circle, returns the top left coordinates of
 	 *  the square in which the circle is inscribed. 

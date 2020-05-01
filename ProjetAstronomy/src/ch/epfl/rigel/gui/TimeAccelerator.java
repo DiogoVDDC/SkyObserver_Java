@@ -34,7 +34,10 @@ public interface TimeAccelerator {
      */
     public static TimeAccelerator discrete(int stepFrequency, Duration stepLength) {
         return (initialTime, timeElapsed) -> {
-            return initialTime.plusNanos((long) (Math.floor(stepFrequency * timeElapsed) * stepLength.getNano()));
+        	//The step frequency is divided by 1e9 because it's initially a frequency per seconds 
+        	//and timeElapsed is in nano seconds.
+            return initialTime.plusNanos((long) (Math.floor(stepFrequency/1e9 * timeElapsed))
+            		* stepLength.toNanos());
         };
     }
 }

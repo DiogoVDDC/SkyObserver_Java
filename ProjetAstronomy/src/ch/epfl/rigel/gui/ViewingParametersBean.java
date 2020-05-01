@@ -22,7 +22,7 @@ public final class ViewingParametersBean {
      * Getter for the fieldOfView property.
      * @return: the fieldOfView property.
      */
-    public DoubleProperty fieldOfView(){
+    public DoubleProperty fieldOfViewProperty(){
         return fieldOfView;
     }
     
@@ -46,7 +46,7 @@ public final class ViewingParametersBean {
      * Getter for the horizontal coordinate property.
      * @return: the horizontal coordinates of the center property.
      */
-    public ObjectProperty<HorizontalCoordinates> horizontalCoordinateProperty(){
+    public ObjectProperty<HorizontalCoordinates> centerProperty(){
         return center;
     }  
     
@@ -54,7 +54,7 @@ public final class ViewingParametersBean {
      * Getter for the horizontal coordinates
      * @return: returns the center horizontal coordinates
      */
-    public HorizontalCoordinates getHorizontalCoordinates() {
+    public HorizontalCoordinates getCenter() {
         return center.getValue();
     }
     
@@ -62,10 +62,10 @@ public final class ViewingParametersBean {
      * Setter for the horizontal coordinates
      * @param newHorizontalCoordinates: the new horizontal coordinates
      */
-    public void setHorizontalCoordinates(HorizontalCoordinates newHorizontalCoordinates) {
+    public void setCenter(HorizontalCoordinates newHorizontalCoordinates) {
         center.set(newHorizontalCoordinates);
     } 
-        
+    
     /**
      * Setter for the FOV and the horizontal coodinates
      * @param fieldOfView: the field of view
@@ -73,6 +73,24 @@ public final class ViewingParametersBean {
      */
     public void setParameters(double fieldOfView, HorizontalCoordinates horizontal) {    
         setFieldOfView(fieldOfView);
-        setHorizontalCoordinates(horizontal);
+        setCenter(horizontal);
+    }
+    
+    /**
+     * Allows to nudge the altitude of the center coordinates.
+     * @param delta: the amount to add to the altitude (in degrees).
+     */
+    public void changeAlt(double delta) {
+    	double newAlt = center.get().altDeg() + delta;
+    	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), newAlt));
+    }
+    
+    /**
+     * Allows to nudge the azimuth of the center coordinates.
+     * @param delta: amount to add to the current azimuth angle (in degrees).
+     */
+    public void changeAz(double delta) {
+    	double newAz = center.get().azDeg() + delta;
+    	setCenter(HorizontalCoordinates.ofDeg(newAz, center.get().altDeg()));
     }
 }
