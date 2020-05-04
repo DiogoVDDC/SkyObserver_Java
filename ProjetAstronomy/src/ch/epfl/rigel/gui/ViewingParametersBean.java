@@ -1,5 +1,6 @@
 package ch.epfl.rigel.gui;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
+import ch.epfl.rigel.math.Angle;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -81,7 +82,7 @@ public final class ViewingParametersBean {
      * @param delta: the amount to add to the altitude (in degrees).
      */
     public void changeAlt(double delta) {
-    	double newAlt = center.get().altDeg() + delta;
+    	double newAlt = Angle.toDeg(Angle.normalizePositive(Angle.ofDeg(center.get().altDeg() + delta)));
     	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), newAlt));
     }
     
@@ -90,7 +91,7 @@ public final class ViewingParametersBean {
      * @param delta: amount to add to the current azimuth angle (in degrees).
      */
     public void changeAz(double delta) {
-    	double newAz = center.get().azDeg() + delta;
+    	double newAz = Angle.toDeg(Angle.normalizePositive(Angle.ofDeg(center.get().azDeg() + delta)));
     	setCenter(HorizontalCoordinates.ofDeg(newAz, center.get().altDeg()));
     }
 }
