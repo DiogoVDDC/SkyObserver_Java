@@ -250,11 +250,12 @@ public final class SkyCanvasPainter {
 	 * @param transform: the plane to canvas projection.
 	 * @throws IOException: if there an issue while the painter draws the stars.
 	 */
-	public void drawAllCelestialObjects(ObservedSky observedSky, StereographicProjection projection, Transform transform) throws IOException {
+	public void drawSky(ObservedSky observedSky, StereographicProjection projection, Transform transform) throws IOException {
 		drawStars(observedSky, projection, transform);
 		drawPlanets(observedSky, projection, transform);
 		drawSun(observedSky, projection, transform);
 		drawMoon(observedSky, projection, transform);
+		drawHorizon(observedSky, projection, transform);
 	}
 	
 	/**
