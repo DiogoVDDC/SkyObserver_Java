@@ -48,13 +48,11 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @return: returns true is the longitude is in the correct interval.
      */
     public static boolean isValidLonDeg(double lonDeg) {
-        try {
-            Preconditions.checkInInterval(lonInterval, lonDeg);
-        } 
-        catch(IllegalArgumentException e) {
-            return false;
+        if(lonDeg < 180 && lonDeg >= -180 ) {
+            return true;
         }
-        return true;
+ 
+        return false;
     }
 
     /**     
@@ -63,13 +61,12 @@ public final class GeographicCoordinates extends SphericalCoordinates{
      * @return: returns true is the latitude is in the correct interval.
      */
     public static boolean isValidLatDeg(double latDeg) {
-        try {
-            Preconditions.checkInInterval(latInterval, latDeg);
+        
+        if(latDeg <= 90 && latDeg >= -90 ) {
+            return true;
         }
-        catch(IllegalArgumentException e) {
-            return false;
-        }
-        return true;
+ 
+        return false;
     }
 
     /**     

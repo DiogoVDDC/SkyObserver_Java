@@ -11,7 +11,7 @@ import ch.epfl.rigel.coordinates.EquatorialCoordinates;
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  *
  */
-public class Sun extends CelestialObject{
+public final class Sun extends CelestialObject{
 
     // ecliptic position of the sun
     private final EclipticCoordinates eclipticPos;

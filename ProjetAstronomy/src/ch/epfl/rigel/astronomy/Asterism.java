@@ -31,7 +31,6 @@ public final class Asterism {
      * @return: list of stars.
      */
     public List<Star> stars(){
-        return Collections.unmodifiableList(
-                asterism);
+        return asterism;
     }
 }

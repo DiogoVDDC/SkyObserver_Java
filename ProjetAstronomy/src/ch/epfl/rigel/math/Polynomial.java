@@ -9,7 +9,7 @@ import ch.epfl.rigel.Preconditions;
  *
  */
 public final class Polynomial {
-    private double[] coefficients;
+    private final double[] coefficients;
 
     /**
      * Constructs a polynomial using the given coefficients used only by the auxiliary constructor function.

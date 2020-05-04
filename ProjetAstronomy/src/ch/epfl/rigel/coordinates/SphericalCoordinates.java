@@ -11,9 +11,9 @@ import ch.epfl.rigel.math.Angle;
 abstract class SphericalCoordinates {
     
 	//Lattitude of the position.
-    private double lat;
+    private final double lat;
     //Longitude of the position.
-    private double lon;
+    private final double lon;
 
     /**
      * @param: latitude in radians
