@@ -1,12 +1,17 @@
 package ch.epfl.rigel.gui;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
+import ch.epfl.rigel.math.ClosedInterval;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
 public final class ViewingParametersBean {
+    
+    
+    // Interval in which the altitude angle must be contained.
+    private static final ClosedInterval ALT_INTERVAL = ClosedInterval.of(6, 90);
     
     //The field of view property.
     private final DoubleProperty fieldOfView;
@@ -82,7 +87,8 @@ public final class ViewingParametersBean {
      * @param delta: the amount to add to the altitude (in degrees).
      */
     public void changeAlt(double delta) {
-    	double newAlt = Angle.toDeg(Angle.normalizePositive(Angle.ofDeg(center.get().altDeg() + delta)));
+    	double newAlt = ALT_INTERVAL.clip(center.get().altDeg() + delta);
+    	System.out.println(newAlt);
     	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), newAlt));
     }
     

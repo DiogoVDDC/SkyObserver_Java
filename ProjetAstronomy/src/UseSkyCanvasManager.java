@@ -8,7 +8,6 @@ import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.gui.DateTimeBean;
-import ch.epfl.rigel.gui.SkyCanvasManager;
 import ch.epfl.rigel.gui.ObserverLocationBean;
 import ch.epfl.rigel.gui.SkyCanvasManager;
 import ch.epfl.rigel.gui.ViewingParametersBean;
@@ -47,14 +46,14 @@ public final class UseSkyCanvasManager extends Application {
 	HorizontalCoordinates.ofDeg(180, 42));
       viewingParametersBean.setFieldOfView(70);
 
-      SkyCanvasManager canvasManager = new SkyCanvasManager(
+    SkyCanvasManager canvasManager = new SkyCanvasManager(
 	catalogue,
 	dateTimeBean,
 	observerLocationBean,
 	viewingParametersBean);
 
-      canvasManager.objectUnderMouseProperty().addListener(
-	(p, o, n) -> {if (n != null) System.out.println(n);});
+    canvasManager.objectUnderMouseProperty().addListener(
+            (p, o, n) -> {if (n != null) System.out.println(n);});
 
       Canvas sky = canvasManager.canvas();
       BorderPane root = new BorderPane(sky);
