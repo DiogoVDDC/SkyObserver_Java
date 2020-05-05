@@ -1,5 +1,4 @@
 package ch.epfl.rigel.gui;
-import com.sun.javafx.collections.SetListenerHelper;
 
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
