@@ -154,7 +154,7 @@ public class Main2 extends Application{
        // System.out.println(viewingParametersBean.getFieldOfView());
         Text fovT = new Text();
 
-        fovT.textProperty().bind(Bindings.format("Champ de vue: %s°" , viewingParametersBean.fieldOfViewProperty()));
+        fovT.textProperty().bind(Bindings.format("Champ de vue: %.1f°" , viewingParametersBean.fieldOfViewProperty()));
         // create string
         
         

@@ -104,7 +104,7 @@ public final class SkyCanvasManager {
             return projection.get().inverseApply(CartesianCoordinates.of(transformedMousePos.getX(),
             		transformedMousePos.getY()));
         	} catch(Exception e) {
-        		return null;
+        		return HorizontalCoordinates.of(0, 0);
         	}
 
             }, projection, mousePosition, planeToCanvas);
