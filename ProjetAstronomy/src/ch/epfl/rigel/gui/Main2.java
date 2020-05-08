@@ -154,7 +154,7 @@ public class Main2 extends Application{
        // System.out.println(viewingParametersBean.getFieldOfView());
         Text fovT = new Text();
 
-        fovT.textProperty().bind(Bindings.format("Champ de vue: %s°" , viewingParametersBean.getFieldOfView()));
+        fovT.textProperty().bind(Bindings.format("Champ de vue: %s°" , viewingParametersBean.fieldOfViewProperty()));
         // create string
         
         
@@ -165,7 +165,7 @@ public class Main2 extends Application{
             if(skyCanvasManager.objectUnderMouseProperty().get() == null) {
                 return "";
             } else {
-                return skyCanvasManager.objectUnderMouseProperty().toString();
+                return skyCanvasManager.objectUnderMouseProperty().get().info();
             }
         }, skyCanvasManager.objectUnderMouseProperty()));
 
@@ -173,7 +173,7 @@ public class Main2 extends Application{
         Text mousePosT = new Text();
 
         mousePosT.textProperty().bind(Bindings.format("Azimut: %.1f°, hauteur: %.1f°",  
-                skyCanvasManager.getMouseAzDeg(), skyCanvasManager.getMouseAltDeg()));
+                skyCanvasManager.mouseAzDegProperty(), skyCanvasManager.mouseAltDegProperty()));
 
         BorderPane infoBar = new BorderPane(closestObjectT, null, mousePosT, null, fovT);
         infoBar.setStyle("-fx-padding: 4;\r\n; -fx-background-color: white;");
