@@ -1,6 +1,5 @@
 package ch.epfl.rigel.gui;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -8,9 +7,13 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.ZonedDateTime;
 import java.util.function.UnaryOperator;
-
+import ch.epfl.rigel.astronomy.AsterismLoader;
+import ch.epfl.rigel.astronomy.HygDatabaseLoader;
+import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableObjectValue;
@@ -19,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -26,6 +30,8 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
@@ -36,24 +42,51 @@ public class Main2 extends Application{
 		launch(args);
 	}
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		
-		ViewingParametersBean viewParam = new ViewingParametersBean();
-		DateTimeBean dateTimeB = new DateTimeBean();
-		ObserverLocationBean obsLocB = new ObserverLocationBean();
-		TimeAnimator animator = new TimeAnimator(dateTimeB);
-	
-		
-		primaryStage.setTitle("Rigel");
-		primaryStage.setMinWidth(800);
-		primaryStage.setMinHeight(600);
-		BorderPane scene = new BorderPane();
-		scene.setTop(controlBar(viewParam, dateTimeB, obsLocB, animator));
-		primaryStage.setScene(new Scene(scene));
-		primaryStage.show();
-	}
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        try (InputStream hs = resourceStream("/hygdata_v3.csv"); InputStream ast = resourceStream("/asterisms.txt")){
+            StarCatalogue catalogue = new StarCatalogue.Builder()
+                    .loadFrom(hs, HygDatabaseLoader.INSTANCE).loadFrom(ast, AsterismLoader.INSTANCE)
+                    .build();
 
+            ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
+            DateTimeBean dateTimeBean = new DateTimeBean();
+            dateTimeBean.setZonedDateTime(when);
+
+            ObserverLocationBean observerLocationBean = new ObserverLocationBean();
+            observerLocationBean.setCoordinates(GeographicCoordinates.ofDeg(6.57, 46.52));	    
+
+
+            ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
+            viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180, 42));
+            viewingParametersBean.setFieldOfView(70);
+
+            TimeAnimator animator = new TimeAnimator(dateTimeBean);
+            
+            SkyCanvasManager skyCanvasManager = new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);     
+
+            Canvas sky = skyCanvasManager.canvas();
+            Pane root = new Pane(sky);
+
+            sky.widthProperty().bind(root.widthProperty());
+            sky.heightProperty().bind(root.heightProperty());
+            
+            
+            BorderPane scene = new BorderPane();
+            scene.setCenter(root);
+            scene.setTop(controlBar(viewingParametersBean, dateTimeBean, observerLocationBean, animator));
+            scene.setBottom(informationBar(viewingParametersBean, skyCanvasManager));     
+            
+            
+            primaryStage.setTitle("Rigel");
+            primaryStage.setMinWidth(800);
+            primaryStage.setMinHeight(600);
+            primaryStage.setScene(new Scene(scene));
+            primaryStage.show();
+            sky.requestFocus();
+            }
+    }
+    
 	private HBox controlBar(ViewingParametersBean viewParam, DateTimeBean dateTimeB, 
 			ObserverLocationBean obsLocB, TimeAnimator animator) throws IOException {
 		
@@ -150,7 +183,11 @@ public class Main2 extends Application{
 		
 		return controlBar;
 	}
-
+	
+    private InputStream resourceStream(String resourceName) {
+        return getClass().getResourceAsStream(resourceName);
+    }
+    
 	/**
 	 * Allows to create text formatter for the lattitude of longitude.
 	 * @param latOrlon: "lat" or "lon".
@@ -203,4 +240,37 @@ public class Main2 extends Application{
 			return unicode;
 		}
 	}
+
+
+    private static BorderPane informationBar(ViewingParametersBean viewingParametersBean, SkyCanvasManager skyCanvasManager) {
+       // System.out.println(viewingParametersBean.getFieldOfView());
+        Text fovT = new Text();
+
+        fovT.textProperty().bind(Bindings.format("Champ de vue: <fov>" , viewingParametersBean.getFieldOfView()));
+        // create string
+        
+        
+        
+        Text closestObjectT = new Text();
+
+        closestObjectT.textProperty().bind(Bindings.createStringBinding(() -> {
+            if(skyCanvasManager.objectUnderMouseProperty().get() == null) {
+                return "";
+            } else {
+                return skyCanvasManager.objectUnderMouseProperty().toString();
+            }
+        }, skyCanvasManager.objectUnderMouseProperty()));
+
+       
+        Text mousePosT = new Text();
+
+        mousePosT.textProperty().bind(Bindings.format("Azimut: <az>, hauteur: <alt>",  
+                skyCanvasManager.getMouseAzDeg(), skyCanvasManager.getMouseAltDeg()));
+
+        BorderPane infoBar = new BorderPane(closestObjectT, null, mousePosT, null, fovT);
+        infoBar.setStyle("-fx-padding: 4;\r\n; -fx-background-color: white;");
+
+        return infoBar;
+
+    }
 }
