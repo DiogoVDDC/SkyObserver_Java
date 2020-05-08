@@ -154,7 +154,7 @@ public class Main2 extends Application{
        // System.out.println(viewingParametersBean.getFieldOfView());
         Text fovT = new Text();
 
-        fovT.textProperty().bind(Bindings.format("Champ de vue: <fov>" , viewingParametersBean.getFieldOfView()));
+        fovT.textProperty().bind(Bindings.format("Champ de vue: %s°" , viewingParametersBean.getFieldOfView()));
         // create string
         
         
@@ -172,7 +172,7 @@ public class Main2 extends Application{
        
         Text mousePosT = new Text();
 
-        mousePosT.textProperty().bind(Bindings.format("Azimut: <az>, hauteur: <alt>",  
+        mousePosT.textProperty().bind(Bindings.format("Azimut: %.1f°, hauteur: %.1f°",  
                 skyCanvasManager.getMouseAzDeg(), skyCanvasManager.getMouseAltDeg()));
 
         BorderPane infoBar = new BorderPane(closestObjectT, null, mousePosT, null, fovT);
