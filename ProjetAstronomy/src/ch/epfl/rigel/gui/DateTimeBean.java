@@ -111,7 +111,7 @@ public final class DateTimeBean {
 	 * Setter for the whole triplet date, time and zone using ZonedDateTime.
 	 * @param newZonedDateTime: the new ZonedDateTime.
 	 */
-	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {	  
+	public void setZonedDateTime(ZonedDateTime newZonedDateTime) {	 
 		setDate(newZonedDateTime.toLocalDate());
 		setTime(newZonedDateTime.toLocalTime());
 		setZone(newZonedDateTime.getZone());

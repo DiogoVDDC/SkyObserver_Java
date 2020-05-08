@@ -52,6 +52,7 @@ public final class TimeAnimator extends AnimationTimer{
 		running.setValue(false);
 	}
 
+	
 	@Override
 	public void handle(long now) {
 		//If handle is being called for the first time, stores the initial time value.
@@ -63,7 +64,9 @@ public final class TimeAnimator extends AnimationTimer{
 			long deltaTime = now - elapsedTime;
 			//Adjut the date time according to the delta of time elapsed.
 			ZonedDateTime newObservedTime = accelerator.getValue().adjust(dateTime.getZonedDateTime(), deltaTime);
-			dateTime.setZonedDateTime(newObservedTime);
+			
+			dateTime.setDate(newObservedTime.toLocalDate());
+			dateTime.setTime(newObservedTime.toLocalTime());
 			//Update the elapsed time.
 			elapsedTime = now;
 		}

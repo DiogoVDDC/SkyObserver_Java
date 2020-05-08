@@ -161,20 +161,19 @@ public final class SkyCanvasPainter {
 		Point2D sunPos = transform.transform(observedSky.sunPosition().x(), observedSky.sunPosition().y());
 		
 		// Drawing the sun halo
-		Point2D haloPos = adjustCoordinate(sunPos, relativeSunSize*2.2/2);
+		Point2D haloPos = adjustCoordinate(sunPos, relativeSunSize*1.1);
 		ctx.setFill(Color.YELLOW.deriveColor(0, 1, 1, 0.25));
-		ctx.fillOval(haloPos.getX(), haloPos.getY(), relativeSunSize*2.2/2, relativeSunSize*2.2/2);
+		ctx.fillOval(haloPos.getX(), haloPos.getY(), relativeSunSize*2.2, relativeSunSize*2.2);
 
 		// Drawing the sun outer core
 		Point2D outterCorePos = adjustCoordinate(sunPos, (relativeSunSize+2)/2);
 	    ctx.setFill(Color.YELLOW);
-        ctx.fillOval(outterCorePos.getX(), outterCorePos.getY(), relativeSunSize+2/2, relativeSunSize+2/2);
+        ctx.fillOval(outterCorePos.getX(), outterCorePos.getY(), relativeSunSize+2, relativeSunSize+2);
 
         // Drawing the sun core
-        Point2D adjustedSunPos = adjustCoordinate(sunPos, relativeSunSize);
+        Point2D adjustedSunPos = adjustCoordinate(sunPos, relativeSunSize/2);
 		ctx.setFill(Color.WHITE);
 		ctx.fillOval(adjustedSunPos.getX(), adjustedSunPos.getY(), relativeSunSize, relativeSunSize);
-		
 	}
 	
 	/**
@@ -191,11 +190,10 @@ public final class SkyCanvasPainter {
 		double relativeMoonSize = transform.deltaTransform(moonSize, 0).magnitude();
 	    // Defining the moon position as a point on the affine transform and offsetting the center point.
 		Point2D moonPos = transform.transform(observedSky.moonPosition().x(), observedSky.moonPosition().y());
-        Point2D adjustedPos = adjustCoordinate(moonPos, relativeMoonSize/2);
+        Point2D adjustedPos = adjustCoordinate(moonPos, relativeMoonSize);
 		
         // Drawing the moon 
 		ctx.setFill(Color.WHITE);
-		
 		ctx.fillOval(adjustedPos.getX(), adjustedPos.getY(), relativeMoonSize, relativeMoonSize);
 	}
 	
@@ -228,7 +226,7 @@ public final class SkyCanvasPainter {
 	    
 	    // Setting the parameters for the cardinal point text
 	    ctx.setTextAlign(TextAlignment.CENTER);
-	    ctx.setTextBaseline(VPos.BASELINE.TOP);
+	    ctx.setTextBaseline(VPos.TOP);
 	    ctx.setLineWidth(1);
 	    
 	    // Drawing the text of the every cardinal points on the horizon circle 

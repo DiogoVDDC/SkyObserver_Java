@@ -5,10 +5,11 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.ZonedDateTime;
 import java.util.function.UnaryOperator;
+
 import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -19,24 +20,24 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
-public class Main2 extends Application{
+public class Main extends Application{
 
 	public static void main(String[] args) {
 		launch(args);
@@ -95,12 +96,14 @@ public class Main2 extends Application{
 		Label latL = new Label("Latitude(°):");
 		//latitude text field
 		TextField latTF = new TextField();
-		latTF.setTextFormatter(textFormatter("lat"));
+		TextFormatter<Number> latFormatter = textFormatter("lat");
+		latTF.setTextFormatter(latFormatter);
 		latTF.setStyle("-fx-pref-width: 60; -fx-alignment: baseline_right;");
 		latTF.setText("46.52");
 		//Longitude text field
 		TextField lonTF = new TextField();
-		lonTF.setTextFormatter(textFormatter("lon"));
+		TextFormatter<Number> lonFormatter = textFormatter("lon");
+		lonTF.setTextFormatter(lonFormatter);
 		lonTF.setStyle("-fx-pref-width: 60; -fx-alignment: baseline_right;");
 		lonTF.setText("6.57");
 		// Child containing the location of the observation.
@@ -144,9 +147,13 @@ public class Main2 extends Application{
 		//Reset and Play/Pause buttons.
 		Button resetButton = new Button(ButtonImages.RESTART.getUniCode());
 		resetButton.setFont(fontAwesome);
+		resetButton.setOnAction(e ->{
+			timeTF.setText(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+		});
 		
 		Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
 		playPauseButt.setFont(fontAwesome);
+		// Play/Pause button actions when pressed.
 		playPauseButt.setOnAction(e ->{
 			// Starts and stop the animation depending on whether it's already running or not.
 			if (animator.isRunning()) {
@@ -167,11 +174,11 @@ public class Main2 extends Application{
 		time.setStyle("-fx-spacing: inherit;");
 		
 		// Binding the obsever's location to the lon and lat text fields.
-		obsLocB.latDegProperty().bind(textFormatter("lat").valueProperty());
-		obsLocB.lonDegProperty().bind(textFormatter("lon").valueProperty());
+		obsLocB.latDegProperty().bind(latFormatter.valueProperty());
+		obsLocB.lonDegProperty().bind(lonFormatter.valueProperty());
 		// Binding the date, time and zone to the dateTimeBean property.
-		dateTimeB.dateProperty().bind(datePicker.valueProperty());
-		dateTimeB.timeProperty().bind(timeFormatter.valueProperty());
+		dateTimeB.dateProperty().bindBidirectional(datePicker.valueProperty());
+		dateTimeB.timeProperty().bindBidirectional(timeFormatter.valueProperty());
 		ObservableObjectValue<ZoneId> sb = Bindings.createObjectBinding(() -> ZoneId.of(zoneIdBox.getValue()), zoneIdBox.valueProperty());
 		dateTimeB.zoneProperty().bind(sb);
 		
@@ -243,13 +250,9 @@ public class Main2 extends Application{
 
 
     private static BorderPane informationBar(ViewingParametersBean viewingParametersBean, SkyCanvasManager skyCanvasManager) {
-       // System.out.println(viewingParametersBean.getFieldOfView());
         Text fovT = new Text();
 
         fovT.textProperty().bind(Bindings.format("Champ de vue: %.1f°" , viewingParametersBean.fieldOfViewProperty()));
-        // create string
-        
-        
         
         Text closestObjectT = new Text();
 
@@ -261,7 +264,6 @@ public class Main2 extends Application{
             }
         }, skyCanvasManager.objectUnderMouseProperty()));
 
-       
         Text mousePosT = new Text();
 
         mousePosT.textProperty().bind(Bindings.format("Azimut: %.1f°, hauteur: %.1f°",  
@@ -271,6 +273,5 @@ public class Main2 extends Application{
         infoBar.setStyle("-fx-padding: 4;\r\n; -fx-background-color: white;");
 
         return infoBar;
-
     }
 }

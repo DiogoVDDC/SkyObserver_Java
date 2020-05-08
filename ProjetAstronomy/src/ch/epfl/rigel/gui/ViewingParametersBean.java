@@ -88,7 +88,6 @@ public final class ViewingParametersBean {
      */
     public void changeAlt(double delta) {
     	double newAlt = ALT_INTERVAL.clip(center.get().altDeg() + delta);
-    	System.out.println(newAlt);
     	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), newAlt));
     }
     
