@@ -1,9 +1,7 @@
 package ch.epfl.rigel.gui;
-
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
-import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,10 +9,9 @@ import javafx.beans.property.SimpleObjectProperty;
 
 public final class ViewingParametersBean {
     
-    // Interval in which the azimuth angle must be contained.
-    private static final RightOpenInterval AZ_INTERVAL = RightOpenInterval.of(0,Angle.TAU);
+    
     // Interval in which the altitude angle must be contained.
-    private static final ClosedInterval ALT_INTERVAL = ClosedInterval.symmetric(Math.PI);
+    private static final ClosedInterval ALT_INTERVAL = ClosedInterval.of(6, 90);
     
     //The field of view property.
     private final DoubleProperty fieldOfView;
@@ -90,8 +87,9 @@ public final class ViewingParametersBean {
      * @param delta: the amount to add to the altitude (in degrees).
      */
     public void changeAlt(double delta) {
-    	double newAlt = center.get().altDeg() + delta;
-    	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), Angle.toDeg(ALT_INTERVAL.clip(Angle.ofDeg(newAlt)))));
+    	double newAlt = ALT_INTERVAL.clip(center.get().altDeg() + delta);
+    	System.out.println(newAlt);
+    	setCenter(HorizontalCoordinates.ofDeg(center.get().azDeg(), newAlt));
     }
     
     /**
@@ -99,7 +97,7 @@ public final class ViewingParametersBean {
      * @param delta: amount to add to the current azimuth angle (in degrees).
      */
     public void changeAz(double delta) {
-    	double newAz = center.get().azDeg() + delta;
-    	setCenter(HorizontalCoordinates.ofDeg(Angle.toDeg(AZ_INTERVAL.reduce(Angle.ofDeg(newAz))), center.get().altDeg()));
+    	double newAz = Angle.toDeg(Angle.normalizePositive(Angle.ofDeg(center.get().azDeg() + delta)));
+    	setCenter(HorizontalCoordinates.ofDeg(newAz, center.get().altDeg()));
     }
 }

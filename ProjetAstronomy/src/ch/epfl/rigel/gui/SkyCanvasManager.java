@@ -1,31 +1,22 @@
 package ch.epfl.rigel.gui;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.Month;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-
-import javax.print.attribute.DateTimeSyntax;
+import java.util.Optional;
 
 import ch.epfl.rigel.astronomy.CelestialObject;
 import ch.epfl.rigel.astronomy.ObservedSky;
 import ch.epfl.rigel.astronomy.StarCatalogue;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
-import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
-import ch.epfl.rigel.math.RightOpenInterval;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableObjectValue;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
@@ -34,7 +25,7 @@ import javafx.scene.transform.Transform;
 public final class SkyCanvasManager {
 
     // Interval in which the altitude angle must be contained.
-    private static final ClosedInterval FOV_INTERVAL = ClosedInterval.of(0, 200);
+    private static final ClosedInterval FOV_INTERVAL = ClosedInterval.of(30, 150);
 
     private final ObservableObjectValue<StereographicProjection> projection;
     private final ObservableObjectValue<Transform> planeToCanvas;
@@ -52,14 +43,9 @@ public final class SkyCanvasManager {
             ObserverLocationBean observerLocBean,
             ViewingParametersBean viewingParamBean) {
 
-        this.mouseAltDeg = null;
-        this.mouseAzDeg = null;
-        this.mouseHorizontalCoords = null;
-        this.objectUnderMouse = null;
-        this.mousePosition = null;
         sky = new Canvas();
         painter = new SkyCanvasPainter(sky);
-
+        
         projection = Bindings.createObjectBinding(
                 () -> new StereographicProjection(viewingParamBean.getCenter()),
                 viewingParamBean.centerProperty());
@@ -73,43 +59,42 @@ public final class SkyCanvasManager {
         }, projection, viewingParamBean.fieldOfViewProperty(),
                 sky.widthProperty(), sky.heightProperty());
 
-        observedSky = Bindings.createObjectBinding(
-                () -> new ObservedSky(
+        observedSky = Bindings.createObjectBinding(() -> new ObservedSky(
                         ZonedDateTime.of(dateTimeBean.getDate(),
-                                dateTimeBean.getTime(), dateTimeBean.getZone()),
+                        dateTimeBean.getTime(), dateTimeBean.getZone()),
                         observerLocBean.getCoordinates(), projection.getValue(),
                         catalogue),
                 observerLocBean.coordinatesProperty(),
                 dateTimeBean.dateProperty(), dateTimeBean.timeProperty(),
                 dateTimeBean.zoneProperty(), projection);
 
-        // mousePosition = new SimpleObjectProperty<Point2D>();
-        // sky.setOnMouseMoved(e ->{
-        // mousePosition.set(new Point2D(e.getX(), e.getY()));
-        // });
+         mousePosition = new SimpleObjectProperty<Point2D>(new Point2D(0,0));
+         
+        
 
-        // mouseHorizontalCoords = Bindings.createObjectBinding(() ->{
-        // Point2D transformedMousePos =
-        // planeToCanvas.get().transform(mousePosition.get());
-        // return
-        // projection.get().inverseApply(CartesianCoordinates.of(transformedMousePos.getX(),
-        // transformedMousePos.getY()));
-        // }, projection, mousePosition, planeToCanvas);
-        //
-        // mouseAltDeg = Bindings.createDoubleBinding(() ->
-        // mouseHorizontalCoords.get().altDeg(), mouseHorizontalCoords);
-        // mouseAzDeg = Bindings.createDoubleBinding(() ->
-        // mouseHorizontalCoords.get().azDeg(), mouseHorizontalCoords);
-        //
-        // objectUnderMouse = Bindings.createObjectBinding(() ->{
-        // Point2D transformedMousePos =
-        // planeToCanvas.get().transform(mousePosition.get());
-        //
-        // return
-        // observedSky.get().objectClosestTo(CartesianCoordinates.of(transformedMousePos.getX(),
-        // transformedMousePos.getY()), 10d).get();
-        // }, observedSky, mousePosition, planeToCanvas);
-        //
+         mouseHorizontalCoords = Bindings.createObjectBinding(() ->{
+             Point2D transformedMousePos = planeToCanvas.get().transform(mousePosition.get());             
+             return projection.get().inverseApply(CartesianCoordinates.of(transformedMousePos.getX(),
+                 transformedMousePos.getY()));
+            
+         }, projection, mousePosition, planeToCanvas);
+         
+         
+        
+         mouseAltDeg = Bindings.createDoubleBinding(() ->
+             mouseHorizontalCoords.get().altDeg(), mouseHorizontalCoords);
+         mouseAzDeg = Bindings.createDoubleBinding(() ->
+             mouseHorizontalCoords.get().azDeg(), mouseHorizontalCoords);
+        
+         objectUnderMouse = Bindings.createObjectBinding(() ->{
+             Point2D transformedMousePos =
+                     planeToCanvas.get().transform(mousePosition.get());
+             Optional<CelestialObject> closest = observedSky.get().objectClosestTo(
+                     CartesianCoordinates.of(transformedMousePos.getX(),
+                     transformedMousePos.getY()), 10d);
+             return closest.isEmpty() ? null : closest.get();
+         }, observedSky, mousePosition, planeToCanvas);
+        
 
         observedSky.addListener((o, oV, nV) -> {
             drawCanvas();
@@ -121,39 +106,43 @@ public final class SkyCanvasManager {
 
         sky.setOnScroll(e -> {
             if (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY())) {
-                viewingParamBean.setFieldOfView(FOV_INTERVAL.clip(viewingParamBean.getFieldOfView() + e.getDeltaX()*viewingParamBean.getFieldOfView()/100.0));
+                viewingParamBean.setFieldOfView(FOV_INTERVAL.clip(
+                        viewingParamBean.getFieldOfView() - 
+                        e.getDeltaX()*viewingParamBean.getFieldOfView()/100.0));
             } else {
-                viewingParamBean.setFieldOfView(FOV_INTERVAL.clip(viewingParamBean.getFieldOfView() + e.getDeltaY()*viewingParamBean.getFieldOfView()/100.0));
+                viewingParamBean.setFieldOfView(FOV_INTERVAL.clip(
+                        viewingParamBean.getFieldOfView() -
+                        e.getDeltaY()*viewingParamBean.getFieldOfView()/100.0));
             }
         });
-        //
-        // sky.setOnMousePressed(e ->{
-        // if (e.isPrimaryButtonDown()) sky.requestFocus();
-        // });
-        //
+        
+         sky.setOnMousePressed(e ->{
+         if (e.isPrimaryButtonDown()) sky.requestFocus();
+         });
+        
         sky.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.UP) {
-                System.out.println("UP is pressed");
                 viewingParamBean.changeAlt(5);
-                e.consume();
             }
-
             if (e.getCode() == KeyCode.DOWN) {
                 viewingParamBean.changeAlt(-5);
-                e.consume();
             }
-
             if (e.getCode() == KeyCode.LEFT) {
                 viewingParamBean.changeAz(-5);
-                e.consume();
             }
-
             if (e.getCode() == KeyCode.RIGHT) {
                 viewingParamBean.changeAz(5);
-                e.consume();
             }
+            e.consume();
         });
-
+        
+        
+        sky.setOnMouseMoved(e ->{
+            // position x y sur le canvas
+            mousePosition.set(new Point2D(e.getX(), e.getY()));
+            System.out.println(mousePosition.get().toString());
+           System.out.println(mouseHorizontalCoords.getValue().toString());
+        });
     }
 
     private void drawCanvas() {

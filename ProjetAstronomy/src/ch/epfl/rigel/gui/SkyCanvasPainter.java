@@ -101,7 +101,6 @@ public final class SkyCanvasPainter {
 			double starX = transformedCoords[observedSky.stars().indexOf(star)*2];
 			double starY = transformedCoords[observedSky.stars().indexOf(star)*2+ 1];
 			Point2D starPos = adjustCoordinate(new Point2D(starX, starY), transformedSize/2);
-
 			//Set the color to the star's one based on it's color temperature.
 			ctx.setFill(BlackBodyColor.colorForTemperature(star.colorTemperature()));
 			
