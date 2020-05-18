@@ -3,12 +3,16 @@ package ch.epfl.rigel.gui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.ZonedDateTime;
 import java.util.function.UnaryOperator;
+
 import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -19,24 +23,24 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.converter.LocalTimeStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
-public class Main2 extends Application{
+public class Main extends Application{
 
 	public static void main(String[] args) {
 		launch(args);
@@ -45,33 +49,36 @@ public class Main2 extends Application{
     @Override
     public void start(Stage primaryStage) throws Exception {
         try (InputStream hs = resourceStream("/hygdata_v3.csv"); InputStream ast = resourceStream("/asterisms.txt")){
+            // Read the star catalogue and asterism catalogue
             StarCatalogue catalogue = new StarCatalogue.Builder()
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE).loadFrom(ast, AsterismLoader.INSTANCE)
                     .build();
 
+            // initialises the time of the observed sky
             ZonedDateTime when = ZonedDateTime.parse("2020-02-17T20:15:00+01:00");
             DateTimeBean dateTimeBean = new DateTimeBean();
             dateTimeBean.setZonedDateTime(when);
 
+            // initialises the observer's location
             ObserverLocationBean observerLocationBean = new ObserverLocationBean();
-            observerLocationBean.setCoordinates(GeographicCoordinates.ofDeg(6.57, 46.52));	    
-
-
+            observerLocationBean.setCoordinates(GeographicCoordinates.ofDeg(6.57, 46.52));
+            
+            // initialises the viewing center and fov
             ViewingParametersBean viewingParametersBean = new ViewingParametersBean();
             viewingParametersBean.setCenter(HorizontalCoordinates.ofDeg(180, 42));
             viewingParametersBean.setFieldOfView(70);
 
-            TimeAnimator animator = new TimeAnimator(dateTimeBean);
-            
+            // create animator and sky canvas manager
+            TimeAnimator animator = new TimeAnimator(dateTimeBean);            
             SkyCanvasManager skyCanvasManager = new SkyCanvasManager(catalogue, dateTimeBean, observerLocationBean, viewingParametersBean);     
 
+            // sets up the canvas which will be drawn on
             Canvas sky = skyCanvasManager.canvas();
             Pane root = new Pane(sky);
-
             sky.widthProperty().bind(root.widthProperty());
             sky.heightProperty().bind(root.heightProperty());
             
-            
+            // initialises the scene 
             BorderPane scene = new BorderPane();
             scene.setCenter(root);
             scene.setTop(controlBar(viewingParametersBean, dateTimeBean, observerLocationBean, animator));
@@ -93,16 +100,21 @@ public class Main2 extends Application{
 		//Lat and lon labels.
 		Label lonL = new Label("Longitude(°):");
 		Label latL = new Label("Latitude(°):");
+		
 		//latitude text field
 		TextField latTF = new TextField();
-		latTF.setTextFormatter(textFormatter("lat"));
+		TextFormatter<Number> latFormatter = textFormatter("lat");
+		
+		latTF.setTextFormatter(latFormatter);
 		latTF.setStyle("-fx-pref-width: 60; -fx-alignment: baseline_right;");
-		latTF.setText("46.52");
+		
 		//Longitude text field
 		TextField lonTF = new TextField();
-		lonTF.setTextFormatter(textFormatter("lon"));
+		TextFormatter<Number> lonFormatter = textFormatter("lon");
+		
+		lonTF.setTextFormatter(lonFormatter);
 		lonTF.setStyle("-fx-pref-width: 60; -fx-alignment: baseline_right;");
-		lonTF.setText("6.57");
+		
 		// Child containing the location of the observation.
 		HBox obsPos = new HBox(lonL, lonTF, latL, latTF);
 		obsPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
@@ -115,12 +127,13 @@ public class Main2 extends Application{
 		//Time label and text field.
 		Label timeL = new Label("Heure:");
 		TextField timeTF = new TextField();
+		
+		
 		timeTF.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
 		DateTimeFormatter hmsFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 		LocalTimeStringConverter stringConverter = new LocalTimeStringConverter(hmsFormatter, hmsFormatter);
 		TextFormatter<LocalTime> timeFormatter = new TextFormatter<>(stringConverter);
 		timeTF.setTextFormatter(timeFormatter);
-		timeTF.setText(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
 		
 		//Zone id selector.
 		ComboBox<String> zoneIdBox = new ComboBox<String>(FXCollections.observableArrayList(ZoneId.getAvailableZoneIds()));
@@ -144,23 +157,22 @@ public class Main2 extends Application{
 		//Reset and Play/Pause buttons.
 		Button resetButton = new Button(ButtonImages.RESTART.getUniCode());
 		resetButton.setFont(fontAwesome);
+		resetButton.setOnAction(e ->{
+			dateTimeB.setZonedDateTime(ZonedDateTime.now());;
+		});
 		
 		Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
 		playPauseButt.setFont(fontAwesome);
-		
+		// Play/Pause button actions when pressed.
 		playPauseButt.setOnAction(e ->{
 			// Starts and stop the animation depending on whether it's already running or not.
 			if (animator.isRunning()) {
 				animator.stop();
-			} else {
-				animator.start();
-			}
-			// Switches between the 2 button images.
-			if(playPauseButt.getText().equals(ButtonImages.PAUSE.getUniCode())) {
 				playPauseButt.setText(ButtonImages.PLAY.getUniCode());
 			} else {
+				animator.start();
 				playPauseButt.setText(ButtonImages.PAUSE.getUniCode());
-			}
+			}		
 		});
 		
 		// Child box containing the time spending.
@@ -168,17 +180,19 @@ public class Main2 extends Application{
 		time.setStyle("-fx-spacing: inherit;");
 		
 		// Binding the obsever's location to the lon and lat text fields.
-		obsLocB.latDegProperty().bind(textFormatter("lat").valueProperty());
-		obsLocB.lonDegProperty().bind(textFormatter("lon").valueProperty());
+		latFormatter.valueProperty().bindBidirectional(obsLocB.latDegProperty());
+		lonFormatter.valueProperty().bindBidirectional(obsLocB.lonDegProperty());
 		// Binding the date, time and zone to the dateTimeBean property.
-		dateTimeB.dateProperty().bind(datePicker.valueProperty());
-		dateTimeB.timeProperty().bind(timeFormatter.valueProperty());
+		datePicker.valueProperty().bindBidirectional(dateTimeB.dateProperty());
+		timeFormatter.valueProperty().bindBidirectional(dateTimeB.timeProperty());
+		
 		ObservableObjectValue<ZoneId> sb = Bindings.createObjectBinding(() -> ZoneId.of(zoneIdBox.getValue()), zoneIdBox.valueProperty());
 		dateTimeB.zoneProperty().bind(sb);
 		
 		// Binding the time accelerator to the selected accelerator.
 		animator.acceleratorProperty().bind(Bindings.select(acceleratorChoice.valueProperty(), "accelerator"));
 
+		// Creates the control bar with the correct styling
 		HBox controlBar = new HBox(obsPos, obsTime, time);
 		controlBar.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
 		
@@ -218,8 +232,7 @@ public class Main2 extends Application{
 	
 	/**
 	 * Enum storing the unicode string for the different button images.
-	 * @author Theo Houle (312432)
-	 *
+	 * @author Theo Houle (312432)	 
 	 */
 	private enum ButtonImages {
 		RESTART("\uf0e2"),
@@ -244,11 +257,15 @@ public class Main2 extends Application{
 
 
     private static BorderPane informationBar(ViewingParametersBean viewingParametersBean, SkyCanvasManager skyCanvasManager) {
-
+        // create empty text
         Text fovT = new Text();
-        fovT.textProperty().bind(Bindings.format("Champ de vue: %.1f°" , viewingParametersBean.fieldOfViewProperty()));            
-        
         Text closestObjectT = new Text();
+        Text mousePosT = new Text();
+        
+        // creates a binding between the fov text and fov parameter
+        fovT.textProperty().bind(Bindings.format("Champ de vue: %.1f°" , viewingParametersBean.fieldOfViewProperty()));       
+
+        // creates binding between the closest object text and the object under mouse parameter
         closestObjectT.textProperty().bind(Bindings.createStringBinding(() -> {
             if(skyCanvasManager.objectUnderMouseProperty().get() == null) {
                 return "";
@@ -256,12 +273,12 @@ public class Main2 extends Application{
                 return skyCanvasManager.objectUnderMouseProperty().get().info();
             }
         }, skyCanvasManager.objectUnderMouseProperty()));
-
        
-        Text mousePosT = new Text();
+        // creates binding between the mouse position text and coordinates of the mouse properties
         mousePosT.textProperty().bind(Bindings.format("Azimut: %.1f°, hauteur: %.1f°",  
                 skyCanvasManager.mouseAzDegProperty(), skyCanvasManager.mouseAltDegProperty()));
 
+        // creates the info Bar with the correct styles
         BorderPane infoBar = new BorderPane(closestObjectT, null, mousePosT, null, fovT);
         infoBar.setStyle("-fx-padding: 4;\r\n; -fx-background-color: white;");
 
