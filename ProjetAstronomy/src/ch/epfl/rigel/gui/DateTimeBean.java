@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleObjectProperty;
 /**
  * Class representing an observable ZonedDateTime.
  * @author Theo Houle (312432)
- *
  */
 public final class DateTimeBean {
 

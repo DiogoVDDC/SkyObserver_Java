@@ -7,8 +7,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
-public final class ViewingParametersBean {
-    
+/**
+ * Class representing an viewable parameter such as fov or center of observation
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
+public final class ViewingParametersBean {    
     
     // Interval in which the altitude angle must be contained.
     private static final ClosedInterval ALT_INTERVAL = ClosedInterval.of(6, 90);

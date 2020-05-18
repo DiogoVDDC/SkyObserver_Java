@@ -14,11 +14,10 @@ public enum NamedTimeAccelerator {
     TIMES_300("300x", TimeAccelerator.continuous(300)),
     TIMES_3000("3000x", TimeAccelerator.continuous(3000)),
     DAY("jour", TimeAccelerator.discrete(60,  Duration.ofHours(24))),
-    SIDEREAL_DAY("jour sidéral", TimeAccelerator.discrete(60,  Duration.ofHours((long) 23.9344444444444444)));
+    SIDEREAL_DAY("jour sidéral", TimeAccelerator.discrete(60,  Duration.ofHours(23).plusMinutes(56).plusSeconds(4)));
     
     private String name;
-    private TimeAccelerator timeAccelerator;
-    
+    private TimeAccelerator timeAccelerator;    
     
     private NamedTimeAccelerator(String name, TimeAccelerator timeAccelerator) {
         this.name = name;

@@ -12,7 +12,6 @@ import javafx.beans.property.SimpleObjectProperty;
  * Class representing a time animator which periodically updates a given time 
  * based on a time accelerator.
  * @author Theo Houle (312432)
- *
  */
 public final class TimeAnimator extends AnimationTimer{
 
@@ -60,8 +59,8 @@ public final class TimeAnimator extends AnimationTimer{
 			elapsedTime =  now;
 			justStarted = false;
 		} else {
-			//Compute elapsed time since last call.
-			long deltaTime = now - elapsedTime;
+			//Compute elapsed time in nanoseconds since last call.
+			long deltaTime = (long) (now - elapsedTime);
 			//Adjut the date time according to the delta of time elapsed.
 			ZonedDateTime newObservedTime = accelerator.getValue().adjust(dateTime.getZonedDateTime(), deltaTime);
 			
