@@ -126,7 +126,7 @@ public class Main extends Application{
 		timeTF.setText(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
 		
 		//Zone id selector.
-		ComboBox<String> zoneIdBox = new ComboBox<String>(FXCollections.observableArrayList(ZoneId.getAvailableZoneIds()));
+		ComboBox<String> zoneIdBox = new ComboBox<String>(FXCollections.observableArrayList(ZoneId.getAvailableZoneIds()).sorted());
 		zoneIdBox.setStyle("-fx-pref-width: 180;");
 		zoneIdBox.setValue(ZoneId.systemDefault().toString());
 		
