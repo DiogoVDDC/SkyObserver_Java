@@ -32,12 +32,8 @@ public interface TimeAccelerator {
      * @param stepLength: the size of the steps taken
      * @return returns the simulated time after a certain time elapsed
      */
-    public static TimeAccelerator discrete(int stepFrequency, Duration stepLength) {
-        return (initialTime, timeElapsed) -> {
-        	//The step frequency is divided by 1e9 because it's initially a frequency per seconds 
-        	//and timeElapsed is in nano seconds.
-            return initialTime.plusNanos((long) (Math.floor(stepFrequency/1e9 * timeElapsed))
-            		* stepLength.toNanos());
-        };
+    public static TimeAccelerator discrete(long stepFrequency, Duration stepLength) {
+       return (initialTime, timeElapsed) ->
+           initialTime.plus(stepLength.multipliedBy(timeElapsed*stepFrequency/1000_000_000L));
     }
 }

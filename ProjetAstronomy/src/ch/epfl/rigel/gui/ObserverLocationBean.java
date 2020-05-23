@@ -6,8 +6,12 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableObjectValue;
 
-public final class ObserverLocationBean {
-    
+
+/**
+ * Class representing a viewable observer location properties 
+ * @author Diogo Valdivieso Damasio Da Costa (311673)
+ */
+public final class ObserverLocationBean {    
     //The longitude property.
     private final DoubleProperty lonDeg;
     //The latitude property.
@@ -18,7 +22,8 @@ public final class ObserverLocationBean {
     
     public ObserverLocationBean() {
         this.lonDeg = new SimpleDoubleProperty();
-        this.latDeg = new SimpleDoubleProperty();        
+        this.latDeg = new SimpleDoubleProperty(); 
+        // create binding where coordinates depends of lon and lat
         coordinates = Bindings.createObjectBinding(
                 () -> GeographicCoordinates.ofDeg(lonDeg.get(), latDeg.get())
                 ,lonDeg, latDeg);      
