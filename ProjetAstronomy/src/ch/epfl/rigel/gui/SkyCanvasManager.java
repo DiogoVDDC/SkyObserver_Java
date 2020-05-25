@@ -87,7 +87,7 @@ public final class SkyCanvasManager {
                 dateTimeBean.dateProperty(), dateTimeBean.timeProperty(),
                 dateTimeBean.zoneProperty(), projection);
 
-        //initialising the mouse position property at (0,0) to avoid first occurrence exception.
+        // Initialising the mouse position property at (0,0)
         mousePosition = new SimpleObjectProperty<Point2D>(new Point2D(0,0));
 
         // Updates the mouse position whenever the mouse moves.
@@ -109,24 +109,28 @@ public final class SkyCanvasManager {
 
             }, projection, mousePosition, planeToCanvas);
         
-        // Binding the mosue alt and az to the mouse's horizontal coords.
+         // Binding the mouse alt and az to the mouse's horizontal coords.
          mouseAltDeg = Bindings.createDoubleBinding(() ->
              mouseHorizontalCoords.get().altDeg(), mouseHorizontalCoords);
          mouseAzDeg = Bindings.createDoubleBinding(() ->
              mouseHorizontalCoords.get().azDeg(), mouseHorizontalCoords);
         
-         // Binding the onject under mouse to it's corresponding variables.
+         // Binding the object under mouse to it's corresponding variables.
          objectUnderMouse = Bindings.createObjectBinding(() ->{
         	// Try and catch to avoid having an error of non invertible transform exception at initialisation.
         	 try {
              Point2D transformedMousePos =
                      planeToCanvas.get().inverseTransform(mousePosition.get());
+             
+             // Get the closest object in a certain radius
              Optional<CelestialObject> closest = observedSky.get().objectClosestTo(
                      CartesianCoordinates.of(transformedMousePos.getX(),
                      transformedMousePos.getY()), 10d);
+             
              return closest.isEmpty() ? null : closest.get();
-        	 } catch(Exception e) {
-        		 return null;
+        	 } catch(Exception e1) {
+        	     e1.printStackTrace();
+                 return null;
         	 }
          }, observedSky, mousePosition, planeToCanvas);
         
@@ -134,10 +138,12 @@ public final class SkyCanvasManager {
          observedSky.addListener((o, oV, nV) -> {
         	 drawCanvas();
          });
+         
          //Makes sure the sky is redrawn whenever the plane to canvas trasnformatio changes.
          planeToCanvas.addListener((o, oV, nV) -> {
             drawCanvas();
          });
+         
          //Adjust the fov when zooming in or out using mouse's wheel of trackpad.
          sky.setOnScroll(e -> {
         	 if (Math.abs(e.getDeltaX()) > Math.abs(e.getDeltaY())) {
@@ -150,10 +156,12 @@ public final class SkyCanvasManager {
                          e.getDeltaY()*viewingParamBean.getFieldOfView()/100.0));
              }
          });
-         // Reqests the focus when left clicking on the canvas.
+         
+         // Requests the focus when left clicking on the canvas.
          sky.setOnMousePressed(e ->{
          if (e.isPrimaryButtonDown()) sky.requestFocus();
          });
+         
          // Moves the centre of projection according the the keyboard arrows.
          sky.setOnKeyPressed(e -> {
              if (e.getCode() == KeyCode.UP) {
@@ -171,16 +179,15 @@ public final class SkyCanvasManager {
             e.consume();
         });
         
-        
+        // Changes the mouse position
         sky.setOnMouseMoved(e ->{
-            // position x y sur le canvas
-            mousePosition.set(new Point2D(e.getX(), e.getY()));
+                      mousePosition.set(new Point2D(e.getX(), e.getY()));
             e.consume();           
         });     
     }
 
     /**
-     * Allows to draw all elements of the canvas using a sinle command.
+     * Allows to draw all elements of the canvas using a single command.
      */
     private void drawCanvas() {
         painter.clear();
