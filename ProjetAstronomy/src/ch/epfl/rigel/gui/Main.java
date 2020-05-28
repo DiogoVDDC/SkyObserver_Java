@@ -3,18 +3,13 @@ package ch.epfl.rigel.gui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
-
 import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -22,7 +17,6 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -106,10 +100,7 @@ public class Main extends Application {
             DateTimeBean dateTimeB, ObserverLocationBean obsLocB,
             TimeAnimator animator) throws IOException {
 
-        // Child containing all the buttons to control the time accelerator
-        HBox timeAcceleratorControl = initialiseButton(dateTimeB, animator);
-        timeAcceleratorControl.setStyle("-fx-spacing: inherit;");
-
+      
         // Child containing date, time and zone controls
         HBox obsTime = initialiseDateTimeZone(dateTimeB);
         obsTime.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
@@ -117,6 +108,11 @@ public class Main extends Application {
         // Child containing the location of the observation.
         HBox obsPos = initialiseLonLat(obsLocB);
         obsPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+        
+        // Child containing all the buttons to control the time accelerator
+        HBox timeAcceleratorControl = initialiseButton(dateTimeB, animator, obsTime, obsPos);
+        timeAcceleratorControl.setStyle("-fx-spacing: inherit;");
+
 
         // Creates the control bar with the correct styling
         HBox controlBar = new HBox(obsPos, obsTime, timeAcceleratorControl);
@@ -200,7 +196,7 @@ public class Main extends Application {
         return new HBox(dateL, datePicker, timeL, timeTF, zoneIdBox);
     }
 
-    private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator)
+    private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator, HBox obsTime, HBox obsPos)
             throws IOException {
         // Accelerator choices menu.
         ChoiceBox<NamedTimeAccelerator> acceleratorChoice = new ChoiceBox<NamedTimeAccelerator>(
@@ -211,19 +207,19 @@ public class Main extends Application {
         // Loading font for the button images.
         InputStream fontStream = getClass()
                 .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
-        Font fontAwesome = Font.loadFont(fontStream, 15);
+        Font defaultFont = Font.loadFont(fontStream, 15);
         fontStream.close();
 
         // Reset Button
         Button resetButton = new Button(ButtonImages.RESTART.getUniCode());
-        resetButton.setFont(fontAwesome);
+        resetButton.setFont(defaultFont);
         resetButton.setOnAction(e -> {
             dateTimeB.setZonedDateTime(ZonedDateTime.now());
         });
 
         // Paused Button
         Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
-        playPauseButt.setFont(fontAwesome);
+        playPauseButt.setFont(defaultFont);
 
         // Play/Pause button actions when pressed.
         playPauseButt.setOnAction(e -> {
@@ -232,9 +228,11 @@ public class Main extends Application {
             if (animator.isRunning()) {
                 animator.stop();
                 playPauseButt.setText(ButtonImages.PLAY.getUniCode());
+                disableEnableInterface(obsTime, obsPos);
             } else {
                 animator.start();
                 playPauseButt.setText(ButtonImages.PAUSE.getUniCode());
+                disableEnableInterface(obsTime, obsPos);
             }
         });
 
@@ -243,6 +241,17 @@ public class Main extends Application {
                 .select(acceleratorChoice.valueProperty(), "accelerator"));
 
         return new HBox(acceleratorChoice, resetButton, playPauseButt);
+    }
+    
+    private void disableEnableInterface(HBox obsTime, HBox obsPos) {
+        
+        if(!obsTime.isDisable() && !obsPos.isDisabled()) {
+            obsTime.setDisable(true);
+            obsPos.setDisable(true);
+        } else {
+            obsTime.setDisable(false);
+            obsPos.setDisable(false);
+        }
     }
 
     private InputStream resourceStream(String resourceName) {

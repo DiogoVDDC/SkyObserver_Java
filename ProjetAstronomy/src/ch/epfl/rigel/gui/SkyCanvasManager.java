@@ -129,7 +129,7 @@ public final class SkyCanvasManager {
              
              return closest.isEmpty() ? null : closest.get();
         	 } catch(Exception e1) {
-        	     e1.printStackTrace();
+        	     // returns null if the nonInvertibleTransformException is caught
                  return null;
         	 }
          }, observedSky, mousePosition, planeToCanvas);
