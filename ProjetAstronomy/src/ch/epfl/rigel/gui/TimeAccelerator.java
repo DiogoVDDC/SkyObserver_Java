@@ -9,31 +9,39 @@ import java.time.ZonedDateTime;
  */
 @FunctionalInterface
 public interface TimeAccelerator {
-    
-    /**   
-     * @param initialTime: initial simulated time
-     * @param realTimeElapsed: the amount of real time elapsed since the start of the animation in nanoseconds
-     * @return returns the simulated time after a certain real time elapsed 
+
+    /**
+     * @param initialTime:
+     *            initial simulated time
+     * @param realTimeElapsed:
+     *            the amount of real time elapsed since the start of the
+     *            animation in nanoseconds
+     * @return returns the simulated time after a certain real time elapsed
      */
     ZonedDateTime adjust(ZonedDateTime initialTime, long realTimeElapsed);
-    
+
     /**
-     * @param accelerationFactor: factor at which the simulated time elapses compared to real time
+     * @param accelerationFactor:
+     *            factor at which the simulated time elapses compared to real
+     *            time
      * @return returns the simulated time after a certain time elapsed
      */
     public static TimeAccelerator continuous(int accelerationFactor) {
-        return (initialTime, timeElapsed) -> {           
-            return initialTime.plusNanos(accelerationFactor * timeElapsed);            
-        };
+        return (initialTime, timeElapsed) -> initialTime
+                .plusNanos(accelerationFactor * timeElapsed);
+
     }
-    
+
     /**
-     * @param stepFrequency: frequency of the number of steps taken per second
-     * @param stepLength: the size of the steps taken
+     * @param stepFrequency:
+     *            frequency of the number of steps taken per second
+     * @param stepLength:
+     *            the size of the steps taken
      * @return returns the simulated time after a certain time elapsed
      */
-    public static TimeAccelerator discrete(long stepFrequency, Duration stepLength) {
-       return (initialTime, timeElapsed) ->
-           initialTime.plus(stepLength.multipliedBy(timeElapsed*stepFrequency/1000_000_000L));
+    public static TimeAccelerator discrete(long stepFrequency,
+            Duration stepLength) {
+        return (initialTime, timeElapsed) -> initialTime.plus(stepLength
+                .multipliedBy(timeElapsed * stepFrequency / 1000_000_000L));
     }
 }
