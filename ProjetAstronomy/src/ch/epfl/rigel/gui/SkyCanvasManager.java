@@ -125,7 +125,7 @@ public final class SkyCanvasManager {
              // Get the closest object in a certain radius
              Optional<CelestialObject> closest = observedSky.get().objectClosestTo(
                      CartesianCoordinates.of(transformedMousePos.getX(),
-                     transformedMousePos.getY()), 10d);
+                     transformedMousePos.getY()), planeToCanvas.get().inverseDeltaTransform(10, 0).magnitude());
              
              return closest.isEmpty() ? null : closest.get();
         	 } catch(Exception e1) {

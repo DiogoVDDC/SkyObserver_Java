@@ -290,16 +290,14 @@ public final class SkyCanvasPainter {
         ctx.setTextBaseline(VPos.TOP);
         ctx.setLineWidth(1);
 
-        // Drawing the text of the every cardinal points on the horizon circle
-        for (CardinalPoints cardPoint : CardinalPoints.values()) {
-            // Getting the coordinates at which the text will be drawn
-            CartesianCoordinates coord = cardPoint
-                    .getCartesianCoord(projection);
-            // Ajusting the coordinates to the affine transform
-            Point2D transCoord = transform.transform(coord.x(), coord.y());
-            // Drawing the cardinal point text
-            ctx.strokeText(cardPoint.getFrenchAbrev(), transCoord.getX(),
-                    transCoord.getY());
+        for(int i = 0; i<360; i+=45) {
+        	HorizontalCoordinates coords = HorizontalCoordinates.ofDeg(i, -0.5);
+        	// Getting the coordinates at which the text will be drawn
+        	CartesianCoordinates cartCoords = projection.apply(coords);
+        	// Ajusting the coordinates to the affine transform
+        	Point2D transCoord = transform.transform(cartCoords.x(), cartCoords.y());
+        	// Drawing the cardinal point text
+        	ctx.strokeText(coords.azOctantName("N", "E", "S", "W"), transCoord.getX(), transCoord.getY());
         }
     }
 
@@ -337,45 +335,5 @@ public final class SkyCanvasPainter {
      */
     private Point2D adjustCoordinate(Point2D center, double radius) {
         return new Point2D(center.getX() - radius, center.getY() - radius);
-    }
-
-    // Creating all the cardinal points with appropriate name, and coordinates
-    private enum CardinalPoints {
-        NORTH("N", HorizontalCoordinates.ofDeg(0, -0.5)),
-        NORT_EAST("NE", HorizontalCoordinates.ofDeg(45, -0.5)),
-        EAST("E",HorizontalCoordinates.ofDeg(90, -0.5)),
-        SOUTH_EAST("SE", HorizontalCoordinates.ofDeg(135, -0.5)),
-        SOUTH("S",HorizontalCoordinates.ofDeg(180, -0.5)),
-        SOUTH_WEST("SO",HorizontalCoordinates.ofDeg(225, -0.5)),
-        WEST("O",HorizontalCoordinates.ofDeg(270,-0.5)),
-        NORTH_WEST("NO",HorizontalCoordinates.ofDeg(315,-0.5));
-
-        private final HorizontalCoordinates horCoord;
-        private final String frenchName;
-
-        private CardinalPoints(String frenchAbrev,
-                HorizontalCoordinates horCoord) {
-            this.horCoord = horCoord;
-            this.frenchName = frenchAbrev;
-        }
-
-        /**
-         * @return: 
-         *      returns the french name of the cardinal points
-         */
-        protected String getFrenchAbrev() {
-            return frenchName;
-        }
-
-        /**
-         * @param projection: 
-         *        projection that with be used to the cartesian coordinates  
-         * @return: 
-         *        returns the cartesian coordinates
-         */
-        protected CartesianCoordinates getCartesianCoord(
-                StereographicProjection projection) {
-            return projection.apply(horCoord);
-        }
     }
 }

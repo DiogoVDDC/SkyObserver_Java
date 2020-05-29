@@ -39,6 +39,7 @@ import javafx.util.converter.NumberStringConverter;
 public class Main extends Application {
 
     public static void main(String[] args) {
+    	System.out.println("LAUNCH"  +  System.nanoTime());
         launch(args);
     }
 
