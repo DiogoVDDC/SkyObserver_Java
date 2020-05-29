@@ -2,6 +2,7 @@ package ch.epfl.rigel.astronomy;
 
 import java.util.Objects;
 
+import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
 
 /**
@@ -29,13 +30,11 @@ public abstract class CelestialObject {
      */
     CelestialObject(String name, EquatorialCoordinates equatorialPos, float angularSize, float magnitude){
         //Insures that the position and the name aren't null.
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(equatorialPos);
-        this.name = name;
-        this.equatorialPos = equatorialPos;
+    	this.name = Objects.requireNonNull(name);
+    	this.equatorialPos = Objects.requireNonNull(equatorialPos);
         this.angularSize = angularSize;
         //Insure that the angular size isn't negative.
-        if (angularSize < 0) throw new IllegalArgumentException();
+        Preconditions.checkArgument(angularSize >= 0);
         this.magnitude = magnitude;
     }
     

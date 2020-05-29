@@ -71,7 +71,7 @@ public final class Polynomial {
                 }
                 //if the degree is 1, the x must not be raised since x^1 = x.
                 if (degree > 1) {
-                    str.append("x^" + degree);
+                    str.append("x^").append(degree);
                 } else {
                     str.append("x");
                 }

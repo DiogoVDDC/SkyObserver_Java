@@ -8,7 +8,8 @@ import java.time.ZonedDateTime;
 import java.util.function.Function;
 
 final class SignatureChecks_3 {
-    void checkEpoch() {
+    @SuppressWarnings("unused")
+	void checkEpoch() {
         double d;
         ZonedDateTime z = null;
         Epoch e = Epoch.J2000;
@@ -17,7 +18,8 @@ final class SignatureChecks_3 {
         d = e.julianCenturiesUntil(z);
     }
 
-    void checkSiderealTime() {
+    @SuppressWarnings("unused")
+	void checkSiderealTime() {
         double d;
         ZonedDateTime z = null;
         GeographicCoordinates g = null;
@@ -25,13 +27,15 @@ final class SignatureChecks_3 {
         d = SiderealTime.local(z, g);
     }
 
-    void checkEclipticToEquatorialConversion() {
+    @SuppressWarnings("unused")
+	void checkEclipticToEquatorialConversion() {
         ZonedDateTime z = null;
         EclipticToEquatorialConversion e = new EclipticToEquatorialConversion(z);
         Function<EclipticCoordinates, EquatorialCoordinates> f = e;
     }
 
-    void checkEquatorialToHorizontalConversion() {
+    @SuppressWarnings("unused")
+	void checkEquatorialToHorizontalConversion() {
         ZonedDateTime z = null;
         GeographicCoordinates g = null;
         EquatorialToHorizontalConversion e = new EquatorialToHorizontalConversion(z, g);

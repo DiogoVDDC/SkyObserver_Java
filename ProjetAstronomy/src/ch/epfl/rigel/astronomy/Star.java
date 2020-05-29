@@ -1,4 +1,4 @@
-package ch.epfl.rigel.astronomy;
+ package ch.epfl.rigel.astronomy;
 
 import ch.epfl.rigel.Preconditions;
 import ch.epfl.rigel.coordinates.EquatorialCoordinates;
@@ -14,9 +14,8 @@ public final class Star extends CelestialObject{
     
 	//Hipparcos ID of the star.
     private int hipparcosId;
-    //Color index of the star.
-    private float colorIndex;
-    
+    //Colour temperature of the star.
+    private final int colorTemperature;
     /**
      * Constructor for a Star
      * @param hipparcosId: unique id to identify a star
@@ -32,7 +31,8 @@ public final class Star extends CelestialObject{
         //Check that the hipparcosID is positive.
         Preconditions.checkArgument(hipparcosId >= 0);
         //Check if the colorIndex is in the right interval.
-        this.colorIndex = (float) Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
+        Preconditions.checkInInterval(ClosedInterval.of(-0.5, 5.5), colorIndex);
+        this.colorTemperature = (int)Math.floor(4600*(1/(0.92*colorIndex + 1.7) + 1/(0.92*colorIndex + 0.62)));
         this.hipparcosId = hipparcosId;
     }
     
@@ -49,7 +49,7 @@ public final class Star extends CelestialObject{
      * @return colortemperature: returns the temperature in kelvins rounded to 
      */
     public int colorTemperature() {
-        return (int)Math.floor(4600*(1/(0.92*colorIndex + 1.7) + 1/(0.92*colorIndex + 0.62)));
+        return colorTemperature;
     }
 
 }

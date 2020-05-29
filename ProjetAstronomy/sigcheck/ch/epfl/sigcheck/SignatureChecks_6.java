@@ -1,21 +1,28 @@
 package ch.epfl.sigcheck;
 
-import ch.epfl.rigel.astronomy.*;
-import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
-import ch.epfl.rigel.coordinates.EquatorialCoordinates;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
+import ch.epfl.rigel.astronomy.Asterism;
+import ch.epfl.rigel.astronomy.AsterismLoader;
+import ch.epfl.rigel.astronomy.CelestialObjectModel;
+import ch.epfl.rigel.astronomy.HygDatabaseLoader;
+import ch.epfl.rigel.astronomy.Moon;
+import ch.epfl.rigel.astronomy.MoonModel;
+import ch.epfl.rigel.astronomy.Star;
+import ch.epfl.rigel.astronomy.StarCatalogue;
+
 final class SignatureChecks_6 {
-    void checkMoonModel() {
+    @SuppressWarnings("unused")
+	void checkMoonModel() {
         Enum<MoonModel> m1 = MoonModel.MOON;
         CelestialObjectModel<Moon> m2 = MoonModel.MOON;
     }
 
-    void checkStarCatalogue() throws IOException {
+    @SuppressWarnings({ "unused", "null" })
+	void checkStarCatalogue() throws IOException {
         List<Star> sl = null;
         Star s = null;
         Asterism a = null;
@@ -40,11 +47,13 @@ final class SignatureChecks_6 {
         l.load(i, b);
     }
 
-    void checkHygDatabaseLoader() {
+    @SuppressWarnings("unused")
+	void checkHygDatabaseLoader() {
         StarCatalogue.Loader l = HygDatabaseLoader.INSTANCE;
     }
 
-    void checkAsterismLoader() {
+    @SuppressWarnings("unused")
+	void checkAsterismLoader() {
         StarCatalogue.Loader l = AsterismLoader.INSTANCE;
     }
 }

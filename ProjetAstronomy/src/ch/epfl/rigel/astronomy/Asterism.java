@@ -1,6 +1,5 @@
 package ch.epfl.rigel.astronomy;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 

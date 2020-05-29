@@ -3,14 +3,10 @@ package ch.epfl.rigel.gui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.function.UnaryOperator;
 
 import ch.epfl.rigel.astronomy.AsterismLoader;
@@ -158,7 +154,8 @@ public class Main extends Application{
 		Button resetButton = new Button(ButtonImages.RESTART.getUniCode());
 		resetButton.setFont(fontAwesome);
 		resetButton.setOnAction(e ->{
-			dateTimeB.setZonedDateTime(ZonedDateTime.now());;
+			dateTimeB.dateProperty().set(ZonedDateTime.now().toLocalDate());
+			dateTimeB.timeProperty().set(ZonedDateTime.now().toLocalTime());
 		});
 		
 		Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());

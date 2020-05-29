@@ -23,19 +23,22 @@ final class SignatureChecks_5 {
         l = a.stars();
     }
 
-    void checkCelestialObjectModel() {
+    @SuppressWarnings({ "null", "unused" })
+	void checkCelestialObjectModel() {
         CelestialObjectModel<Sun> s = null;
         double d = 0;
         EclipticToEquatorialConversion e = null;
         Sun t = s.at(d, e);
     }
 
-    void checkSunModel() {
+    @SuppressWarnings("unused")
+	void checkSunModel() {
         Enum<SunModel> m1 = SunModel.SUN;
         CelestialObjectModel<Sun> m2 = SunModel.SUN;
     }
 
-    void checkPlanetModel() {
+    @SuppressWarnings("unused")
+	void checkPlanetModel() {
         List<PlanetModel> a = PlanetModel.ALL;
         Enum<PlanetModel> mercury1 = PlanetModel.MERCURY;
         CelestialObjectModel<Planet> mercury2 = PlanetModel.MERCURY;

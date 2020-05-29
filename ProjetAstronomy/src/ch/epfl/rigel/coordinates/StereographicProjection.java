@@ -66,6 +66,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      * @param azAlt: horizontal coordinates which will be projected to cartesian coordinates.
      * @return: returns cartesian coordinates of the projection of the horizontal coordinates.
      */
+    @Override
     public CartesianCoordinates apply(HorizontalCoordinates azAlt) {
         double sinLat = Math.sin(azAlt.alt());
         double cosLat = Math.cos(azAlt.alt());

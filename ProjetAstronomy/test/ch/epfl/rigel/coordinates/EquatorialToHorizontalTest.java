@@ -1,7 +1,5 @@
 package ch.epfl.rigel.coordinates;
 
-import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;

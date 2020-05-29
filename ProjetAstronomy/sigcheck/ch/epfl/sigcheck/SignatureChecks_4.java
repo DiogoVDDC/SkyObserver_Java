@@ -1,10 +1,14 @@
 package ch.epfl.sigcheck;
 
-import ch.epfl.rigel.astronomy.*;
-import ch.epfl.rigel.coordinates.*;
-
-import java.time.ZonedDateTime;
-import java.util.function.Function;
+import ch.epfl.rigel.astronomy.CelestialObject;
+import ch.epfl.rigel.astronomy.Moon;
+import ch.epfl.rigel.astronomy.Planet;
+import ch.epfl.rigel.astronomy.Sun;
+import ch.epfl.rigel.coordinates.CartesianCoordinates;
+import ch.epfl.rigel.coordinates.EclipticCoordinates;
+import ch.epfl.rigel.coordinates.EquatorialCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
+import ch.epfl.rigel.coordinates.StereographicProjection;
 
 final class SignatureChecks_4 {
     void checkCartesianCoordinates() {
@@ -27,7 +31,8 @@ final class SignatureChecks_4 {
         h = s.inverseApply(c);
     }
 
-    void checkCelestialObject() {
+    @SuppressWarnings({ "unused", "null" })
+	void checkCelestialObject() {
         CelestialObject c = null;
         String s;
         double d;
@@ -39,7 +44,8 @@ final class SignatureChecks_4 {
         s = c.info();
     }
 
-    void checkSun() {
+    @SuppressWarnings("unused")
+	void checkSun() {
         CelestialObject c;
         Sun s;
         EclipticCoordinates e = null;
@@ -52,7 +58,8 @@ final class SignatureChecks_4 {
         c = s;
     }
 
-    void checkMoon() {
+    @SuppressWarnings("unused")
+	void checkMoon() {
         CelestialObject c;
         Moon m;
         EquatorialCoordinates e = null;
@@ -61,7 +68,8 @@ final class SignatureChecks_4 {
         c = m;
     }
 
-    void checkPlanet() {
+    @SuppressWarnings("unused")
+	void checkPlanet() {
         CelestialObject c;
         Planet m;
         EquatorialCoordinates e = null;
