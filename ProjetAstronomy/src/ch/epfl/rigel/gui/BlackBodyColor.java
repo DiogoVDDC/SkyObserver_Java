@@ -56,7 +56,7 @@ public class BlackBodyColor {
 
     /**
      * Method allowing to know for a given degree the corresponding color
-     * according to the file from Mitchell Charity.
+     * according to the file from Mitchell  Charity.
      * @param degreesK:
      *            the degree in Kelvin.
      * @return: the corresponding colour as an instance of Color from the JavaFX
