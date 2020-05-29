@@ -228,11 +228,11 @@ public class Main extends Application {
             if (animator.isRunning()) {
                 animator.stop();
                 playPauseButt.setText(ButtonImages.PLAY.getUniCode());
-                disableEnableInterface(obsTime, obsPos);
+                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             } else {
                 animator.start();
                 playPauseButt.setText(ButtonImages.PAUSE.getUniCode());
-                disableEnableInterface(obsTime, obsPos);
+                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             }
         });
 
@@ -243,14 +243,16 @@ public class Main extends Application {
         return new HBox(acceleratorChoice, resetButton, playPauseButt);
     }
     
-    private void disableEnableInterface(HBox obsTime, HBox obsPos) {
+    private void disableEnableInterface(HBox obsTime, Button resetButton, ChoiceBox<NamedTimeAccelerator> acceleratorChoice) {
         
-        if(!obsTime.isDisable() && !obsPos.isDisabled()) {
+        if(!obsTime.isDisable()) {
             obsTime.setDisable(true);
-            obsPos.setDisable(true);
+            resetButton.setDisable(true);
+            acceleratorChoice.setDisable(true);
         } else {
             obsTime.setDisable(false);
-            obsPos.setDisable(false);
+            resetButton.setDisable(false);
+            acceleratorChoice.setDisable(false);
         }
     }
 
