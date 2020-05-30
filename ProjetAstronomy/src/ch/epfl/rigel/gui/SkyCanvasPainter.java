@@ -7,6 +7,7 @@ import ch.epfl.rigel.astronomy.ObservedSky;
 import ch.epfl.rigel.astronomy.Planet;
 import ch.epfl.rigel.astronomy.Star;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
+import ch.epfl.rigel.coordinates.CartesianCoordinatesTest;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
@@ -17,8 +18,14 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Transform;
+
 
 /**
  * Class representing a sky painter.
@@ -284,11 +291,12 @@ public final class SkyCanvasPainter {
         ctx.strokeOval(transHorizonCoords.getX() - transHorizonRadius,
                 transHorizonCoords.getY() - transHorizonRadius,
                 transHorizonRadius * 2, transHorizonRadius * 2);
-
+        
         // Setting the parameters for the cardinal point text
         ctx.setTextAlign(TextAlignment.CENTER);
         ctx.setTextBaseline(VPos.TOP);
         ctx.setLineWidth(1);
+        ctx.setStroke(Color.YELLOW);
 
         for(int i = 0; i<360; i+=45) {
         	HorizontalCoordinates coords = HorizontalCoordinates.ofDeg(i, -0.5);
@@ -298,6 +306,63 @@ public final class SkyCanvasPainter {
         	Point2D transCoord = transform.transform(cartCoords.x(), cartCoords.y());
         	// Drawing the cardinal point text
         	ctx.strokeText(coords.azOctantName("N", "E", "S", "W"), transCoord.getX(), transCoord.getY());
+        }
+    }
+    
+    public void drawMeridians(ObservedSky observedSky,
+            StereographicProjection projection, Transform transform) {
+        
+        
+        for(int i = -90; i<90; i+=15) {
+            HorizontalCoordinates meridian = HorizontalCoordinates.ofDeg(0, i);
+         
+            // Projecting the center of the circle
+            CartesianCoordinates meridianCoords = projection
+                    .circleCenterForMeridian(meridian);
+            
+            double radius = projection.circleRadiusForMeridian(meridian);
+            
+            double transMeridianRadius = transform.deltaTransform(radius, 0)
+                    .magnitude();
+            
+            
+            Point2D transMeridianCoords = transform.transform(meridianCoords.x(),
+                    meridianCoords.y());          
+           
+
+        
+            ctx.setStroke(Color.SKYBLUE);
+            ctx.setLineWidth(0.2);
+            ctx.strokeOval(transMeridianCoords.getX() - transMeridianRadius,
+                    transMeridianCoords.getY() - transMeridianRadius,
+                    transMeridianRadius * 2, transMeridianRadius * 2);
+        }
+    }
+    
+    public void drawLatitudeCircle(ObservedSky observedSky,
+            StereographicProjection projection, Transform transform) {
+        
+        for(int i = -90; i<90; i+=15) {
+            HorizontalCoordinates latitude = HorizontalCoordinates.ofDeg(0, i);
+         
+            // Projecting the center of the circle
+            CartesianCoordinates latitudeCoords = projection
+                    .circleCenterForParallel(latitude);
+            
+            double radius = projection.circleRadiusForParallel(latitude);
+            
+            double transLatitudeRadius = transform.deltaTransform(radius, 0)
+                    .magnitude();
+            
+            
+            Point2D transLatitudeCoords = transform.transform(latitudeCoords.x(),
+                    latitudeCoords.y());          
+           
+            ctx.setStroke(Color.SKYBLUE);
+            ctx.setLineWidth(0.2);
+            ctx.strokeOval(transLatitudeCoords.getX() - transLatitudeRadius,
+                    transLatitudeCoords.getY() - transLatitudeRadius,
+                    transLatitudeRadius * 2, transLatitudeRadius * 2);
         }
     }
 
@@ -320,6 +385,8 @@ public final class SkyCanvasPainter {
         drawSun(observedSky, projection, transform);
         drawMoon(observedSky, projection, transform);
         drawHorizon(observedSky, projection, transform);
+        drawMeridians(observedSky, projection, transform);
+        drawLatitudeCircle(observedSky, projection, transform);
     }
 
     /**

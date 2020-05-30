@@ -15,6 +15,8 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     private final double cosOfCenterLat;
     //Sine of the latitude of the centre position.
     private final double sinOfCenterLat;
+    //Tan of the latitude of the centre position.
+    private final double tanOfCenterLat;
     //Longitude of the centre position.
     private final double centerLon;
     //Latitude of the centre position.
@@ -27,6 +29,7 @@ public final class StereographicProjection implements Function<HorizontalCoordin
     public StereographicProjection(HorizontalCoordinates center) {
         cosOfCenterLat = Math.cos(center.lat());
         sinOfCenterLat = Math.sin(center.lat());
+        tanOfCenterLat = Math.atan(center.lat());
         centerLon = center.lon();
         centerLat = center.lat();
     }   
@@ -49,6 +52,16 @@ public final class StereographicProjection implements Function<HorizontalCoordin
      */
     public double circleRadiusForParallel(HorizontalCoordinates parallel) {
         return Math.cos(parallel.alt())/(Math.sin(parallel.alt()) + sinOfCenterLat);
+    }
+    
+    
+    public double circleRadiusForMeridian(HorizontalCoordinates meridian) {
+        return 1/(cosOfCenterLat * Math.sin(meridian.alt() - centerLon));
+    }
+    
+    public CartesianCoordinates circleCenterForMeridian(HorizontalCoordinates meridian) {                          
+        return CartesianCoordinates.of(-1/(cosOfCenterLat * Math.tan(meridian.alt() - centerLon)),
+                   -tanOfCenterLat);
     }
     
     
