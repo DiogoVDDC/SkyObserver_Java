@@ -46,6 +46,8 @@ public final class SkyCanvasManager {
     private final ObservableObjectValue<CelestialObject> objectUnderMouse;
     // Propety to enable of disable lon/lat lines.
     private final BooleanProperty enLatLonLines;
+    // Property to enable or disable the names of the planets, sun and moon.
+    private final BooleanProperty enWritingNames;
     // Canvas on which the sky is drawn.
     private final Canvas sky;
     // Painter used to draw onto the canvas.
@@ -96,6 +98,10 @@ public final class SkyCanvasManager {
         enLatLonLines = new SimpleBooleanProperty();
         enLatLonLines.bind(viewingParamBean.enLatLonLinesProperty());
         enLatLonLines.addListener((o, oV, oN) -> drawCanvas());
+        
+        enWritingNames = new SimpleBooleanProperty();
+        enWritingNames.bind(viewingParamBean.enWriteNamesProperty());
+        enWritingNames.addListener((o, oV, oN) -> drawCanvas());
 
         // Initialising the mouse position property at (0,0)
         mousePosition = new SimpleObjectProperty<Point2D>(new Point2D(0,0));
@@ -208,12 +214,8 @@ public final class SkyCanvasManager {
     private void drawCanvas() {
         painter.clear();
         try {
-        	if(enLatLonLines.get())
-        		painter.drawSkyWithLatLon(observedSky.get(), projection.get(),
-                    planeToCanvas.get());
-        	else
-        		painter.drawSkyNoLatLon(observedSky.get(), projection.get(),
-                        planeToCanvas.get());
+        	painter.drawSky(observedSky.get(), projection.get(),
+                    planeToCanvas.get(), enWritingNames.get(), enLatLonLines.get());
         } catch (IOException e1) {
             e1.printStackTrace();
         }

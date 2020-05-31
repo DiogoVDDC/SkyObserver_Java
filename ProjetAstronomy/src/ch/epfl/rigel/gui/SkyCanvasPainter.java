@@ -29,7 +29,9 @@ import javafx.scene.transform.Transform;
  */
 public final class SkyCanvasPainter {
 
-    private Canvas canvas;
+	// Offset used to slightly move the names of the objects down.
+    private static final int NAMES_OFFSET = 3;
+	private Canvas canvas;
     private final GraphicsContext ctx;
     private static final ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval
             .of(-2, 5);
@@ -140,8 +142,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawPlanets(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawPlanets(ObservedSky observedSky, StereographicProjection projection, 
+    					Transform transform, boolean writeName) {
         double[] transformedCoords = new double[observedSky
                 .planetPositions().length];
         // Transforming all stars positions accoridng to the affine
@@ -174,6 +176,10 @@ public final class SkyCanvasPainter {
             // Drawing the planet on the canvas.
             ctx.fillOval(planetPos.getX(), planetPos.getY(), transformedSize,
                     transformedSize);
+            
+            //Write the name of the planet if option is enabled.
+            if(writeName)
+            	ctx.fillText(planet.name(), planetX, planetY + NAMES_OFFSET); 
         }
 
     }
@@ -187,8 +193,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawSun(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawSun(ObservedSky observedSky, StereographicProjection projection, 
+    				Transform transform, boolean writeName) {
         // Finding the radius of the sun using the angular size.
         double sunSize = projection
                 .applyToAngle(observedSky.sun().angularSize());
@@ -198,7 +204,7 @@ public final class SkyCanvasPainter {
         // Defining the sun position as a point on the affine transform and.
         Point2D sunPos = transform.transform(observedSky.sunPosition().x(),
                 observedSky.sunPosition().y());
-
+        
         // Drawing the sun halo
         Point2D haloPos = adjustCoordinate(sunPos, relativeSunSize * 1.1);
         ctx.setFill(Color.YELLOW.deriveColor(0, 1, 1, 0.25));
@@ -217,6 +223,12 @@ public final class SkyCanvasPainter {
         ctx.setFill(Color.WHITE);
         ctx.fillOval(adjustedSunPos.getX(), adjustedSunPos.getY(),
                 relativeSunSize, relativeSunSize);
+        
+        //Writes the name of the sun next to it if enabled.
+        if(writeName) {
+        	ctx.fillText(observedSky.sun().name(), sunPos.getX(), sunPos.getY() + NAMES_OFFSET);
+        }
+
     }
 
     /**
@@ -228,8 +240,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawMoon(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawMoon(ObservedSky observedSky, StereographicProjection projection,
+    					Transform transform, boolean writeName) {
 
         // Finding the diameter of the sun using the angular size
         double moonSize = projection
@@ -249,6 +261,11 @@ public final class SkyCanvasPainter {
         ctx.setFill(Color.WHITE);
         ctx.fillOval(adjustedPos.getX(), adjustedPos.getY(), relativeMoonSize,
                 relativeMoonSize);
+        
+        // Draws the name if option is enabled.
+        if(writeName) {
+        	ctx.fillText(observedSky.moon().name(), moonPos.getX(), moonPos.getY() + NAMES_OFFSET);
+        }
     }
 
     /**
@@ -371,26 +388,18 @@ public final class SkyCanvasPainter {
      * @throws IOException:
      *             if there an issue while the painter draws the stars.
      */
-    public void drawSkyWithLatLon(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform)
+    public void drawSky(ObservedSky observedSky, StereographicProjection projection,
+    							Transform transform, boolean writeName, boolean drawLonLatLines)
             throws IOException {
         drawStars(observedSky, projection, transform);
-        drawPlanets(observedSky, projection, transform);
-        drawSun(observedSky, projection, transform);
-        drawMoon(observedSky, projection, transform);
+        drawPlanets(observedSky, projection, transform, writeName);
+        drawSun(observedSky, projection, transform, writeName);
+        drawMoon(observedSky, projection, transform, writeName);
         drawHorizon(observedSky, projection, transform);
-        drawMeridians(observedSky, projection, transform);
-        drawLatitudeCircle(observedSky, projection, transform);
-    }
-    
-    public void drawSkyNoLatLon(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform)
-            throws IOException {
-        drawStars(observedSky, projection, transform);
-        drawPlanets(observedSky, projection, transform);
-        drawSun(observedSky, projection, transform);
-        drawMoon(observedSky, projection, transform);
-        drawHorizon(observedSky, projection, transform);
+        if(drawLonLatLines) {
+        	drawMeridians(observedSky, projection, transform);
+        	drawLatitudeCircle(observedSky, projection, transform);
+        }
     }
 
     /**

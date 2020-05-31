@@ -294,7 +294,7 @@ public class Main extends Application {
     	HBox namedLocations = namedLocationsButton(obsLocB, animator);
     	namedLocations.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
-    	HBox toggleLonLatLine  = toggleLonLatButton(viewParam);
+    	HBox toggleLonLatLine  = toggleButtons(viewParam);
     	toggleLonLatLine.setStyle("-fx-spacing: inherit; -fx-alignment: center-left;");
     	
     	HBox controlBarBottom = new HBox(namedLocations, toggleLonLatLine);
@@ -319,11 +319,15 @@ public class Main extends Application {
     	return new HBox(namedLocation_l, locationsBox);
     }
     
-    private HBox toggleLonLatButton(ViewingParametersBean viewParam) {
-    	Label toggle_l = new Label("Toggle lon/lat lines");
+    private HBox toggleButtons(ViewingParametersBean viewParam) {
+    	Label toggleLonLat_l = new Label("Toggle lon/lat lines");
     	CheckBox toggleLonLatLine = new CheckBox();
     	viewParam.enLatLonLinesProperty().bind(toggleLonLatLine.selectedProperty());
-    	return new HBox(toggle_l, toggleLonLatLine);
+    	
+    	Label toggleName_l = new Label("Toggle names");
+    	CheckBox toggleNames = new CheckBox();
+    	viewParam.enWriteNamesProperty().bind(toggleNames.selectedProperty());
+    	return new HBox(toggleLonLat_l, toggleLonLatLine, toggleName_l, toggleNames);
     }
 
     private InputStream resourceStream(String resourceName) {
