@@ -13,7 +13,9 @@ import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableObjectValue;
@@ -42,6 +44,8 @@ public final class SkyCanvasManager {
     private final ObservableDoubleValue mouseAltDeg;
     // Property containing the closest celestial object to the current mouse's position.
     private final ObservableObjectValue<CelestialObject> objectUnderMouse;
+    // Propety to enable of disable lon/lat lines.
+    private final BooleanProperty enLatLonLines;
     // Canvas on which the sky is drawn.
     private final Canvas sky;
     // Painter used to draw onto the canvas.
@@ -88,6 +92,10 @@ public final class SkyCanvasManager {
                 observerLocBean.coordinatesProperty(),
                 dateTimeBean.dateProperty(), dateTimeBean.timeProperty(),
                 dateTimeBean.zoneProperty(), projection);
+        
+        enLatLonLines = new SimpleBooleanProperty();
+        enLatLonLines.bind(viewingParamBean.enLatLonLinesProperty());
+        enLatLonLines.addListener((o, oV, oN) -> drawCanvas());
 
         // Initialising the mouse position property at (0,0)
         mousePosition = new SimpleObjectProperty<Point2D>(new Point2D(0,0));
@@ -200,8 +208,12 @@ public final class SkyCanvasManager {
     private void drawCanvas() {
         painter.clear();
         try {
-            painter.drawSky(observedSky.get(), projection.get(),
+        	if(enLatLonLines.get())
+        		painter.drawSkyWithLatLon(observedSky.get(), projection.get(),
                     planeToCanvas.get());
+        	else
+        		painter.drawSkyNoLatLon(observedSky.get(), projection.get(),
+                        planeToCanvas.get());
         } catch (IOException e1) {
             e1.printStackTrace();
         }

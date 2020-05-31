@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
+
 import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -21,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -52,11 +54,8 @@ public class Main extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(ast, AsterismLoader.INSTANCE).build();
 
-            // initialises the time of the observed sky
-            ZonedDateTime when = ZonedDateTime
-                    .parse("2020-02-17T20:15:00+01:00");
             DateTimeBean dateTimeBean = new DateTimeBean();
-            dateTimeBean.setZonedDateTime(when);
+            dateTimeBean.setZonedDateTime(ZonedDateTime.now());
 
             // initialises the observer's location
             ObserverLocationBean observerLocationBean = new ObserverLocationBean();
@@ -111,7 +110,7 @@ public class Main extends Application {
             TimeAnimator animator) throws IOException {
 
         HBox controlBarTop =  controlBarTop(dateTimeB, obsLocB, animator);
-        HBox controlBarBottom = controlBarBottom(obsLocB);
+        HBox controlBarBottom = controlBarBottom(obsLocB, viewParam, animator);
 
         return new VBox(controlBarTop, controlBarBottom);
     }
@@ -134,7 +133,7 @@ public class Main extends Application {
         obsPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         
         // Child containing all the buttons to control the time accelerator
-        HBox timeAcceleratorControl = initialiseButton(dateTimeB, animator, obsTime, obsPos);
+        HBox timeAcceleratorControl = initialiseButton(dateTimeB, animator);
         timeAcceleratorControl.setStyle("-fx-spacing: inherit;");
 
 
@@ -239,7 +238,7 @@ public class Main extends Application {
      * @return: the controls for the time animation in a HBox.
      * @throws IOException
      */
-    private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator, HBox obsTime, HBox obsPos)
+    private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator)
             throws IOException {
         // Accelerator choices menu.
         ChoiceBox<NamedTimeAccelerator> acceleratorChoice = new ChoiceBox<NamedTimeAccelerator>(
@@ -290,12 +289,15 @@ public class Main extends Application {
      * @param obsLocB: property of the observer's location.
      * @return: the bottom part of the control bar.
      */
-    private HBox controlBarBottom(ObserverLocationBean obsLocB) {
+    private HBox controlBarBottom(ObserverLocationBean obsLocB, ViewingParametersBean viewParam, TimeAnimator animator) {
  
-    	HBox namedLocations = namedLocationsButton(obsLocB);
+    	HBox namedLocations = namedLocationsButton(obsLocB, animator);
     	namedLocations.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
-    	HBox controlBarBottom = new HBox(namedLocations);
+    	HBox toggleLonLatLine  = toggleLonLatButton(viewParam);
+    	toggleLonLatLine.setStyle("-fx-spacing: inherit; -fx-alignment: center-left;");
+    	
+    	HBox controlBarBottom = new HBox(namedLocations, toggleLonLatLine);
     	controlBarBottom.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
     	return controlBarBottom;
     }
@@ -305,20 +307,29 @@ public class Main extends Application {
      * @param obsLocB: Property of the observer's location.
      * @return: name location selector.
      */
-    private HBox namedLocationsButton(ObserverLocationBean obsLocB) {
+    private HBox namedLocationsButton(ObserverLocationBean obsLocB, TimeAnimator animator) {
        	Label namedLocation_l = new Label("Position connues:");
     	ChoiceBox<NamedPositions> locationsBox = new ChoiceBox<NamedPositions>(FXCollections.observableArrayList(NamedPositions.values()));
     	locationsBox.setStyle("-fx-pref-width: 160;");
     	locationsBox.setValue(NamedPositions.epfl);
+    	locationsBox.disableProperty().bind(animator.runningProperty());
     	locationsBox.valueProperty().addListener((o, oV, nV) ->{
     		obsLocB.setCoordinates(locationsBox.getValue().coords());
     	});
     	return new HBox(namedLocation_l, locationsBox);
     }
+    
+    private HBox toggleLonLatButton(ViewingParametersBean viewParam) {
+    	Label toggle_l = new Label("Toggle lon/lat lines");
+    	CheckBox toggleLonLatLine = new CheckBox();
+    	viewParam.enLatLonLinesProperty().bind(toggleLonLatLine.selectedProperty());
+    	return new HBox(toggle_l, toggleLonLatLine);
+    }
 
     private InputStream resourceStream(String resourceName) {
         return getClass().getResourceAsStream(resourceName);
     }
+
 
     /**
      * Allows to create text formatter for the lattitude of longitude.

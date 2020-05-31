@@ -243,7 +243,7 @@ public final class SkyCanvasPainter {
         // offsetting the center point.
         Point2D moonPos = transform.transform(observedSky.moonPosition().x(),
                 observedSky.moonPosition().y());
-        Point2D adjustedPos = adjustCoordinate(moonPos, relativeMoonSize);
+        Point2D adjustedPos = adjustCoordinate(moonPos, relativeMoonSize/2);
 
         // Drawing the moon
         ctx.setFill(Color.WHITE);
@@ -371,7 +371,7 @@ public final class SkyCanvasPainter {
      * @throws IOException:
      *             if there an issue while the painter draws the stars.
      */
-    public void drawSky(ObservedSky observedSky,
+    public void drawSkyWithLatLon(ObservedSky observedSky,
             StereographicProjection projection, Transform transform)
             throws IOException {
         drawStars(observedSky, projection, transform);
@@ -381,6 +381,16 @@ public final class SkyCanvasPainter {
         drawHorizon(observedSky, projection, transform);
         drawMeridians(observedSky, projection, transform);
         drawLatitudeCircle(observedSky, projection, transform);
+    }
+    
+    public void drawSkyNoLatLon(ObservedSky observedSky,
+            StereographicProjection projection, Transform transform)
+            throws IOException {
+        drawStars(observedSky, projection, transform);
+        drawPlanets(observedSky, projection, transform);
+        drawSun(observedSky, projection, transform);
+        drawMoon(observedSky, projection, transform);
+        drawHorizon(observedSky, projection, transform);
     }
 
     /**

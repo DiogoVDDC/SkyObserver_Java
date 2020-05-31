@@ -3,8 +3,10 @@ package ch.epfl.rigel.gui;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -19,6 +21,8 @@ public final class ViewingParametersBean {
 
     // The field of view property.
     private final DoubleProperty fieldOfView;
+    //Enables the lon/lat lines
+    private final BooleanProperty enLonLatLines;
     // The center property
     private final ObjectProperty<HorizontalCoordinates> center;
 
@@ -26,6 +30,7 @@ public final class ViewingParametersBean {
     public ViewingParametersBean() {
         this.fieldOfView = new SimpleDoubleProperty();
         this.center = new SimpleObjectProperty<HorizontalCoordinates>(null);
+        this.enLonLatLines = new SimpleBooleanProperty(false);
     }
 
     /**
@@ -69,6 +74,18 @@ public final class ViewingParametersBean {
         return center.getValue();
     }
 
+    public boolean isLatLonEnable() {
+    	return enLonLatLines.get();
+    }
+    
+    public BooleanProperty enLatLonLinesProperty() {
+    	return enLonLatLines;
+    }
+    
+    public void setEnableLatLonline(boolean val) {
+    	enLonLatLines.set(val);
+    }
+    
     /**
      * Setter for the horizontal coordinates
      * @param newHorizontalCoordinates:
