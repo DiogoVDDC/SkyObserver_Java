@@ -126,7 +126,7 @@ public class Main extends Application {
      */
     private HBox controlBarTop(DateTimeBean dateTimeB, ObserverLocationBean obsLocB, TimeAnimator animator) throws IOException {
         // Child containing date, time and zone controls
-        HBox obsTime = initialiseDateTimeZone(dateTimeB);
+        HBox obsTime = initialiseDateTimeZone(dateTimeB, animator);
         obsTime.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         // Child containing the location of the observation.
@@ -183,11 +183,11 @@ public class Main extends Application {
      * @param dateTimeB: the date time and zone property.
      * @return: controls for the date time and zone.
      */
-    private HBox initialiseDateTimeZone(DateTimeBean dateTimeB) {
+    private HBox initialiseDateTimeZone(DateTimeBean dateTimeB, TimeAnimator animator) {
         // Time label and text field.
         Label timeL = new Label("Heure:");
         TextField timeTF = new TextField();
-
+        timeTF.disableProperty().bind(animator.runningProperty());
         // Time formatting
         timeTF.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
         DateTimeFormatter hmsFormatter = DateTimeFormatter
@@ -206,7 +206,7 @@ public class Main extends Application {
         Label dateL = new Label("Date:");
         DatePicker datePicker = new DatePicker(LocalDate.now());
         datePicker.setStyle("-fx-pref-width: 120;");
-
+        datePicker.disableProperty().bind(animator.runningProperty());
         // Binding the date picker to the date time bean
         datePicker.valueProperty().bindBidirectional(dateTimeB.dateProperty());
 
@@ -223,13 +223,22 @@ public class Main extends Application {
         // Zone id styling
         zoneIdBox.setStyle("-fx-pref-width: 180;");
         zoneIdBox.setValue(ZoneId.systemDefault());
-
+        zoneIdBox.disableProperty().bind(animator.runningProperty());
         // Binding of zone property to zoneid box
         dateTimeB.zoneProperty().bindBidirectional(zoneIdBox.valueProperty());
 
         return new HBox(dateL, datePicker, timeL, timeTF, zoneIdBox);
     }
 
+    /**
+     * Initialises the button for the simulation.
+     * @param dateTimeB: date time property.
+     * @param animator: Movement animator.
+     * @param obsTime: Property of the time of observation.
+     * @param obsPos: Property of the observator's location.
+     * @return: the controls for the time animation in a HBox.
+     * @throws IOException
+     */
     private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator, HBox obsTime, HBox obsPos)
             throws IOException {
         // Accelerator choices menu.
@@ -237,7 +246,7 @@ public class Main extends Application {
                 FXCollections
                         .observableArrayList(NamedTimeAccelerator.values()));
         acceleratorChoice.setValue(NamedTimeAccelerator.TIMES_300);
-
+        acceleratorChoice.disableProperty().bind(animator.runningProperty());
         // Loading font for the button images.
         InputStream fontStream = getClass()
                 .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
@@ -250,6 +259,7 @@ public class Main extends Application {
         resetButton.setOnAction(e -> {
             dateTimeB.setZonedDateTime(ZonedDateTime.now());
         });
+        resetButton.disableProperty().bind(animator.runningProperty());
 
         // Paused Button
         Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
@@ -262,11 +272,9 @@ public class Main extends Application {
             if (animator.isRunning()) {
                 animator.stop();
                 playPauseButt.setText(ButtonImages.PLAY.getUniCode());
-                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             } else {
                 animator.start();
                 playPauseButt.setText(ButtonImages.PAUSE.getUniCode());
-                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             }
         });
 
@@ -277,6 +285,11 @@ public class Main extends Application {
         return new HBox(acceleratorChoice, resetButton, playPauseButt);
     }
     
+    /**
+     * Creates the bottom part of the control bar.
+     * @param obsLocB: property of the observer's location.
+     * @return: the bottom part of the control bar.
+     */
     private HBox controlBarBottom(ObserverLocationBean obsLocB) {
  
     	HBox namedLocations = namedLocationsButton(obsLocB);
@@ -287,6 +300,11 @@ public class Main extends Application {
     	return controlBarBottom;
     }
     
+    /**
+     * Controls for the named location selection.
+     * @param obsLocB: Property of the observer's location.
+     * @return: name location selector.
+     */
     private HBox namedLocationsButton(ObserverLocationBean obsLocB) {
        	Label namedLocation_l = new Label("Position connues:");
     	ChoiceBox<NamedPositions> locationsBox = new ChoiceBox<NamedPositions>(FXCollections.observableArrayList(NamedPositions.values()));
@@ -296,19 +314,6 @@ public class Main extends Application {
     		obsLocB.setCoordinates(locationsBox.getValue().coords());
     	});
     	return new HBox(namedLocation_l, locationsBox);
-    }
-    
-    private void disableEnableInterface(HBox obsTime, Button resetButton, ChoiceBox<NamedTimeAccelerator> acceleratorChoice) {
-        
-        if(!obsTime.isDisable()) {
-            obsTime.setDisable(true);
-            resetButton.setDisable(true);
-            acceleratorChoice.setDisable(true);
-        } else {
-            obsTime.setDisable(false);
-            resetButton.setDisable(false);
-            acceleratorChoice.setDisable(false);
-        }
     }
 
     private InputStream resourceStream(String resourceName) {
