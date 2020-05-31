@@ -39,7 +39,6 @@ import javafx.util.converter.NumberStringConverter;
 public class Main extends Application {
 
     public static void main(String[] args) {
-    	System.out.println("LAUNCH"  +  System.nanoTime());
         launch(args);
     }
 
@@ -84,7 +83,7 @@ public class Main extends Application {
             BorderPane scene = new BorderPane();
             scene.setCenter(root);
             scene.setTop(controlBar(viewingParametersBean, dateTimeBean,
-                    observerLocationBean, animator));
+                    observerLocationBean, animator, skyCanvasManager));
             scene.setBottom(
                     informationBar(viewingParametersBean, skyCanvasManager));
 
@@ -99,7 +98,7 @@ public class Main extends Application {
 
     private HBox controlBar(ViewingParametersBean viewParam,
             DateTimeBean dateTimeB, ObserverLocationBean obsLocB,
-            TimeAnimator animator) throws IOException {
+            TimeAnimator animator, SkyCanvasManager skyCanvasManager) throws IOException {
 
       
         // Child containing date, time and zone controls
@@ -111,7 +110,7 @@ public class Main extends Application {
         obsPos.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
         
         // Child containing all the buttons to control the time accelerator
-        HBox timeAcceleratorControl = initialiseButton(dateTimeB, animator, obsTime, obsPos);
+        HBox timeAcceleratorControl = initialiseButton(viewParam, dateTimeB, skyCanvasManager, animator, obsTime, obsPos);
         timeAcceleratorControl.setStyle("-fx-spacing: inherit;");
 
 
@@ -197,7 +196,7 @@ public class Main extends Application {
         return new HBox(dateL, datePicker, timeL, timeTF, zoneIdBox);
     }
 
-    private HBox initialiseButton(DateTimeBean dateTimeB, TimeAnimator animator, HBox obsTime, HBox obsPos)
+    private HBox initialiseButton(ViewingParametersBean viewParam, DateTimeBean dateTimeB, SkyCanvasManager skyCanvasManager, TimeAnimator animator, HBox obsTime, HBox obsPos)
             throws IOException {
         // Accelerator choices menu.
         ChoiceBox<NamedTimeAccelerator> acceleratorChoice = new ChoiceBox<NamedTimeAccelerator>(
@@ -220,7 +219,15 @@ public class Main extends Application {
 
         // Paused Button
         Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
-        playPauseButt.setFont(defaultFont);
+        playPauseButt.setFont(defaultFont);        
+     
+        // Sun Button
+        Button sunButt = new Button("Sun");
+        sunButt.setFont(defaultFont);
+        
+        sunButt.setOnAction(e -> {
+            viewParam.setCenter(skyCanvasManager.getProjection().inverseApply(skyCanvasManager.getObservedSky().sunPosition()));
+        });
 
         // Play/Pause button actions when pressed.
         playPauseButt.setOnAction(e -> {
@@ -241,7 +248,7 @@ public class Main extends Application {
         animator.acceleratorProperty().bind(Bindings
                 .select(acceleratorChoice.valueProperty(), "accelerator"));
 
-        return new HBox(acceleratorChoice, resetButton, playPauseButt);
+        return new HBox(sunButt, acceleratorChoice, resetButton, playPauseButt);
     }
     
     private void disableEnableInterface(HBox obsTime, Button resetButton, ChoiceBox<NamedTimeAccelerator> acceleratorChoice) {
