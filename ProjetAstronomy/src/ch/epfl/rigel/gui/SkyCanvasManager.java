@@ -46,6 +46,8 @@ public final class SkyCanvasManager {
     private final Canvas sky;
     // Painter used to draw onto the canvas.
     private final SkyCanvasPainter painter;
+    // Boolean indicating if sun tracking is on
+    private boolean trackingSun;
 
     /**
      * SkyCanvasManager constructor.
@@ -136,7 +138,7 @@ public final class SkyCanvasManager {
         
          // Makes sure the sky is redrawn whenever the observed sky changes.
          observedSky.addListener((o, oV, nV) -> {
-        	 drawCanvas();
+        	 drawCanvas();        	
          });
          
          //Makes sure the sky is redrawn whenever the plane to canvas trasnformatio changes.
@@ -159,7 +161,9 @@ public final class SkyCanvasManager {
          
          // Requests the focus when left clicking on the canvas.
          sky.setOnMousePressed(e ->{
-         if (e.isPrimaryButtonDown()) sky.requestFocus();
+             if (e.isPrimaryButtonDown()) sky.requestFocus();
+         
+             trackingSun = false;
          });
          
          // Moves the centre of projection according the the keyboard arrows.
@@ -176,6 +180,7 @@ public final class SkyCanvasManager {
              if (e.getCode() == KeyCode.RIGHT) {
                 viewingParamBean.changeAz(5);
             }
+            trackingSun = false;
             e.consume();
         });
         
@@ -183,7 +188,25 @@ public final class SkyCanvasManager {
         sky.setOnMouseMoved(e ->{
                       mousePosition.set(new Point2D(e.getX(), e.getY()));
             e.consume();           
-        });     
+        });
+        
+        
+        sky.setOnMouseClicked(e -> { 
+            if(objectUnderMouse.get() != null){
+                
+                if(objectUnderMouse.get().toString() == "Soleil") {
+                    System.out.println(trackingSun);
+                    trackingSun = true;
+                } 
+                
+            }
+            
+
+          //  viewingParamBean.setCenter(HorizontalCoordinates.ofDeg(mouseAzDeg.get(), mouseAltDeg.get()));
+         
+            e.consume();    
+        });
+
     }
 
     /**
@@ -196,7 +219,7 @@ public final class SkyCanvasManager {
                     planeToCanvas.get());
         } catch (IOException e1) {
             e1.printStackTrace();
-        }
+        }     
     }
 
     /**

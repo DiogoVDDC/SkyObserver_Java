@@ -47,5 +47,5 @@ public final class Sun extends CelestialObject{
     public float meanAnomaly() {
         return meanAnomaly;
     }
-
+   
 }
