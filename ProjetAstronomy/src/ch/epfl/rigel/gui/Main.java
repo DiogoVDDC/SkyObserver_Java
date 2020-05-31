@@ -30,6 +30,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -96,11 +97,34 @@ public class Main extends Application {
         }
     }
 
-    private HBox controlBar(ViewingParametersBean viewParam,
+    /**
+     * Creates the bar of controls
+     * @param viewParam: Parameters for the viewing location.
+     * @param dateTimeB: Date and time property.
+     * @param obsLocB: Location of the observer.
+     * @param animator: Movement animator.
+     * @return: the control bar.
+     * @throws IOException
+     */
+    private VBox controlBar(ViewingParametersBean viewParam,
             DateTimeBean dateTimeB, ObserverLocationBean obsLocB,
             TimeAnimator animator) throws IOException {
 
-      
+        HBox controlBarTop =  controlBarTop(dateTimeB, obsLocB, animator);
+        HBox controlBarBottom = controlBarBottom(obsLocB);
+
+        return new VBox(controlBarTop, controlBarBottom);
+    }
+    
+    /**
+     * Creates the top part of the control bar.
+     * @param dateTimeB:  Date and time property.
+     * @param obsLocB: Location of the observer.
+     * @param animator:  Movement animator.
+     * @return: the top part of the control bar.
+     * @throws IOException
+     */
+    private HBox controlBarTop(DateTimeBean dateTimeB, ObserverLocationBean obsLocB, TimeAnimator animator) throws IOException {
         // Child containing date, time and zone controls
         HBox obsTime = initialiseDateTimeZone(dateTimeB);
         obsTime.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
@@ -117,10 +141,15 @@ public class Main extends Application {
         // Creates the control bar with the correct styling
         HBox controlBar = new HBox(obsPos, obsTime, timeAcceleratorControl);
         controlBar.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
-
+        
         return controlBar;
     }
 
+    /**
+     * Initialises the latitude and longitude controls.
+     * @param obsLocB: Observator's location.
+     * @return: the controls for latitude and longitude.
+     */
     private HBox initialiseLonLat(ObserverLocationBean obsLocB) {
         // Lat and lon labels.
         Label lonL = new Label("Longitude(°):");
@@ -149,6 +178,11 @@ public class Main extends Application {
         return new HBox(lonL, lonTF, latL, latTF);
     }
 
+    /**
+     * Initialises the controls for the date time and zone.
+     * @param dateTimeB: the date time and zone property.
+     * @return: controls for the date time and zone.
+     */
     private HBox initialiseDateTimeZone(DateTimeBean dateTimeB) {
         // Time label and text field.
         Label timeL = new Label("Heure:");
@@ -241,6 +275,27 @@ public class Main extends Application {
                 .select(acceleratorChoice.valueProperty(), "accelerator"));
 
         return new HBox(acceleratorChoice, resetButton, playPauseButt);
+    }
+    
+    private HBox controlBarBottom(ObserverLocationBean obsLocB) {
+ 
+    	HBox namedLocations = namedLocationsButton(obsLocB);
+    	namedLocations.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+
+    	HBox controlBarBottom = new HBox(namedLocations);
+    	controlBarBottom.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
+    	return controlBarBottom;
+    }
+    
+    private HBox namedLocationsButton(ObserverLocationBean obsLocB) {
+       	Label namedLocation_l = new Label("Position connues:");
+    	ChoiceBox<NamedPositions> locationsBox = new ChoiceBox<NamedPositions>(FXCollections.observableArrayList(NamedPositions.values()));
+    	locationsBox.setStyle("-fx-pref-width: 160;");
+    	locationsBox.setValue(NamedPositions.epfl);
+    	locationsBox.valueProperty().addListener((o, oV, nV) ->{
+    		obsLocB.setCoordinates(locationsBox.getValue().coords());
+    	});
+    	return new HBox(namedLocation_l, locationsBox);
     }
     
     private void disableEnableInterface(HBox obsTime, Button resetButton, ChoiceBox<NamedTimeAccelerator> acceleratorChoice) {
