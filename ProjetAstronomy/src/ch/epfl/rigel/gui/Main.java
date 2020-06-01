@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
+
 import ch.epfl.rigel.astronomy.AsterismLoader;
 import ch.epfl.rigel.astronomy.HygDatabaseLoader;
 import ch.epfl.rigel.astronomy.StarCatalogue;
@@ -21,6 +22,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -30,6 +32,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -51,11 +54,8 @@ public class Main extends Application {
                     .loadFrom(hs, HygDatabaseLoader.INSTANCE)
                     .loadFrom(ast, AsterismLoader.INSTANCE).build();
 
-            // initialises the time of the observed sky
-            ZonedDateTime when = ZonedDateTime
-                    .parse("2020-02-17T20:15:00+01:00");
             DateTimeBean dateTimeBean = new DateTimeBean();
-            dateTimeBean.setZonedDateTime(when);
+            dateTimeBean.setZonedDateTime(ZonedDateTime.now());
 
             // initialises the observer's location
             ObserverLocationBean observerLocationBean = new ObserverLocationBean();
@@ -96,13 +96,37 @@ public class Main extends Application {
         }
     }
 
-    private HBox controlBar(ViewingParametersBean viewParam,
+    /**
+     * Creates the bar of controls
+     * @param viewParam: Parameters for the viewing location.
+     * @param dateTimeB: Date and time property.
+     * @param obsLocB: Location of the observer.
+     * @param animator: Movement animator.
+     * @return: the control bar.
+     * @throws IOException
+     */
+    private VBox controlBar(ViewingParametersBean viewParam,
             DateTimeBean dateTimeB, ObserverLocationBean obsLocB,
             TimeAnimator animator, SkyCanvasManager skyCanvasManager) throws IOException {
 
-      
+        HBox controlBarTop =  controlBarTop(dateTimeB, obsLocB, animator, viewParam, skyCanvasManager);
+        HBox controlBarBottom = controlBarBottom(skyCanvasManager, obsLocB, viewParam, animator);
+
+        return new VBox(controlBarTop, controlBarBottom);
+    }
+    
+    /**
+     * Creates the top part of the control bar.
+     * @param dateTimeB:  Date and time property.
+     * @param obsLocB: Location of the observer.
+     * @param animator:  Movement animator.
+     * @return: the top part of the control bar.
+     * @throws IOException
+     */
+    private HBox controlBarTop(DateTimeBean dateTimeB, ObserverLocationBean obsLocB, TimeAnimator animator,
+            ViewingParametersBean viewParam, SkyCanvasManager skyCanvasManager) throws IOException {
         // Child containing date, time and zone controls
-        HBox obsTime = initialiseDateTimeZone(dateTimeB);
+        HBox obsTime = initialiseDateTimeZone(dateTimeB, animator);
         obsTime.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
 
         // Child containing the location of the observation.
@@ -111,16 +135,22 @@ public class Main extends Application {
         
         // Child containing all the buttons to control the time accelerator
         HBox timeAcceleratorControl = initialiseButton(viewParam, dateTimeB, skyCanvasManager, animator, obsTime, obsPos);
+
         timeAcceleratorControl.setStyle("-fx-spacing: inherit;");
 
 
         // Creates the control bar with the correct styling
         HBox controlBar = new HBox(obsPos, obsTime, timeAcceleratorControl);
         controlBar.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
-
+        
         return controlBar;
     }
 
+    /**
+     * Initialises the latitude and longitude controls.
+     * @param obsLocB: Observator's location.
+     * @return: the controls for latitude and longitude.
+     */
     private HBox initialiseLonLat(ObserverLocationBean obsLocB) {
         // Lat and lon labels.
         Label lonL = new Label("Longitude(°):");
@@ -149,11 +179,16 @@ public class Main extends Application {
         return new HBox(lonL, lonTF, latL, latTF);
     }
 
-    private HBox initialiseDateTimeZone(DateTimeBean dateTimeB) {
+    /**
+     * Initialises the controls for the date time and zone.
+     * @param dateTimeB: the date time and zone property.
+     * @return: controls for the date time and zone.
+     */
+    private HBox initialiseDateTimeZone(DateTimeBean dateTimeB, TimeAnimator animator) {
         // Time label and text field.
         Label timeL = new Label("Heure:");
         TextField timeTF = new TextField();
-
+        timeTF.disableProperty().bind(animator.runningProperty());
         // Time formatting
         timeTF.setStyle("-fx-pref-width: 75; -fx-alignment: baseline-right;");
         DateTimeFormatter hmsFormatter = DateTimeFormatter
@@ -172,7 +207,7 @@ public class Main extends Application {
         Label dateL = new Label("Date:");
         DatePicker datePicker = new DatePicker(LocalDate.now());
         datePicker.setStyle("-fx-pref-width: 120;");
-
+        datePicker.disableProperty().bind(animator.runningProperty());
         // Binding the date picker to the date time bean
         datePicker.valueProperty().bindBidirectional(dateTimeB.dateProperty());
 
@@ -189,21 +224,30 @@ public class Main extends Application {
         // Zone id styling
         zoneIdBox.setStyle("-fx-pref-width: 180;");
         zoneIdBox.setValue(ZoneId.systemDefault());
-
+        zoneIdBox.disableProperty().bind(animator.runningProperty());
         // Binding of zone property to zoneid box
         dateTimeB.zoneProperty().bindBidirectional(zoneIdBox.valueProperty());
 
         return new HBox(dateL, datePicker, timeL, timeTF, zoneIdBox);
-    }
+    }   
 
-    private HBox initialiseButton(ViewingParametersBean viewParam, DateTimeBean dateTimeB, SkyCanvasManager skyCanvasManager, TimeAnimator animator, HBox obsTime, HBox obsPos)
-            throws IOException {
+    /**
+     * Initialises the button for the simulation.
+     * @param dateTimeB: date time property.
+     * @param animator: Movement animator.
+     * @param obsTime: Property of the time of observation.
+     * @param obsPos: Property of the observator's location.
+     * @return: the controls for the time animation in a HBox.
+     * @throws IOException
+     */
+    private HBox initialiseButton(ViewingParametersBean viewParam, DateTimeBean dateTimeB, SkyCanvasManager skyCanvasManager,
+            TimeAnimator animator, HBox obsTime, HBox obsPos)  throws IOException {
         // Accelerator choices menu.
         ChoiceBox<NamedTimeAccelerator> acceleratorChoice = new ChoiceBox<NamedTimeAccelerator>(
                 FXCollections
                         .observableArrayList(NamedTimeAccelerator.values()));
         acceleratorChoice.setValue(NamedTimeAccelerator.TIMES_300);
-
+        acceleratorChoice.disableProperty().bind(animator.runningProperty());
         // Loading font for the button images.
         InputStream fontStream = getClass()
                 .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
@@ -216,18 +260,12 @@ public class Main extends Application {
         resetButton.setOnAction(e -> {
             dateTimeB.setZonedDateTime(ZonedDateTime.now());
         });
+        resetButton.disableProperty().bind(animator.runningProperty());
 
         // Paused Button
         Button playPauseButt = new Button(ButtonImages.PLAY.getUniCode());
-        playPauseButt.setFont(defaultFont);        
-     
-        // Sun Button
-        Button sunButt = new Button("Sun");
-        sunButt.setFont(defaultFont);
-        
-        sunButt.setOnAction(e -> {
-            viewParam.setCenter(skyCanvasManager.getProjection().inverseApply(skyCanvasManager.getObservedSky().sunPosition()));
-        });
+        playPauseButt.setFont(defaultFont);    
+  
 
         // Play/Pause button actions when pressed.
         playPauseButt.setOnAction(e -> {
@@ -236,11 +274,9 @@ public class Main extends Application {
             if (animator.isRunning()) {
                 animator.stop();
                 playPauseButt.setText(ButtonImages.PLAY.getUniCode());
-                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             } else {
                 animator.start();
                 playPauseButt.setText(ButtonImages.PAUSE.getUniCode());
-                disableEnableInterface(obsTime, resetButton, acceleratorChoice);
             }
         });
 
@@ -248,25 +284,95 @@ public class Main extends Application {
         animator.acceleratorProperty().bind(Bindings
                 .select(acceleratorChoice.valueProperty(), "accelerator"));
 
-        return new HBox(sunButt, acceleratorChoice, resetButton, playPauseButt);
+        return new HBox(acceleratorChoice, resetButton, playPauseButt);
     }
     
-    private void disableEnableInterface(HBox obsTime, Button resetButton, ChoiceBox<NamedTimeAccelerator> acceleratorChoice) {
+    /**
+     * Creates the bottom part of the control bar.
+     * @param obsLocB: property of the observer's location.
+     * @return: the bottom part of the control bar.
+     * @throws IOException 
+     */
+    private HBox controlBarBottom(SkyCanvasManager skyCanvasManager, ObserverLocationBean obsLocB, ViewingParametersBean viewParam, TimeAnimator animator) throws IOException {
+ 
+    	HBox namedLocations = namedLocationsButton(obsLocB, animator);
+    	namedLocations.setStyle("-fx-spacing: inherit; -fx-alignment: baseline-left;");
+
+    	HBox toggleLonLatLine  = toggleButtons(viewParam);
+    	toggleLonLatLine.setStyle("-fx-spacing: inherit; -fx-alignment: center-left;");
+    	
+    	HBox planetButton = initialisePlanetButton(skyCanvasManager, viewParam);
+    	
+    	HBox controlBarBottom = new HBox(namedLocations, toggleLonLatLine, planetButton);
+    	controlBarBottom.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
+    	return controlBarBottom;
+    }
+    
+    /**
+     * Controls for the named location selection.
+     * @param obsLocB: Property of the observer's location.
+     * @return: name location selector.
+     */
+    private HBox namedLocationsButton(ObserverLocationBean obsLocB, TimeAnimator animator) {
+       	Label namedLocation_l = new Label("Position connues:");
+    	ChoiceBox<NamedPositions> locationsBox = new ChoiceBox<NamedPositions>(FXCollections.observableArrayList(NamedPositions.values()));
+    	locationsBox.setStyle("-fx-pref-width: 160;");
+    	locationsBox.setValue(NamedPositions.epfl);
+    	locationsBox.disableProperty().bind(animator.runningProperty());
+    	locationsBox.valueProperty().addListener((o, oV, nV) ->{
+    		obsLocB.setCoordinates(locationsBox.getValue().coords());
+    	});
+    	return new HBox(namedLocation_l, locationsBox);
+    }
+    
+    private HBox toggleButtons(ViewingParametersBean viewParam) {
+    	Label toggleLonLat_l = new Label("Toggle lon/lat lines");
+    	CheckBox toggleLonLatLine = new CheckBox();
+    	viewParam.enLatLonLinesProperty().bind(toggleLonLatLine.selectedProperty());
+    	
+    	Label toggleName_l = new Label("Toggle names");
+    	CheckBox toggleNames = new CheckBox();
+    	viewParam.enWriteNamesProperty().bind(toggleNames.selectedProperty());
+    	return new HBox(toggleLonLat_l, toggleLonLatLine, toggleName_l, toggleNames);
+    }
+    
+    private HBox initialisePlanetButton(SkyCanvasManager skyCanvasManager, ViewingParametersBean viewParam) throws IOException {
+        // Loading font for the button images.
+        InputStream fontStream = getClass()
+                .getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf");
+        Font defaultFont = Font.loadFont(fontStream, 12);
+        fontStream.close();
+
         
-        if(!obsTime.isDisable()) {
-            obsTime.setDisable(true);
-            resetButton.setDisable(true);
-            acceleratorChoice.setDisable(true);
-        } else {
-            obsTime.setDisable(false);
-            resetButton.setDisable(false);
-            acceleratorChoice.setDisable(false);
-        }
+        //Creating sun Button
+        Button sunButt = new Button("Sun");
+        sunButt.setFont(defaultFont);
+        sunButt.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
+        
+        //Setting action of sun button to center on the sun when clicked
+        sunButt.setOnAction(e -> {
+            viewParam.setCenter(skyCanvasManager.getProjection().inverseApply(skyCanvasManager.getObservedSky().sunPosition()));
+        });
+        
+        //Creating moon Button
+        Button moonButt = new Button("Moon");
+        moonButt.setFont(defaultFont);
+        
+        //Setting action of moon button to center on the moon when clicked
+        moonButt.setOnAction(e -> {
+            viewParam.setCenter(skyCanvasManager.getProjection().inverseApply(skyCanvasManager.getObservedSky().moonPosition()));
+        });
+        
+        moonButt.setStyle("-fx-spacing: 4; -FX-PADDING: 4;");
+        
+        
+        return new HBox(sunButt, moonButt);    
     }
 
     private InputStream resourceStream(String resourceName) {
         return getClass().getResourceAsStream(resourceName);
     }
+
 
     /**
      * Allows to create text formatter for the lattitude of longitude.

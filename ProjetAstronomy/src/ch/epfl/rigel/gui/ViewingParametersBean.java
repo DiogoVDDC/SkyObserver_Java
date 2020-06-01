@@ -3,8 +3,10 @@ package ch.epfl.rigel.gui;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -19,6 +21,10 @@ public final class ViewingParametersBean {
 
     // The field of view property.
     private final DoubleProperty fieldOfView;
+    //Enables the lon/lat lines
+    private final BooleanProperty enLonLatLines;
+    // Enable the writing of the planets, sun and moon names.
+    private final BooleanProperty enWriteNames;
     // The center property
     private final ObjectProperty<HorizontalCoordinates> center;
 
@@ -26,6 +32,8 @@ public final class ViewingParametersBean {
     public ViewingParametersBean() {
         this.fieldOfView = new SimpleDoubleProperty();
         this.center = new SimpleObjectProperty<HorizontalCoordinates>(null);
+        this.enLonLatLines = new SimpleBooleanProperty(false);
+        this.enWriteNames = new SimpleBooleanProperty(false);
     }
 
     /**
@@ -69,6 +77,54 @@ public final class ViewingParametersBean {
         return center.getValue();
     }
 
+    /**
+     * Getter for the enabling of lat/lon lines.
+     * @return
+     */
+    public boolean isLatLonEnable() {
+    	return enLonLatLines.get();
+    }
+    
+    /**
+     * Getter for the porperty of the enabling of lat/lon lines.
+     * @return
+     */
+    public BooleanProperty enLatLonLinesProperty() {
+    	return enLonLatLines;
+    }
+    
+    /**
+     * Setter for the enabling of lat/lon lines.
+     * @param val
+     */
+    public void setEnableLatLonline(boolean val) {
+    	enLonLatLines.set(val);
+    }
+    
+    /**
+     * Getter for the enabling of name writing
+     * @return
+     */
+    public boolean isWriteName() {
+    	return enWriteNames.get();
+    }
+    
+    /**
+     * Getter for the property of the enabling of name writing.
+     * @return
+     */
+    public BooleanProperty enWriteNamesProperty() {
+    	return enWriteNames;
+    }
+    
+    /**
+     * Setter for the enabling of name writing.
+     * @param val
+     */
+    public void setEnWriteNames(boolean val) {
+    	enWriteNames.set(val);
+    }
+    
     /**
      * Setter for the horizontal coordinates
      * @param newHorizontalCoordinates:

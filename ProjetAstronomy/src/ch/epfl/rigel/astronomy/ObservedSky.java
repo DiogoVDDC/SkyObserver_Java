@@ -99,7 +99,6 @@ public class ObservedSky {
     			planetPositions[2 * index + 1] = planetPos.y();
     			//Adding the planet and it's position in the map containing all object and their positions.
     			celestialObjectPosMap.put(planet, planetPos);
-    			
     			index++;
 		    }
 		}
