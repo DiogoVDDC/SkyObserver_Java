@@ -13,7 +13,9 @@ import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
 import ch.epfl.rigel.math.ClosedInterval;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableDoubleValue;
 import javafx.beans.value.ObservableObjectValue;
@@ -42,10 +44,18 @@ public final class SkyCanvasManager {
     private final ObservableDoubleValue mouseAltDeg;
     // Property containing the closest celestial object to the current mouse's position.
     private final ObservableObjectValue<CelestialObject> objectUnderMouse;
+    // Propety to enable of disable lon/lat lines.
+    private final BooleanProperty enLatLonLines;
+    // Property to enable or disable the names of the planets, sun and moon.
+    private final BooleanProperty enWritingNames;
     // Canvas on which the sky is drawn.
     private final Canvas sky;
     // Painter used to draw onto the canvas.
     private final SkyCanvasPainter painter;
+    // Anchor points of the mouse
+    private double anchorX;
+    private double anchorY;
+
 
     /**
      * SkyCanvasManager constructor.
@@ -86,6 +96,14 @@ public final class SkyCanvasManager {
                 observerLocBean.coordinatesProperty(),
                 dateTimeBean.dateProperty(), dateTimeBean.timeProperty(),
                 dateTimeBean.zoneProperty(), projection);
+        
+        enLatLonLines = new SimpleBooleanProperty();
+        enLatLonLines.bind(viewingParamBean.enLatLonLinesProperty());
+        enLatLonLines.addListener((o, oV, oN) -> drawCanvas());
+        
+        enWritingNames = new SimpleBooleanProperty();
+        enWritingNames.bind(viewingParamBean.enWriteNamesProperty());
+        enWritingNames.addListener((o, oV, oN) -> drawCanvas());
 
         // Initialising the mouse position property at (0,0)
         mousePosition = new SimpleObjectProperty<Point2D>(new Point2D(0,0));
@@ -94,14 +112,14 @@ public final class SkyCanvasManager {
         sky.setOnMouseMoved(e ->{
             mousePosition.setValue(new Point2D(e.getX(), e.getY()));
          });
-
+       
         // Binding the horizontal coords to the position of the mouse.
         mouseHorizontalCoords = Bindings.createObjectBinding(() ->{
         	// Try and catch to avoid having an error of non invertible transform exception at initialisation.
         	try {
-            Point2D transformedMousePos =
+        		Point2D transformedMousePos =
                 planeToCanvas.get().inverseTransform(mousePosition.get());
-            return projection.get().inverseApply(CartesianCoordinates.of(transformedMousePos.getX(),
+        		return projection.get().inverseApply(CartesianCoordinates.of(transformedMousePos.getX(),
             		transformedMousePos.getY()));
         	} catch(Exception e) {
         		return HorizontalCoordinates.of(0, 0);
@@ -136,7 +154,7 @@ public final class SkyCanvasManager {
         
          // Makes sure the sky is redrawn whenever the observed sky changes.
          observedSky.addListener((o, oV, nV) -> {
-        	 drawCanvas();
+        	 drawCanvas();        	
          });
          
          //Makes sure the sky is redrawn whenever the plane to canvas trasnformatio changes.
@@ -158,8 +176,21 @@ public final class SkyCanvasManager {
          });
          
          // Requests the focus when left clicking on the canvas.
-         sky.setOnMousePressed(e ->{
-         if (e.isPrimaryButtonDown()) sky.requestFocus();
+         sky.setOnMousePressed(e ->{   
+
+        	 if (e.isPrimaryButtonDown()) sky.requestFocus();
+        	 anchorX = e.getX();
+        	 anchorY = e.getY();
+         });
+         
+         // Allows to move around using the mouse drag
+         sky.setOnMouseDragged(e ->{
+        	 // The azimuth and altitude are chnaged by the difference bewteen the two
+        	 // positions and scaled down by 10 to make the mouvement smaller.
+         	 viewingParamBean.changeAz((anchorX - e.getX())/10);
+         	 viewingParamBean.changeAlt((e.getY() - anchorY)/10); 
+         	 anchorX = e.getX();
+         	 anchorY = e.getY();
          });
          
          // Moves the centre of projection according the the keyboard arrows.
@@ -183,7 +214,8 @@ public final class SkyCanvasManager {
         sky.setOnMouseMoved(e ->{
                       mousePosition.set(new Point2D(e.getX(), e.getY()));
             e.consume();           
-        });     
+        });
+        
     }
 
     /**
@@ -192,11 +224,11 @@ public final class SkyCanvasManager {
     private void drawCanvas() {
         painter.clear();
         try {
-            painter.drawSky(observedSky.get(), projection.get(),
-                    planeToCanvas.get());
+        	painter.drawSky(observedSky.get(), projection.get(),
+                    planeToCanvas.get(), enWritingNames.get(), enLatLonLines.get());
         } catch (IOException e1) {
             e1.printStackTrace();
-        }
+        }     
     }
 
     /**

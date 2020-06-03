@@ -13,7 +13,10 @@ import ch.epfl.rigel.coordinates.CartesianCoordinates;
 import ch.epfl.rigel.coordinates.EclipticToEquatorialConversion;
 import ch.epfl.rigel.coordinates.EquatorialToHorizontalConversion;
 import ch.epfl.rigel.coordinates.GeographicCoordinates;
+import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
+import javafx.geometry.Point2D;
+import javafx.scene.transform.Transform;
 
 /**
  * Representation of the sky at a give time and position.
@@ -30,6 +33,10 @@ public class ObservedSky {
 	private final Moon moon;
 	//Position in Cartesian coordinates of the moon
 	private final CartesianCoordinates moonPosition;
+	// Position of the centre of the horizon's circle.
+	private final CartesianCoordinates horizonCentre;
+	// Radius of the horizon's circle
+	private final double horizonRadius;
 	//Models of the 7 solar system planets at a given time.
 	private final List<Planet> planets;	
 	//Positions in Cartesian coordinates of the planets. Each star has two slot,
@@ -83,6 +90,12 @@ public class ObservedSky {
 		//Adding the sun and it's position in the map containing all object and their positions.
 		celestialObjectPosMap.put(sun, sunPosition);
 		
+		
+		HorizontalCoordinates horizonHorCoords = HorizontalCoordinates.ofDeg(0, 0);
+        horizonCentre = projection.circleCenterForParallel(horizonHorCoords);
+		horizonRadius = projection.circleRadiusForParallel(horizonHorCoords);
+		
+		
 		//Modelization of the solar system planets and their positions in Cartesian coordinates.
 		planets = new ArrayList<>(7);
 		planetPositions = new double[14];
@@ -99,7 +112,6 @@ public class ObservedSky {
     			planetPositions[2 * index + 1] = planetPos.y();
     			//Adding the planet and it's position in the map containing all object and their positions.
     			celestialObjectPosMap.put(planet, planetPos);
-    			
     			index++;
 		    }
 		}
@@ -149,6 +161,21 @@ public class ObservedSky {
 		return moonPosition;
 	}
 	
+	/**
+	 * Getter for the centre coordinates of the horizon.
+	 * @return
+	 */
+	public CartesianCoordinates hozironPosition() {
+	    return horizonCentre;
+	}
+	
+	/**
+	 * Getter for the radius of the horizon circle.
+	 * @return
+	 */
+	public double horizonRadius() {
+	    return horizonRadius;
+	}
 	/**
 	 * Getter for the models of the planets.
 	 * @return: table containing each model of the planets.
@@ -202,6 +229,22 @@ public class ObservedSky {
 		return List.copyOf(catalogue.asterismIndices(asterism));
 	}
 	
+	public boolean isMoonAboveHorizon(Transform planeToCanvas) {
+	    double transHorRadius = planeToCanvas.deltaTransform(horizonRadius, 0).magnitude();
+	    Point2D transMoonPos = planeToCanvas.transform(moonPosition.x(), moonPosition.y());
+	    Point2D transHorPos = planeToCanvas.transform(horizonCentre.x(), horizonCentre.y());
+
+	    return getDistance(transMoonPos, transHorPos) > transHorRadius;
+	}
+	
+	public boolean isSunAboveHorizon(Transform planeToCanvas) {
+	    double transHorRadius = planeToCanvas.deltaTransform(horizonRadius, 0).magnitude();
+	    Point2D transSunPos = planeToCanvas.transform(sunPosition.x(), sunPosition.y());
+	    Point2D transHorPos = planeToCanvas.transform(horizonCentre.x(), horizonCentre.y());
+	    
+	    return getDistance(transSunPos, transHorPos) > transHorRadius;
+	}
+	
 	/**
 	 * Getter for the closest celestial object to the given position in a given radius.
 	 * @param pos the position of the object you want to compare to
@@ -250,6 +293,11 @@ public class ObservedSky {
 		double x = c2.x() - c1.x();
 		double y = c2.y() - c1.y();
 		return Math.sqrt(x*x + y*y);
+	}
+	
+	private double getDistance(Point2D c1, Point2D c2) {
+	    return getDistance(CartesianCoordinates.of(c1.getX(), c1.getY()),
+	                        CartesianCoordinates.of(c2.getX(), c2.getY()));
 	}
 	
 	

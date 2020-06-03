@@ -7,7 +7,6 @@ import ch.epfl.rigel.astronomy.ObservedSky;
 import ch.epfl.rigel.astronomy.Planet;
 import ch.epfl.rigel.astronomy.Star;
 import ch.epfl.rigel.coordinates.CartesianCoordinates;
-import ch.epfl.rigel.coordinates.CartesianCoordinatesTest;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 import ch.epfl.rigel.coordinates.StereographicProjection;
 import ch.epfl.rigel.math.Angle;
@@ -18,11 +17,6 @@ import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
-import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Transform;
 
@@ -35,7 +29,9 @@ import javafx.scene.transform.Transform;
  */
 public final class SkyCanvasPainter {
 
-    private Canvas canvas;
+	// Offset used to slightly move the names of the objects down.
+    private static final int NAMES_OFFSET = 3;
+	private Canvas canvas;
     private final GraphicsContext ctx;
     private static final ClosedInterval MAGNITUDE_INTERVAL = ClosedInterval
             .of(-2, 5);
@@ -71,7 +67,7 @@ public final class SkyCanvasPainter {
         
         double[] transformedCoords = new double[observedSky.starPositions().length];
         // Transforming all stars positions accoridng to the affine
-        // transformation.
+        // transformation.  
         transform.transform2DPoints(observedSky.starPositions(), 0,
                 transformedCoords, 0, transformedCoords.length / 2);
 
@@ -124,7 +120,7 @@ public final class SkyCanvasPainter {
             // Defining the star coordinates and finding top left coordinates.
             double starX = transformedCoords[observedSky.stars().indexOf(star) * 2];
             double starY = transformedCoords[observedSky.stars().indexOf(star) * 2 + 1];
-            Point2D starPos = adjustCoordinate(new Point2D(starX, starY),
+            Point2D starPos = changeCenter(new Point2D(starX, starY),
                     transformedSize / 2);
             // Set the color to the star's one based on it's color temperature.
             ctx.setFill(BlackBodyColor
@@ -146,8 +142,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawPlanets(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawPlanets(ObservedSky observedSky, StereographicProjection projection, 
+    					Transform transform, boolean writeName) {
         double[] transformedCoords = new double[observedSky
                 .planetPositions().length];
         // Transforming all stars positions accoridng to the affine
@@ -171,15 +167,19 @@ public final class SkyCanvasPainter {
             // Defining the planet's coordinates and finding top left corner
             // coordinates.
             double planetX = transformedCoords[observedSky.planets()
-                    .indexOf(planet)];
+                    .indexOf(planet)*2];
             double planetY = transformedCoords[observedSky.planets()
-                    .indexOf(planet) + 1];
-            Point2D planetPos = adjustCoordinate(new Point2D(planetX, planetY),
+                    .indexOf(planet)*2 + 1];
+            Point2D planetPos = changeCenter(new Point2D(planetX, planetY),
                     transformedSize / 2);
 
             // Drawing the planet on the canvas.
             ctx.fillOval(planetPos.getX(), planetPos.getY(), transformedSize,
                     transformedSize);
+            
+            //Write the name of the planet if option is enabled.
+            if(writeName)
+            	ctx.fillText(planet.name(), planetX, planetY + NAMES_OFFSET); 
         }
 
     }
@@ -193,8 +193,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawSun(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawSun(ObservedSky observedSky, StereographicProjection projection, 
+    				Transform transform, boolean writeName) {
         // Finding the radius of the sun using the angular size.
         double sunSize = projection
                 .applyToAngle(observedSky.sun().angularSize());
@@ -204,25 +204,31 @@ public final class SkyCanvasPainter {
         // Defining the sun position as a point on the affine transform and.
         Point2D sunPos = transform.transform(observedSky.sunPosition().x(),
                 observedSky.sunPosition().y());
-
+        
         // Drawing the sun halo
-        Point2D haloPos = adjustCoordinate(sunPos, relativeSunSize * 1.1);
+        Point2D haloPos = changeCenter(sunPos, relativeSunSize * 1.1);
         ctx.setFill(Color.YELLOW.deriveColor(0, 1, 1, 0.25));
         ctx.fillOval(haloPos.getX(), haloPos.getY(), relativeSunSize * 2.2,
                 relativeSunSize * 2.2);
 
         // Drawing the sun outer core
-        Point2D outterCorePos = adjustCoordinate(sunPos,
+        Point2D outterCorePos = changeCenter(sunPos,
                 (relativeSunSize + 2) / 2);
         ctx.setFill(Color.YELLOW);
         ctx.fillOval(outterCorePos.getX(), outterCorePos.getY(),
                 relativeSunSize + 2, relativeSunSize + 2);
 
         // Drawing the sun core
-        Point2D adjustedSunPos = adjustCoordinate(sunPos, relativeSunSize / 2);
+        Point2D adjustedSunPos = changeCenter(sunPos, relativeSunSize / 2);
         ctx.setFill(Color.WHITE);
         ctx.fillOval(adjustedSunPos.getX(), adjustedSunPos.getY(),
                 relativeSunSize, relativeSunSize);
+        
+        //Writes the name of the sun next to it if enabled.
+        if(writeName) {
+        	ctx.fillText(observedSky.sun().name(), sunPos.getX(), sunPos.getY() + NAMES_OFFSET);
+        }
+
     }
 
     /**
@@ -234,8 +240,8 @@ public final class SkyCanvasPainter {
      * @param transform:
      *            plane to canvas affine transform
      */
-    public void drawMoon(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform) {
+    public void drawMoon(ObservedSky observedSky, StereographicProjection projection,
+    					Transform transform, boolean writeName) {
 
         // Finding the diameter of the sun using the angular size
         double moonSize = projection
@@ -249,12 +255,17 @@ public final class SkyCanvasPainter {
         // offsetting the center point.
         Point2D moonPos = transform.transform(observedSky.moonPosition().x(),
                 observedSky.moonPosition().y());
-        Point2D adjustedPos = adjustCoordinate(moonPos, relativeMoonSize);
+        Point2D adjustedPos = changeCenter(moonPos, relativeMoonSize/2);
 
         // Drawing the moon
         ctx.setFill(Color.WHITE);
         ctx.fillOval(adjustedPos.getX(), adjustedPos.getY(), relativeMoonSize,
                 relativeMoonSize);
+        
+        // Draws the name if option is enabled.
+        if(writeName) {
+        	ctx.fillText(observedSky.moon().name(), moonPos.getX(), moonPos.getY() + NAMES_OFFSET);
+        }
     }
 
     /**
@@ -268,19 +279,15 @@ public final class SkyCanvasPainter {
      */
     public void drawHorizon(ObservedSky observedSky,
             StereographicProjection projection, Transform transform) {
-        
-        // Defining the horizon object
-        HorizontalCoordinates horizon = HorizontalCoordinates.ofDeg(0, 0);
 
         // Projecting the center of the circle
-        CartesianCoordinates horizonCoords = projection
-                .circleCenterForParallel(horizon);
+        CartesianCoordinates horizonCoords = observedSky.hozironPosition();
         // Creating a point from the centre of the circle
         Point2D transHorizonCoords = transform.transform(horizonCoords.x(),
                 horizonCoords.y());
 
         // Defining the the radius of the circle
-        double horizonRadius = projection.circleRadiusForParallel(horizon);
+        double horizonRadius = observedSky.horizonRadius();
         // Ajusting the radius to the affine transform
         double transHorizonRadius = transform.deltaTransform(horizonRadius, 0)
                 .magnitude();
@@ -309,10 +316,20 @@ public final class SkyCanvasPainter {
         }
     }
     
+    
+    /**
+     * Draws the meridians line
+     * @param observedSky:
+     *            the observed sky from which we will draw the horizon
+     * @param projection:
+     *            projection of the point which we will draw around
+     * @param transform:
+     *            plane to canvas affine transform
+     */
     public void drawMeridians(ObservedSky observedSky,
             StereographicProjection projection, Transform transform) {
         
-        
+        // Drawing meridian lines with 15 degree interval
         for(int i = -90; i<90; i+=15) {
             HorizontalCoordinates meridian = HorizontalCoordinates.ofDeg(0, i);
          
@@ -320,17 +337,17 @@ public final class SkyCanvasPainter {
             CartesianCoordinates meridianCoords = projection
                     .circleCenterForMeridian(meridian);
             
-            double radius = projection.circleRadiusForMeridian(meridian);
-            
+            // Calculating the radius
+            double radius = projection.circleRadiusForMeridian(meridian);            
             double transMeridianRadius = transform.deltaTransform(radius, 0)
                     .magnitude();
             
             
             Point2D transMeridianCoords = transform.transform(meridianCoords.x(),
-                    meridianCoords.y());          
+                    meridianCoords.y());   
            
 
-        
+            // Drawing the meridians
             ctx.setStroke(Color.SKYBLUE);
             ctx.setLineWidth(0.2);
             ctx.strokeOval(transMeridianCoords.getX() - transMeridianRadius,
@@ -339,6 +356,15 @@ public final class SkyCanvasPainter {
         }
     }
     
+    /**
+     * Draws the latitude circle
+     * @param observedSky:
+     *            the observed sky from which we will draw the horizon
+     * @param projection:
+     *            projection of the point which we will draw around
+     * @param transform:
+     *            plane to canvas affine transform
+     */
     public void drawLatitudeCircle(ObservedSky observedSky,
             StereographicProjection projection, Transform transform) {
         
@@ -349,15 +375,16 @@ public final class SkyCanvasPainter {
             CartesianCoordinates latitudeCoords = projection
                     .circleCenterForParallel(latitude);
             
-            double radius = projection.circleRadiusForParallel(latitude);
-            
+            // Calculating the radius
+            double radius = projection.circleRadiusForParallel(latitude);            
             double transLatitudeRadius = transform.deltaTransform(radius, 0)
                     .magnitude();
             
-            
+            // Calculating point coordinates
             Point2D transLatitudeCoords = transform.transform(latitudeCoords.x(),
                     latitudeCoords.y());          
            
+            // Drawing the latitude circles
             ctx.setStroke(Color.SKYBLUE);
             ctx.setLineWidth(0.2);
             ctx.strokeOval(transLatitudeCoords.getX() - transLatitudeRadius,
@@ -377,16 +404,18 @@ public final class SkyCanvasPainter {
      * @throws IOException:
      *             if there an issue while the painter draws the stars.
      */
-    public void drawSky(ObservedSky observedSky,
-            StereographicProjection projection, Transform transform)
+    public void drawSky(ObservedSky observedSky, StereographicProjection projection,
+    							Transform transform, boolean writeName, boolean drawLonLatLines)
             throws IOException {
         drawStars(observedSky, projection, transform);
-        drawPlanets(observedSky, projection, transform);
-        drawSun(observedSky, projection, transform);
-        drawMoon(observedSky, projection, transform);
+        drawPlanets(observedSky, projection, transform, writeName);
+        drawSun(observedSky, projection, transform, writeName);
+        drawMoon(observedSky, projection, transform, writeName);
         drawHorizon(observedSky, projection, transform);
-        drawMeridians(observedSky, projection, transform);
-        drawLatitudeCircle(observedSky, projection, transform);
+        if(drawLonLatLines) {
+        	drawMeridians(observedSky, projection, transform);
+        	drawLatitudeCircle(observedSky, projection, transform);
+        }
     }
 
     /**
@@ -400,7 +429,7 @@ public final class SkyCanvasPainter {
      * @return: 
      *          returns point ajusted by the radius
      */
-    private Point2D adjustCoordinate(Point2D center, double radius) {
+    private Point2D changeCenter(Point2D center, double radius) {
         return new Point2D(center.getX() - radius, center.getY() - radius);
     }
 }
