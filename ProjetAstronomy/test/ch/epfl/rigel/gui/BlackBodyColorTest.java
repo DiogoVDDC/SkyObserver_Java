@@ -7,8 +7,6 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.scene.paint.Color;
-
 class BlackBodyColorTest {
 
 	@Test

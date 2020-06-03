@@ -15,27 +15,12 @@ import ch.epfl.rigel.math.Polynomial;
  */
 public final class EclipticToEquatorialConversion implements Function<EclipticCoordinates, EquatorialCoordinates>{
 
-	//Ecliptic obliquity.
+	//Elliptic obliquity.
     private final double eclipticObliquity;
-    //Cosine of the ecliptic obliquity
+    //Cosine of the elliptic obliquity
     private final double cosOfEclipticObliquity;
     //Sine of the eccliptic obliquity.
     private final double sinOfEclipticObliquity;
-    
-    @Override
-    /**
-     * Transforms ecliptic coordinates to equatorial coordinates
-     * @param: ecliptic coordinates to be converted
-     * @returns: new equatorial coordinates after conversion
-     */
-    public EquatorialCoordinates apply(EclipticCoordinates ecl) {          
-        double ra = Angle.normalizePositive(Math.atan2((Math.sin(ecl.lon())*cosOfEclipticObliquity 
-                - Math.tan(ecl.lat())*sinOfEclipticObliquity), Math.cos(ecl.lon())));
-        
-        double dec = Math.asin(Math.sin(ecl.lat())*cosOfEclipticObliquity 
-                + Math.cos(ecl.lat())*sinOfEclipticObliquity*Math.sin(ecl.lon()));
-        return  EquatorialCoordinates.of(ra, dec);
-    }
     
     /**
      * Initialises the constant used to reduce calculation when conversion of coordinates
@@ -48,6 +33,22 @@ public final class EclipticToEquatorialConversion implements Function<EclipticCo
    
         cosOfEclipticObliquity = Math.cos(eclipticObliquity);
         sinOfEclipticObliquity = Math.sin(eclipticObliquity);
+    }
+    
+    /**
+     * Transforms elliptic coordinates to equatorial coordinates
+     * @param: ecliptic coordinates to be converted
+     * @returns: new equatorial coordinates after conversion
+     */
+    @Override
+    public EquatorialCoordinates apply(EclipticCoordinates ecl) {       
+    	double sinOfLon = Math.sin(ecl.lon());
+        double ra = Angle.normalizePositive(Math.atan2((sinOfLon*cosOfEclipticObliquity 
+                - Math.tan(ecl.lat())*sinOfEclipticObliquity), Math.cos(ecl.lon())));
+        
+        double dec = Math.asin(Math.sin(ecl.lat())*cosOfEclipticObliquity 
+                + Math.cos(ecl.lat())*sinOfEclipticObliquity*sinOfLon);
+        return  EquatorialCoordinates.of(ra, dec);
     }
     
     @Override

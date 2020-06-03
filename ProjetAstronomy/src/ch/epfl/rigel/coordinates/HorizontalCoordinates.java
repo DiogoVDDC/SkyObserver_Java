@@ -73,7 +73,7 @@ public final class HorizontalCoordinates extends SphericalCoordinates{
             case(7):
                 return n + w;
             default:
-                return "Error";
+                throw new Error();
         }
     }
 

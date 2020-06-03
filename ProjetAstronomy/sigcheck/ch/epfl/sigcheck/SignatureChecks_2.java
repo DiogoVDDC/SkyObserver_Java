@@ -6,7 +6,8 @@ import ch.epfl.rigel.coordinates.GeographicCoordinates;
 import ch.epfl.rigel.coordinates.HorizontalCoordinates;
 
 final class SignatureChecks_2 {
-    void checkGeographicCoordinates() {
+    @SuppressWarnings("unused")
+	void checkGeographicCoordinates() {
         boolean b;
         double d = 0;
         GeographicCoordinates g;

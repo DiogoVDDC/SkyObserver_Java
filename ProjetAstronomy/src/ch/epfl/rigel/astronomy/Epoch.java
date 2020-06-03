@@ -14,15 +14,15 @@ import java.time.temporal.ChronoUnit;
  * @author Diogo Valdivieso Damasio Da Costa (311673)
  */
 public enum Epoch {    
-    J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.of(12, 0),
+    J2000(ZonedDateTime.of(LocalDate.of(2000, Month.JANUARY, 1), LocalTime.NOON,
             ZoneOffset.UTC)),
-    J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1), LocalTime.of(0, 0),
+    J2010(ZonedDateTime.of(LocalDate.of(2010, Month.JANUARY, 1).minusDays(1), LocalTime.MIDNIGHT,
             ZoneOffset.UTC));
     
     private static final double MILLI_PER_DAYS = 1000.0*60.0*60.0*24.0;
     private static final double DAYS_PER_JULIAN_CENTURY = 36525.0;
     // The precise date of the two enums.
-    private ZonedDateTime date;
+    private final ZonedDateTime date;
     
     private Epoch(ZonedDateTime date) {
         this.date = date;
@@ -35,8 +35,7 @@ public enum Epoch {
      */
     public double daysUntil(ZonedDateTime when) {
         // To avoid loosing precision, we use milliseconds instead of hours and then convert back to hours.
-        double h = this.date.until(when, ChronoUnit.MILLIS);
-        return h/MILLI_PER_DAYS;
+        return this.date.until(when, ChronoUnit.MILLIS)/MILLI_PER_DAYS;
     }
     
     /**

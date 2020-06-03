@@ -10,9 +10,9 @@ import java.util.Locale;
 public final class CartesianCoordinates {
     
 	//X coordinate of the position.
-    private double x;
+    private final double x;
     //Y coordinate of the position.
-    private double y;
+    private final double y;
 
     /**
      * Constructor for cartesian coordinates.

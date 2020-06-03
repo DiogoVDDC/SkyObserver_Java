@@ -39,17 +39,19 @@ public final class EquatorialToHorizontalConversion implements Function<Equatori
      * @returns: new horizontal coordinates after conversion.
      */
     public HorizontalCoordinates apply(EquatorialCoordinates equ) { 
+    	double sinOfDec = Math.sin(equ.dec());
+    	double cosOfDec = Math.cos(equ.dec());
         double angleHour = localSideRealTime - equ.ra();
         // Altitude calculation.
-        double alt = Math.asin(( Math.sin(equ.dec()) * sinOfObservLat )
-                    + ( Math.cos(equ.dec()) * cosOfObservLat * Math.cos(angleHour) ));
+        double alt = ( sinOfDec * sinOfObservLat )
+                    + ( cosOfDec * cosOfObservLat * Math.cos(angleHour) );
         // Quotient of the arctan of azimuth calculation.
-        double y = (-Math.cos(equ.dec())) * cosOfObservLat * Math.sin(angleHour);
+        double y = (-cosOfDec) * cosOfObservLat * Math.sin(angleHour);
         // Denominator of the arctan of azimuth calculation.
-        double x = Math.sin(equ.dec()) - sinOfObservLat* Math.sin(alt);
+        double x = sinOfDec - sinOfObservLat* alt;
         // Calculation and normalization of arctan.
         double az = Angle.normalizePositive(Math.atan2(y, x));
-        return  HorizontalCoordinates.of(az, alt);
+        return  HorizontalCoordinates.of(az, Math.asin(alt));
     }
     
     @Override
