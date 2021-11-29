@@ -16,3 +16,4 @@ The project was designed in the main parts.
 3) Allow easy conversion between the coordinate system, class: SiderealTime, EclipticToEquatorialConversion et EquatorialToHorizontalConversion
 4) Model the projection onto the sky and different celestial objets, class: StereographicProjection, CelestialObject, Planet, Moon 
 5) Draw the Sky using Java FX class: SkyCanvasPainter
+6) Create GUI for the Application, class: ViewingParametersBean, ObserverLocationBean, SkyCanvasManager,Main
