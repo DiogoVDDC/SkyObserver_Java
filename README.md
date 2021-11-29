@@ -1,4 +1,4 @@
-# ProjetAstronomy
+# Sky Observer
 
 Realised by Diogo Valdivieso Damasio Da Costa & Théo Houle
 
